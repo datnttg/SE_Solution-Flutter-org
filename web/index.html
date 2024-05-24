@@ -33,6 +33,28 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<script src="flutter_bootstrap.js" async></script>
+  <script src="flutter_bootstrap.js" async></script>
+
+  <!--Put at bottom of the body tag, but before any Firebase services-->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDz9OUBmB2DLYGbtFjGx3xZhVkJZLYFgeg",
+      authDomain: "se-solution-53715.firebaseapp.com",
+      projectId: "se-solution-53715",
+      storageBucket: "se-solution-53715.appspot.com",
+      messagingSenderId: "249185202958",
+      appId: "1:249185202958:web:4ec4ba7199f865994d9d5f"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 </body>
 </html>

@@ -17,6 +17,7 @@ class Constants {
 
   String defaultLocaleName = 'vi_VN';
   Locale defaultLocale = const Locale('vi', 'VN');
+  String? fcmApiKey;
 
   List<LocaleDescription> supportedLocales = <LocaleDescription>[
     const LocaleDescription(Locale('en', 'US'), 'English'),

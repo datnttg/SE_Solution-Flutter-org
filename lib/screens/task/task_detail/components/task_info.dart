@@ -85,7 +85,7 @@ class _TaskInfoState extends State<TaskInfo> {
           children: [
             ResponsiveItem(
               // widthRatio: 2,
-              parentPercentWidth: 100,
+              percentWidthOfParent: 100,
               child: KTextFormField(
                 label: Text(sharedPrefs.translate('Title')),
                 controller: titleController,
@@ -98,7 +98,7 @@ class _TaskInfoState extends State<TaskInfo> {
               ),
             ),
             ResponsiveItem(
-              parentPercentWidth: 100,
+              percentWidthOfParent: 100,
               child: KTextFormField(
                 label: Text(sharedPrefs.translate('Addition information')),
                 controller: taskDescriptionController,

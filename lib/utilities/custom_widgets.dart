@@ -1,5 +1,6 @@
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
+import 'responsive.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
 
@@ -431,10 +432,15 @@ class KElevatedButton extends StatelessWidget {
 /// CUSTOM TEXT FORM FIELD
 class CTextFormField extends StatelessWidget {
   final TextEditingController? controller;
-  final Widget? suffix, suffixIcon;
   final String? labelText, hintText, initialValue;
-  final BoxConstraints? suffixIconConstraints;
-  final bool? required, autoFocus, enabled, readOnly, labelAsHint;
+  final bool? required,
+      autoFocus,
+      enabled,
+      readOnly,
+      labelTextAsHint,
+      wrap,
+      boldText,
+      showDivider;
   final int? maxLines;
   final void Function()? onTap;
   final void Function(String)? onChanged;
@@ -444,18 +450,18 @@ class CTextFormField extends StatelessWidget {
     super.key,
     this.controller,
     this.labelText,
-    this.labelAsHint,
-    this.validator,
+    this.labelTextAsHint = false,
+    this.boldText = false,
     this.hintText,
     this.initialValue,
-    this.suffix,
-    this.suffixIcon,
-    this.enabled,
-    this.required,
-    this.autoFocus,
-    this.readOnly,
+    this.enabled = true,
+    this.required = false,
+    this.autoFocus = false,
+    this.readOnly = false,
+    this.wrap = false,
+    this.showDivider = true,
     this.maxLines = 1,
-    this.suffixIconConstraints,
+    this.validator,
     this.onTap,
     this.onChanged,
   });
@@ -465,20 +471,20 @@ class CTextFormField extends StatelessWidget {
     if (initialValue != null && controller != null) {
       controller!.text = initialValue!;
     }
-
-    return TextFormField(
+    var tempHintText = labelTextAsHint == true ? labelText : hintText;
+    var textFormField = TextFormField(
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
-        // labelText: labelText,
-        border: defaultBorder,
-        enabledBorder: defaultBorder,
-        focusedBorder: defaultFocusedBorder,
-        hintText: labelAsHint == true ? labelText : hintText,
-        prefix: labelAsHint == true ? null : Text('$labelText'),
-        suffix: suffix,
-        suffixIcon: suffixIcon,
-        suffixIconConstraints: suffixIconConstraints,
+        isDense: wrap,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        hintText: tempHintText != null && required == true
+            ? '$tempHintText*'
+            : tempHintText,
+        hintStyle: const TextStyle(fontSize: defaultTextSize),
       ),
       initialValue: controller != null ? null : initialValue,
       onTap: onTap,
@@ -487,6 +493,62 @@ class CTextFormField extends StatelessWidget {
       enabled: enabled,
       autofocus: autoFocus ?? false,
       maxLines: maxLines,
+      style: boldText == true
+          ? const TextStyle(fontWeight: FontWeight.bold)
+          : labelTextAsHint == true
+              ? null
+              : const TextStyle(fontWeight: FontWeight.bold),
+      textAlign: wrap == true || labelTextAsHint == true
+          ? TextAlign.start
+          : Responsive.isSmallWidth(context)
+              ? TextAlign.end
+              : TextAlign.start,
+    );
+    var requireSign = required == true
+        ? const Text(
+            '*',
+            style: TextStyle(color: Colors.red),
+          )
+        : const SizedBox();
+    return Container(
+      padding:
+          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      decoration: showDivider == true
+          ? const BoxDecoration(border: Border(bottom: BorderSide(width: 1)))
+          : null,
+      child: wrap == true
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: defaultPadding * 2),
+                Row(
+                  children: [
+                    Text(
+                      '$labelText',
+                      style: const TextStyle(fontSize: defaultTextSize),
+                    ),
+                    requireSign,
+                  ],
+                ),
+                textFormField,
+                const SizedBox(height: defaultPadding * 2),
+              ],
+            )
+          : Row(
+              children: [
+                labelTextAsHint == true
+                    ? const SizedBox()
+                    : Text(
+                        '$labelText',
+                        style: const TextStyle(fontSize: defaultTextSize),
+                      ),
+                labelTextAsHint == true ? const SizedBox() : requireSign,
+                labelTextAsHint == true
+                    ? const SizedBox()
+                    : const SizedBox(width: defaultPadding),
+                Expanded(child: textFormField),
+              ],
+            ),
     );
   }
 }
@@ -494,10 +556,10 @@ class CTextFormField extends StatelessWidget {
 class KTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
-  final Widget? label, suffix, suffixIcon;
-  final String? hintText, initialValue;
+  final Widget? label, prefix, prefixIcon, suffix, suffixIcon;
+  final String? labelText, hintText, initialValue;
   final BoxConstraints? suffixIconConstraints;
-  final bool? required, autoFocus, enabled, readOnly;
+  final bool? required, autoFocus, enabled, readOnly, labelTextAsHint;
   final int? maxLines;
   final void Function()? onTap;
   final void Function(String)? onChanged;
@@ -507,6 +569,9 @@ class KTextFormField extends StatelessWidget {
     this.controller,
     this.validator,
     this.label,
+    this.prefix,
+    this.prefixIcon,
+    this.labelText,
     this.hintText,
     this.initialValue,
     this.suffix,
@@ -515,6 +580,7 @@ class KTextFormField extends StatelessWidget {
     this.required,
     this.autoFocus,
     this.readOnly,
+    this.labelTextAsHint,
     this.maxLines = 1,
     this.suffixIconConstraints,
     this.onTap,
@@ -527,7 +593,7 @@ class KTextFormField extends StatelessWidget {
       controller!.text = initialValue!;
     }
 
-    Widget? newLabel = label;
+    Widget? newLabel = label ?? Text('$labelText');
     if (label != null && required == true) {
       newLabel = Row(
         children: [
@@ -555,9 +621,14 @@ class KTextFormField extends StatelessWidget {
       ,
       decoration: InputDecoration(
         label: newLabel,
-        border: defaultBorder,
-        focusedBorder: defaultFocusedBorder,
+        labelText: labelText,
+        border: kBorder,
+        enabledBorder: kBorder,
+        disabledBorder: kDisabledBorder,
+        focusedBorder: kFocusedBorder,
         hintText: hintText,
+        prefix: prefix,
+        prefixIcon: prefixIcon,
         suffix: suffix,
         suffixIcon: suffixIcon,
         suffixIconConstraints: suffixIconConstraints,

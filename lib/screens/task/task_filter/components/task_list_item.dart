@@ -41,9 +41,7 @@ class TaskListItem extends StatelessWidget {
               context: context,
               children: [
                 ResponsiveItem(
-                  parentPercentWidth:
-                      // Responsive.isSmallWidth(context) ? 100 : 50,
-                      100,
+                  percentWidthOfParent: 100,
                   child: KText(
                     '${dataItem['taskTitle']}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
@@ -152,7 +150,7 @@ class TaskListItem extends StatelessWidget {
                   ),
                 ),
                 // ResponsiveItem(
-                //   parentPercentWidth: 100,
+                //   percentWidthOfParent: 100,
                 //   child: Row(
                 //     children: [
                 //       Flexible(

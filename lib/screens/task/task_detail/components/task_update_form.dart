@@ -48,7 +48,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                     context: context,
                     children: [
                       ResponsiveItem(
-                          parentPercentWidth:
+                          percentWidthOfParent:
                               Responsive.isSmallWidth(context) ? 100 : 30,
                           child: KDropdownMenu(
                             labelText: sharedPrefs.translate('Status'),
@@ -60,7 +60,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                             }),
                           )),
                       ResponsiveItem(
-                          parentPercentWidth:
+                          percentWidthOfParent:
                               Responsive.isSmallWidth(context) ? 100 : 70,
                           child: KTextFormField(
                             label: Text(sharedPrefs.translate('Description')),
@@ -69,7 +69,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                             }),
                           )),
                       ResponsiveItem(
-                          parentPercentWidth: 100,
+                          percentWidthOfParent: 100,
                           child: Container(
                             padding:
                                 const EdgeInsets.only(top: defaultPadding * 3),

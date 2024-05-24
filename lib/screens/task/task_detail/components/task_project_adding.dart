@@ -134,7 +134,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                 padding: const EdgeInsets.all(borderDefaultPadding),
                 child: ResponsiveRow(context: context, children: [
                   ResponsiveItem(
-                      parentPercentWidth: 100,
+                      percentWidthOfParent: 100,
                       child: KFutureDropdownMenu(
                         controller: annexController,
                         enableFilter: true,
@@ -191,7 +191,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                   ResponsiveItem(
                       child: KDropdownMenu(
                     controller: districtController,
-                        labelText: sharedPrefs.translate('District'),
+                    labelText: sharedPrefs.translate('District'),
                     hintText: sharedPrefs.translate('Choose one'),
                     dropdownMenuEntries:
                         taskProjectAddingController.districts.isEmpty
@@ -207,7 +207,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                   ResponsiveItem(
                       child: KDropdownMenu(
                     controller: wardController,
-                        labelText: sharedPrefs.translate('Ward'),
+                    labelText: sharedPrefs.translate('Ward'),
                     hintText: sharedPrefs.translate('Choose one'),
                     dropdownMenuEntries:
                         taskProjectAddingController.wards.isEmpty
@@ -224,7 +224,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                         label: Text(sharedPrefs.translate('Address')),
                       )),
                   ResponsiveItem(
-                      parentPercentWidth: 100,
+                      percentWidthOfParent: 100,
                       child: KTextFormField(
                         controller: noteController,
                         label: Text(sharedPrefs.translate('Note')),

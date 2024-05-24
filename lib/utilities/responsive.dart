@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'ui_styles.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey widgetKey = GlobalKey();
@@ -44,7 +43,7 @@ class Responsive extends StatelessWidget {
 class ResponsiveRow extends StatelessWidget {
   final BuildContext context;
   final List<ResponsiveItem> children;
-  final double? basicWidth, verticalSpacing, horizontalSpacing;
+  final double? basicWidth, horizontalSpacing, verticalSpacing;
   final WrapCrossAlignment? crossAxisAlignment;
 
   const ResponsiveRow({
@@ -52,8 +51,8 @@ class ResponsiveRow extends StatelessWidget {
     required this.context,
     required this.children,
     this.basicWidth,
-    this.verticalSpacing,
-    this.horizontalSpacing,
+    this.horizontalSpacing = 0,
+    this.verticalSpacing = 0,
     this.crossAxisAlignment,
   });
 
@@ -61,36 +60,29 @@ class ResponsiveRow extends StatelessWidget {
   Widget build(BuildContext context) {
     var mobileBaseWidth = 180;
     var desktopBaseWidth = 240;
-    var verticalMargin = verticalSpacing ?? defaultPadding;
-    var horizontalMargin = horizontalSpacing ?? defaultPadding * 5;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         var parentWidth = constraints.maxWidth;
-        var columns = parentWidth ~/
-                    (basicWidth ??
-                        (Responsive.isSmallWidth(context)
-                            ? mobileBaseWidth
-                            : desktopBaseWidth)) <
-                1
-            ? 1
-            : parentWidth ~/
-                (basicWidth ??
-                    (Responsive.isSmallWidth(context)
-                        ? mobileBaseWidth
-                        : desktopBaseWidth));
-        var width = parentWidth / columns > parentWidth
-            ? parentWidth
-            : parentWidth / columns;
+        var tempWidth = basicWidth ??
+            (Responsive.isSmallWidth(context)
+                ? mobileBaseWidth
+                : desktopBaseWidth);
+        var columns =
+            parentWidth ~/ tempWidth < 1 ? 1 : parentWidth ~/ tempWidth;
+        var width = parentWidth / columns;
 
         List<Widget> items = [];
         for (var child in children) {
-          var elementWidth = child.parentPercentWidth != null
-              ? parentWidth * (child.parentPercentWidth ?? 100) / 100
+          var elementWidth = child.percentWidthOfParent != null
+              ? parentWidth * (child.percentWidthOfParent ?? 100) / 100
               : width * (child.widthRatio ?? 1);
-          var item = Container(
-            padding: EdgeInsets.fromLTRB(
-                0, verticalMargin / 2, horizontalMargin, verticalMargin / 2),
-            width: elementWidth,
+          if (elementWidth < tempWidth && Responsive.isSmallWidth(context)) {
+            elementWidth = parentWidth;
+          }
+          var item = SizedBox(
+            width: columns == 1 || parentWidth / elementWidth < 2
+                ? parentWidth
+                : elementWidth - horizontalSpacing!,
             child: child.child,
           );
           items.add(item);
@@ -101,6 +93,10 @@ class ResponsiveRow extends StatelessWidget {
             children: [
               Expanded(
                 child: Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  spacing: horizontalSpacing!,
+                  runAlignment: WrapAlignment.start,
+                  runSpacing: verticalSpacing!,
                   crossAxisAlignment:
                       crossAxisAlignment ?? WrapCrossAlignment.start,
                   children: items,
@@ -116,7 +112,8 @@ class ResponsiveRow extends StatelessWidget {
 
 class ResponsiveItem extends StatelessWidget {
   final Widget child;
-  final double? widthRatio, parentPercentWidth;
+  final int? widthRatio;
+  final double? percentWidthOfParent;
   final Function(bool)? onHover;
   final VoidCallback? onTap;
   final VoidCallback? onDoubleTap;
@@ -125,7 +122,7 @@ class ResponsiveItem extends StatelessWidget {
     super.key,
     required this.child,
     this.widthRatio,
-    this.parentPercentWidth,
+    this.percentWidthOfParent,
     this.onTap,
     this.onDoubleTap,
     this.onHover,

@@ -22,7 +22,7 @@ void main() async {
   if (Platform.isAndroid || Platform.isIOS) {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    await FirebaseApi().initialNotifications();
+    await FirebaseApi().initialFCM();
   }
   runApp(const MyApp());
 }

@@ -53,10 +53,13 @@ class MaterialColorGenerator {
 
 // const defaultBorder = null;
 // const defaultFocusedBorder = null;
-const defaultBorder = UnderlineInputBorder(
+const kBorder = UnderlineInputBorder(
     borderSide: BorderSide(width: 1, color: kPrimaryColor));
 
-const defaultFocusedBorder = UnderlineInputBorder(
+const kFocusedBorder = UnderlineInputBorder(
+    borderSide: BorderSide(width: 1, color: kPrimaryColor));
+
+const kDisabledBorder = UnderlineInputBorder(
     borderSide: BorderSide(width: 1, color: kPrimaryColor));
 
 final lightTheme = ThemeData(
@@ -70,20 +73,23 @@ final lightTheme = ThemeData(
     errorColor: kErrorColor,
   ).copyWith(secondary: kSecondaryColor),
   fontFamily: 'NotoSans',
-  // textTheme: const TextTheme(
-  //   displayLarge: TextStyle(fontSize: largeTextSize),
-  //   displayMedium: TextStyle(fontSize: defaultTextSize),
-  //   displaySmall: TextStyle(fontSize: smallTextSize),
-  //   labelLarge: TextStyle(fontSize: largeTextSize),
-  //   labelMedium: TextStyle(fontSize: defaultTextSize),
-  //   labelSmall: TextStyle(fontSize: smallTextSize),
-  //   titleLarge: TextStyle(fontSize: largeTextSize),
-  //   titleMedium: TextStyle(fontSize: defaultTextSize),
-  //   titleSmall: TextStyle(fontSize: smallTextSize),
-  //   bodyLarge: TextStyle(fontSize: largeTextSize),
-  //   bodyMedium: TextStyle(fontSize: defaultTextSize),
-  //   bodySmall: TextStyle(fontSize: smallTextSize),
-  // ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(fontSize: largeTextSize),
+    displayMedium: TextStyle(fontSize: defaultTextSize),
+    displaySmall: TextStyle(fontSize: smallTextSize),
+    titleLarge: TextStyle(fontSize: largeTextSize * 1.5),
+    titleMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    titleSmall: TextStyle(fontSize: smallTextSize * 1.5),
+    bodyLarge: TextStyle(fontSize: largeTextSize),
+    bodyMedium: TextStyle(fontSize: defaultTextSize),
+    bodySmall: TextStyle(fontSize: smallTextSize),
+    labelLarge: TextStyle(fontSize: largeTextSize),
+    labelMedium: TextStyle(fontSize: defaultTextSize),
+    labelSmall: TextStyle(fontSize: smallTextSize),
+    headlineLarge: TextStyle(fontSize: largeTextSize * 1.5),
+    headlineMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    headlineSmall: TextStyle(fontSize: smallTextSize * 1.5),
+  ),
 );
 
 final darkTheme = ThemeData(
@@ -98,23 +104,23 @@ final darkTheme = ThemeData(
     errorColor: kDarkErrorColor,
   ).copyWith(secondary: kDarkSecondaryColor),
   fontFamily: 'NotoSans',
-  // textTheme: const TextTheme(
-  //   displayLarge: TextStyle(fontSize: largeTextSize),
-  //   displayMedium: TextStyle(fontSize: defaultTextSize),
-  //   displaySmall: TextStyle(fontSize: smallTextSize),
-  //   headlineLarge: TextStyle(fontSize: largeTextSize),
-  //   headlineMedium: TextStyle(fontSize: defaultTextSize),
-  //   headlineSmall: TextStyle(fontSize: smallTextSize),
-  //   labelLarge: TextStyle(fontSize: largeTextSize),
-  //   labelMedium: TextStyle(fontSize: defaultTextSize),
-  //   labelSmall: TextStyle(fontSize: smallTextSize),
-  //   titleLarge: TextStyle(fontSize: largeTextSize),
-  //   titleMedium: TextStyle(fontSize: defaultTextSize),
-  //   titleSmall: TextStyle(fontSize: smallTextSize),
-  //   bodyLarge: TextStyle(fontSize: largeTextSize),
-  //   bodyMedium: TextStyle(fontSize: defaultTextSize),
-  //   bodySmall: TextStyle(fontSize: smallTextSize),
-  // ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(fontSize: largeTextSize),
+    displayMedium: TextStyle(fontSize: defaultTextSize),
+    displaySmall: TextStyle(fontSize: smallTextSize),
+    titleLarge: TextStyle(fontSize: largeTextSize * 1.5),
+    titleMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    titleSmall: TextStyle(fontSize: smallTextSize * 1.5),
+    bodyLarge: TextStyle(fontSize: largeTextSize),
+    bodyMedium: TextStyle(fontSize: defaultTextSize),
+    bodySmall: TextStyle(fontSize: smallTextSize),
+    labelLarge: TextStyle(fontSize: largeTextSize),
+    labelMedium: TextStyle(fontSize: defaultTextSize),
+    labelSmall: TextStyle(fontSize: smallTextSize),
+    headlineLarge: TextStyle(fontSize: largeTextSize * 1.5),
+    headlineMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    headlineSmall: TextStyle(fontSize: smallTextSize * 1.5),
+  ),
 );
 
 // TextStyle kLoginTitleStyle(Size size) => GoogleFonts.ubuntu(

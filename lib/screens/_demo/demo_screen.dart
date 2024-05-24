@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:se_solution/utilities/custom_widgets.dart';
-import '../../utilities/app_service.dart';
+import 'package:se_solution/utilities/responsive.dart';
 import '../common_components/main_menu.dart';
 
 class DemoScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _DemoScreenDemo extends State<DemoScreen> {
     return Scaffold(
         drawer: const MainMenu(),
         appBar: AppBar(
-          title: const Text("Demo 2"),
+          title: const Text("Demo screen"),
           backgroundColor: Colors.redAccent, //background color of app bar
         ),
         body: Padding(
@@ -51,18 +51,58 @@ class _DemoScreenDemo extends State<DemoScreen> {
               //
               // Begin here
               // ====================================================================
-              KElevatedButton(
-                child: const Text("Check"),
-                onPressed: () {
-                  kShowToast(
-                    style: 'success',
-                    content: 'Test content',
-                    title: 'Test',
-                  );
-                },
+              ResponsiveRow(
+                context: context,
+                horizontalSpacing: 20,
+                basicWidth: 360,
+                children: [
+                  ResponsiveItem(
+                    percentWidthOfParent: 100 / 3,
+                    child: CTextFormField(
+                      labelText: "Label as hint",
+                      labelTextAsHint: true,
+                      boldText: true,
+                      required: true,
+                      // labelAsHint: true,
+                    ),
+                  ),
+                  ResponsiveItem(
+                    percentWidthOfParent: 100 / 3,
+                    child: CTextFormField(
+                      labelText: "Label as hint",
+                      labelTextAsHint: true,
+                      // labelAsHint: true,
+                    ),
+                  ),
+                  ResponsiveItem(
+                    percentWidthOfParent: 100 / 3,
+                    child: CTextFormField(
+                      labelText: "Label here",
+                      required: true,
+                      // labelAsHint: true,
+                    ),
+                  ),
+                  ResponsiveItem(
+                    percentWidthOfParent: 100,
+                    child: CTextFormField(
+                      labelText: "Label here",
+                      wrap: true,
+                      maxLines: 3,
+                      // labelAsHint: true,
+                    ),
+                  ),
+                ],
+              ),
+
+              ///
+              CTextFormField(
+                labelText: "Label here",
+                // labelAsHint: true,
               ),
               CTextFormField(
                 labelText: "Label here",
+                wrap: true,
+                maxLines: 3,
                 // labelAsHint: true,
               ),
               Container(
