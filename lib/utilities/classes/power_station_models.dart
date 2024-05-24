@@ -1,0 +1,68 @@
+class StationEnergyDataCurrent {
+  String? apiSystem,
+      stationId,
+      name,
+      contactPhone,
+      country,
+      city,
+      address,
+      latitude,
+      longitude,
+      imageUrl,
+      locale,
+      operator,
+      installer,
+      status,
+      type;
+  DateTime? createdDate;
+  double? installedCapacity, totalEnergy, todayEnergy, currentPower, peakPower;
+
+  StationEnergyDataCurrent({
+    this.apiSystem,
+    this.stationId,
+    this.name,
+    this.contactPhone,
+    this.country,
+    this.city,
+    this.address,
+    this.latitude,
+    this.longitude,
+    this.imageUrl,
+    this.locale,
+    this.operator,
+    this.installer,
+    this.status,
+    this.type,
+    this.createdDate,
+    this.installedCapacity,
+    this.totalEnergy,
+    this.todayEnergy,
+    this.currentPower,
+    this.peakPower,
+  });
+
+  factory StationEnergyDataCurrent.fromJson(Map<String, dynamic> json) =>
+      StationEnergyDataCurrent(
+        apiSystem: json['apiSystem'],
+        stationId: json['stationId'],
+        name: json['name'],
+        contactPhone: json['contactPhone'],
+        country: json['country'],
+        city: json['city'],
+        address: json['address'],
+        latitude: json['latitude'],
+        longitude: json['longitude'],
+        imageUrl: json['imageUrl'],
+        locale: json['locale'],
+        operator: json['operator'],
+        installer: json['installer'],
+        status: json['status'],
+        type: json['type'],
+        createdDate: DateTime.parse(json['createdDate']),
+        installedCapacity: json['installedCapacity'],
+        totalEnergy: json['totalEnergy'],
+        todayEnergy: json['todayEnergy'],
+        currentPower: json['currentPower'],
+        peakPower: json['peakPower'],
+      );
+}
