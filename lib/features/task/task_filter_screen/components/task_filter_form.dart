@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
-import 'package:se_solution/utilities/responsive.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
+
+import '../../../../utilities/custom_widgets.dart';
+import '../../../../utilities/responsive.dart';
+import '../../../../utilities/shared_preferences.dart';
 import '../bloc/task_filter_bloc.dart';
 import '../bloc/task_filter_events.dart';
 import '../services/task_fetch_data_service.dart';
