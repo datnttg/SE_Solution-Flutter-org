@@ -11,21 +11,22 @@ class Responsive extends StatelessWidget {
   const Responsive(
       {super.key, required this.mobile, this.tablet, this.desktop});
 
+  /// small: <850, large: >= 1100, medium: else
   static bool isSmallWidth(BuildContext context) =>
       MediaQuery.of(context).size.width < 850;
 
-  static bool isMediumWidth(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 850 &&
-      MediaQuery.of(context).size.width < 1100;
-
-  static bool isLargeWidth(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 100;
+  // static bool isMediumWidth(BuildContext context) =>
+  //     MediaQuery.of(context).size.width >= 850 &&
+  //     MediaQuery.of(context).size.width < 1100;
+  //
+  // static bool isLargeWidth(BuildContext context) =>
+  //     MediaQuery.of(context).size.width >= 1100;
 
   static bool isPortrait(BuildContext context) =>
       MediaQuery.of(context).size.width < MediaQuery.of(context).size.height;
 
-  static bool isLandscape(BuildContext context) =>
-      MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
+  // static bool isLandscape(BuildContext context) =>
+  //     MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
 
   @override
   Widget build(BuildContext context) {
@@ -50,39 +51,37 @@ class ResponsiveRow extends StatelessWidget {
     super.key,
     required this.context,
     required this.children,
-    this.basicWidth,
+    this.basicWidth = 180,
     this.horizontalSpacing = 0,
     this.verticalSpacing = 0,
-    this.crossAxisAlignment,
+    this.crossAxisAlignment = WrapCrossAlignment.start,
   });
 
   @override
   Widget build(BuildContext context) {
-    var mobileBaseWidth = 180;
-    var desktopBaseWidth = 240;
+    // var mobileBaseWidth = 180;
+    // var desktopBaseWidth = 240;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         var parentWidth = constraints.maxWidth;
-        var tempWidth = basicWidth ??
-            (Responsive.isSmallWidth(context)
-                ? mobileBaseWidth
-                : desktopBaseWidth);
+        // var tempWidth = basicWidth ??
+        //     (Responsive.isSmallWidth(context)
+        //         ? mobileBaseWidth
+        //         : desktopBaseWidth);
         var columns =
-            parentWidth ~/ tempWidth < 1 ? 1 : parentWidth ~/ tempWidth;
+            parentWidth ~/ basicWidth! < 1 ? 1 : parentWidth ~/ basicWidth!;
         var width = parentWidth / columns;
 
         List<Widget> items = [];
         for (var child in children) {
-          var elementWidth = child.percentWidthOfParent != null
-              ? parentWidth * (child.percentWidthOfParent ?? 100) / 100
-              : width * (child.widthRatio ?? 1);
-          if (elementWidth < tempWidth && Responsive.isSmallWidth(context)) {
-            elementWidth = parentWidth;
-          }
+          var elementWidth = child.percentWidthOnParent != null
+              ? parentWidth * (child.percentWidthOnParent ?? 100) / 100
+              : width * (child.widthRatio!);
           var item = SizedBox(
-            width: columns == 1 || parentWidth / elementWidth < 2
+            width: columns == 1 || parentWidth ~/ elementWidth < 1
                 ? parentWidth
-                : elementWidth - horizontalSpacing!,
+                : elementWidth -
+                    (parentWidth ~/ elementWidth - 1) * horizontalSpacing!,
             child: child.child,
           );
           items.add(item);
@@ -93,12 +92,11 @@ class ResponsiveRow extends StatelessWidget {
             children: [
               Expanded(
                 child: Wrap(
-                  alignment: WrapAlignment.spaceBetween,
+                  alignment: WrapAlignment.start,
                   spacing: horizontalSpacing!,
                   runAlignment: WrapAlignment.start,
                   runSpacing: verticalSpacing!,
-                  crossAxisAlignment:
-                      crossAxisAlignment ?? WrapCrossAlignment.start,
+                  crossAxisAlignment: crossAxisAlignment!,
                   children: items,
                 ),
               ),
@@ -113,7 +111,7 @@ class ResponsiveRow extends StatelessWidget {
 class ResponsiveItem extends StatelessWidget {
   final Widget child;
   final int? widthRatio;
-  final double? percentWidthOfParent;
+  final double? percentWidthOnParent;
   final Function(bool)? onHover;
   final VoidCallback? onTap;
   final VoidCallback? onDoubleTap;
@@ -121,8 +119,8 @@ class ResponsiveItem extends StatelessWidget {
   const ResponsiveItem({
     super.key,
     required this.child,
-    this.widthRatio,
-    this.percentWidthOfParent,
+    this.widthRatio = 1,
+    this.percentWidthOnParent,
     this.onTap,
     this.onDoubleTap,
     this.onHover,

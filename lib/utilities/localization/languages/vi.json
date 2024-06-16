@@ -43,6 +43,7 @@
   "Task management": "Quản lý công việc",
   "Task type": "Loại công việc",
   "Assign to": "Người phụ trách",
+  "Executor": "Phụ trách",
   "Assigned to": "Người phụ trách",
   "Assigned date": "Ngày giao",
   "Filter": "Lọc",
@@ -50,6 +51,8 @@
   "Back": "Trở lại",
   "Save": "Lưu",
   "Choose one": "Chọn một",
+  "Choose many": "Chọn nhiều",
+  "Search": "Tìm kiếm",
   "Loading...": "Đang tải...",
   "Empty list": "Danh sách rỗng",
   "Create task": "Tạo việc",
@@ -107,6 +110,5 @@
   "Others": "Khác",
   "Type": "Loại",
   "Creator": "Người tạo",
-  "Confirm": "Xác nhận",
-  "Executor": "Người phụ trách"
+  "Confirm": "Xác nhận"
 }

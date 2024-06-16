@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 
-const defaultTextSize = 12.0;
-const smallTextSize = defaultTextSize * 0.9;
-const mediumTextSize = defaultTextSize * 1.1;
-const largeTextSize = defaultTextSize * 1.3;
+const mediumTextSize = 16.0;
+const smallTextSize = mediumTextSize * 0.9;
+const largeTextSize = mediumTextSize * 1.1;
 
 const defaultPadding = 5.0;
 const borderDefaultPadding = 20.0;
 const defaultRadius = 10.0;
+
+const cAppBarColor = Color(0xFFBFD8FB);
+const cButtonBgColor = Colors.white;
+const cButtonBgHoverColor = Colors.white70;
+const cButtonTextColor = Colors.black;
+const cButtonTextHoverColor = Color(0xFFBFD8FB);
+const cButtonBorderColor = Color(0xFF8FB4E7);
+const cButtonBorderHoverColor = Color(0xFF8FB4E7);
+
+enum ButtonType {
+  normal,
+  success,
+  danger,
+  warning,
+  discard,
+}
 
 // const primaryColor = Color(0xFF00AF80);
 const kPrimaryColor = Colors.blue;
@@ -23,6 +38,7 @@ const kButtonPressedBgColor = Color(0xFFC65326);
 const kCardColor = Colors.white;
 const kTextColor = Colors.black;
 const kErrorColor = Color(0xFFC70D00);
+const kBorderColor = Colors.black12;
 
 // const darkPrimaryColor = Color(0xFF00AF80);
 const kDarkPrimaryColor = Color(0xFF3D93DA);
@@ -64,6 +80,10 @@ const kDisabledBorder = UnderlineInputBorder(
 
 final lightTheme = ThemeData(
   useMaterial3: true,
+  appBarTheme: const AppBarTheme(
+    color: cAppBarColor,
+    elevation: 0,
+  ),
   scaffoldBackgroundColor: kScaffoldBgColor,
   colorScheme: ColorScheme.fromSwatch(
     primarySwatch: MaterialColorGenerator.from(kPrimaryColor),
@@ -75,19 +95,19 @@ final lightTheme = ThemeData(
   fontFamily: 'NotoSans',
   textTheme: const TextTheme(
     displayLarge: TextStyle(fontSize: largeTextSize),
-    displayMedium: TextStyle(fontSize: defaultTextSize),
+    displayMedium: TextStyle(fontSize: mediumTextSize),
     displaySmall: TextStyle(fontSize: smallTextSize),
-    titleLarge: TextStyle(fontSize: largeTextSize * 1.5),
-    titleMedium: TextStyle(fontSize: defaultTextSize * 1.5),
-    titleSmall: TextStyle(fontSize: smallTextSize * 1.5),
-    bodyLarge: TextStyle(fontSize: largeTextSize),
-    bodyMedium: TextStyle(fontSize: defaultTextSize),
+    titleLarge: TextStyle(fontSize: largeTextSize),
+    titleMedium: TextStyle(fontSize: mediumTextSize),
+    titleSmall: TextStyle(fontSize: smallTextSize),
+    bodyLarge: TextStyle(fontSize: mediumTextSize),
+    bodyMedium: TextStyle(fontSize: mediumTextSize),
     bodySmall: TextStyle(fontSize: smallTextSize),
-    labelLarge: TextStyle(fontSize: largeTextSize),
-    labelMedium: TextStyle(fontSize: defaultTextSize),
+    labelLarge: TextStyle(fontSize: mediumTextSize),
+    labelMedium: TextStyle(fontSize: mediumTextSize),
     labelSmall: TextStyle(fontSize: smallTextSize),
     headlineLarge: TextStyle(fontSize: largeTextSize * 1.5),
-    headlineMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    headlineMedium: TextStyle(fontSize: mediumTextSize * 1.5),
     headlineSmall: TextStyle(fontSize: smallTextSize * 1.5),
   ),
 );
@@ -106,19 +126,19 @@ final darkTheme = ThemeData(
   fontFamily: 'NotoSans',
   textTheme: const TextTheme(
     displayLarge: TextStyle(fontSize: largeTextSize),
-    displayMedium: TextStyle(fontSize: defaultTextSize),
+    displayMedium: TextStyle(fontSize: mediumTextSize),
     displaySmall: TextStyle(fontSize: smallTextSize),
-    titleLarge: TextStyle(fontSize: largeTextSize * 1.5),
-    titleMedium: TextStyle(fontSize: defaultTextSize * 1.5),
-    titleSmall: TextStyle(fontSize: smallTextSize * 1.5),
-    bodyLarge: TextStyle(fontSize: largeTextSize),
-    bodyMedium: TextStyle(fontSize: defaultTextSize),
+    titleLarge: TextStyle(fontSize: largeTextSize),
+    titleMedium: TextStyle(fontSize: mediumTextSize),
+    titleSmall: TextStyle(fontSize: smallTextSize),
+    bodyLarge: TextStyle(fontSize: mediumTextSize),
+    bodyMedium: TextStyle(fontSize: mediumTextSize),
     bodySmall: TextStyle(fontSize: smallTextSize),
-    labelLarge: TextStyle(fontSize: largeTextSize),
-    labelMedium: TextStyle(fontSize: defaultTextSize),
+    labelLarge: TextStyle(fontSize: mediumTextSize),
+    labelMedium: TextStyle(fontSize: mediumTextSize),
     labelSmall: TextStyle(fontSize: smallTextSize),
     headlineLarge: TextStyle(fontSize: largeTextSize * 1.5),
-    headlineMedium: TextStyle(fontSize: defaultTextSize * 1.5),
+    headlineMedium: TextStyle(fontSize: mediumTextSize * 1.5),
     headlineSmall: TextStyle(fontSize: smallTextSize * 1.5),
   ),
 );

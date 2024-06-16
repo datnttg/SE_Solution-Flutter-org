@@ -1,6 +1,7 @@
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
-import 'responsive.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'classes/custom_widget_models.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
 
@@ -22,7 +23,7 @@ class KScaffold extends StatelessWidget {
       appBar: appBar == null
           ? null
           : PreferredSize(
-              preferredSize: const Size.fromHeight(defaultTextSize * 3.5),
+              preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
               child: appBar!,
             ),
       drawer: drawer,
@@ -39,6 +40,160 @@ class KScaffold extends StatelessWidget {
 }
 
 /// CUSTOM DROPDOWN MENU
+class CDropdownMenu extends StatelessWidget {
+  final String? labelText;
+  final List<CDropdownMenuEntry>? dropdownMenuEntries;
+  final List<CDropdownMenuEntry>? selectedMenuEntries;
+  final List<CDropdownMenuEntry>? disabledMenuEntries;
+  final bool? multiSelect,
+      wrap,
+      enabled,
+      enableSearch,
+      required,
+      showDivider,
+      showClearIcon,
+      labelTextAsHint;
+  final MultiSelectController<dynamic>? controller;
+  final String? hintText;
+  final double? width, menuHeight;
+  final Function(List<CDropdownMenuEntry<dynamic>>)? onSelected;
+
+  const CDropdownMenu({
+    super.key,
+    this.dropdownMenuEntries,
+    this.selectedMenuEntries,
+    this.disabledMenuEntries,
+    this.labelText,
+    this.labelTextAsHint = false,
+    this.controller,
+    this.onSelected,
+    this.hintText,
+    this.multiSelect = false,
+    this.wrap,
+    this.enabled = true,
+    this.enableSearch = false,
+    this.required = false,
+    this.showDivider = true,
+    this.showClearIcon = false,
+    this.width,
+    this.menuHeight = 200,
+  });
+
+  List<ValueItem> convertToValueItem(List<CDropdownMenuEntry>? values) {
+    if (values?.isEmpty ?? true) return [];
+    return values!
+        .map<ValueItem>(
+            (e) => ValueItem(label: e.labelText ?? '', value: e.value))
+        .toList();
+  }
+
+  void newOnSelected(List<ValueItem<dynamic>> entries) {
+    final List<CDropdownMenuEntry<dynamic>> valueItems = entries
+        .map((e) =>
+            CDropdownMenuEntry<dynamic>(value: e.value, labelText: e.label))
+        .toList();
+    onSelected?.call(valueItems);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var dropdownEntries = convertToValueItem(dropdownMenuEntries);
+    var selectedEntries = convertToValueItem(selectedMenuEntries);
+    var disabledEntries = convertToValueItem(disabledMenuEntries);
+
+    var requireSign = required == true
+        ? const Text(
+            '*',
+            style: TextStyle(color: Colors.red),
+          )
+        : const SizedBox();
+    var newHintText = hintText;
+    if (newHintText == null && multiSelect == false) {
+      newHintText = sharedPrefs.translate('Choose one');
+    } else if (newHintText == null && multiSelect == true) {
+      newHintText = sharedPrefs.translate('Choose many');
+    }
+
+    var dropdownMenu = MultiSelectDropDown(
+      dropdownMargin: 1,
+      clearIcon: showClearIcon == true
+          ? const Icon(Icons.close_outlined, size: 20)
+          : null,
+      options: dropdownEntries,
+      selectedOptions: selectedEntries,
+      disabledOptions: disabledEntries,
+      dropdownHeight: menuHeight!,
+      chipConfig: const ChipConfig(
+          backgroundColor: Colors.white,
+          labelStyle: TextStyle(color: Colors.black87),
+          deleteIconColor: Colors.black54),
+      onOptionSelected: newOnSelected,
+      searchEnabled: enableSearch!,
+      hint: newHintText ?? sharedPrefs.translate('Select'),
+      searchLabel: sharedPrefs.translate('Search'),
+      selectionType:
+          multiSelect == true ? SelectionType.multi : SelectionType.single,
+      inputDecoration: const BoxDecoration(),
+      optionTextStyle: const TextStyle(fontSize: mediumTextSize),
+      singleSelectItemStyle: const TextStyle(fontSize: mediumTextSize),
+      hintStyle: const TextStyle(fontSize: mediumTextSize),
+    );
+
+    return Container(
+      padding:
+          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      decoration: showDivider == true
+          ? const BoxDecoration(
+              border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
+          : null,
+      child: wrap == true
+          ? Column(children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  labelTextAsHint == true
+                      ? const SizedBox()
+                      : Text(
+                          '$labelText',
+                          style: TextStyle(
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .fontSize),
+                        ),
+                  labelTextAsHint == true ? const SizedBox() : requireSign,
+                  labelTextAsHint == true
+                      ? const SizedBox()
+                      : const SizedBox(width: defaultPadding),
+                ],
+              ),
+              dropdownMenu,
+            ])
+          : Row(
+              children: [
+                labelTextAsHint == true
+                    ? const SizedBox()
+                    : Text(
+                        '$labelText',
+                        style: TextStyle(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize),
+                      ),
+                labelTextAsHint == true ? const SizedBox() : requireSign,
+                labelTextAsHint == true
+                    ? const SizedBox()
+                    : const SizedBox(width: defaultPadding),
+                Expanded(
+                  child: dropdownMenu,
+                )
+              ],
+            ),
+    );
+  }
+}
+
 class KDropdownMenu extends StatelessWidget {
   final Widget? label;
   final String? labelText;
@@ -119,6 +274,130 @@ class KDropdownMenu extends StatelessWidget {
 }
 
 /// CUSTOM DROPDOWN SEARCH
+// class CDropdownSearch extends StatelessWidget {
+//   final String? labelText;
+//   final List<DropdownMenuEntry> dropdownMenuEntries;
+//   final dynamic initialSelection;
+//   final bool? enabled, required, autoFocus, addNew, showDivider;
+//   final DropdownEditingController<Map<String, dynamic>>? controller;
+//   final String? hintText;
+//   final double? width, menuHeight;
+//   final Function(dynamic)? onSelected;
+//
+//   const CDropdownSearch({
+//     super.key,
+//     required this.dropdownMenuEntries,
+//     this.labelText,
+//     this.initialSelection,
+//     this.controller,
+//     this.onSelected,
+//     this.hintText,
+//     this.autoFocus = false,
+//     this.enabled = true,
+//     this.required = false,
+//     this.showDivider = true,
+//     this.addNew = false,
+//     this.width,
+//     this.menuHeight = 280,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     if (enabled == false) {
+//       return CDropdownMenu(
+//         labelText: labelText,
+//         dropdownMenuEntries: dropdownMenuEntries,
+//         initialSelection: initialSelection,
+//         hintText: hintText,
+//         enabled: enabled,
+//       );
+//     } else {
+//       final items = dropdownMenuEntries
+//           .map((e) => {"value": e.value, "label": e.label})
+//           .toList();
+//
+//       if (initialSelection != null && initialSelection != '') {
+//         controller?.value =
+//             items.firstWhere((element) => element['value'] == initialSelection);
+//       } else {
+//         controller?.value = items[0];
+//       }
+//
+//       return Container(
+//         padding:
+//             const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+//         decoration: showDivider == true
+//             ? const BoxDecoration(
+//                 border:
+//                     Border(bottom: BorderSide(width: 1, color: kBorderColor)))
+//             : null,
+//         child: Row(
+//           children: [
+//             Text('$labelText'),
+//             required == true
+//                 ? const Text(
+//                     '*',
+//                     style: TextStyle(color: Colors.red),
+//                   )
+//                 : const SizedBox(),
+//             Container(width: defaultPadding),
+//             Expanded(
+//               child: DropdownFormField<Map<String, dynamic>>(
+//                 controller: controller,
+//                 emptyText: sharedPrefs.translate('No matching found!'),
+//                 emptyActionText:
+//                     addNew == true ? sharedPrefs.translate('Create new') : '',
+//                 // onEmptyActionPressed: (String str) async {},
+//                 // dropdownItemSeparator: const Divider(
+//                 //   color: Colors.grey,
+//                 //   height: 1,
+//                 // ),
+//                 autoFocus: autoFocus!,
+//                 decoration: const InputDecoration(
+//                   border: InputBorder.none,
+//                   enabledBorder: InputBorder.none,
+//                   disabledBorder: InputBorder.none,
+//                   focusedBorder: InputBorder.none,
+//                 ),
+//                 dropdownHeight: menuHeight,
+//                 onSaved: (dynamic str) {},
+//                 onChanged: (dynamic str) {
+//                   onSelected?.call(str['value']);
+//                 },
+//                 validator: (dynamic str) {
+//                   return null;
+//                 },
+//                 displayItemFn: (dynamic item) => Text(
+//                   (item ?? {})['label'] ?? '',
+//                   style: const TextStyle(fontSize: mediumTextSize * 1.3),
+//                 ),
+//                 findFn: (dynamic str) async => items,
+//                 selectedFn: (dynamic item1, dynamic item2) {
+//                   if (item1 != null && item2 != null) {
+//                     return item1['value'] == item2['value'];
+//                   }
+//                   return false;
+//                 },
+//                 filterFn: (dynamic item, str) =>
+//                     item['value'].toLowerCase().indexOf(str.toLowerCase()) >= 0,
+//                 dropdownItemFn: (dynamic item, int position, bool focused,
+//                     bool selected, Function() onTap) {
+//                   return ListTile(
+//                     title: Text(item['label']),
+//                     tileColor: focused ? Colors.blue.shade200 : kBgColorRow1,
+//                     onTap: onTap,
+//                   );
+//                 },
+//               ),
+//             ),
+//             const Icon(Icons.arrow_drop_down_sharp),
+//           ],
+//         ),
+//       );
+//     }
+//   }
+// }
+
 class KDropdownSearch extends StatelessWidget {
   final Widget? label;
   final String? labelText;
@@ -180,24 +459,6 @@ class KDropdownSearch extends StatelessWidget {
     }
 
     if (enabled == false) {
-      /// ORIGINAL DECLARATION
-      // return LayoutBuilder(
-      //     builder: (BuildContext context, BoxConstraints constraints) {
-      //   return DropdownMenu(
-      //     width: constraints.maxWidth,
-      //     label: newLabel,
-      //     controller: controller,
-      //     enabled: enabled!,
-      //     enableSearch: false,
-      //     enableFilter: false,
-      //     hintText: hintText,
-      //     dropdownMenuEntries: dropdownMenuEntries,
-      //     initialSelection: initialSelection,
-      //     onSelected: onSelected,
-      //     menuHeight: menuHeight,
-      //     inputDecorationTheme: const InputDecorationTheme(),
-      //   );
-      // });
       return KDropdownMenu(
         label: newLabel,
         dropdownMenuEntries: dropdownMenuEntries,
@@ -243,7 +504,7 @@ class KDropdownSearch extends StatelessWidget {
         },
         displayItemFn: (dynamic item) => Text(
           (item ?? {})['label'] ?? '',
-          style: const TextStyle(fontSize: defaultTextSize * 1.3),
+          style: const TextStyle(fontSize: mediumTextSize * 1.3),
         ),
         findFn: (dynamic str) async => items,
         selectedFn: (dynamic item1, dynamic item2) {
@@ -268,6 +529,28 @@ class KDropdownSearch extends StatelessWidget {
 }
 
 /// CUSTOM LOADING DROPDOWN MENU
+class COnLoadingDropdownMenu extends StatelessWidget {
+  final String? labelText;
+  final bool? required;
+
+  const COnLoadingDropdownMenu({super.key, this.labelText, this.required});
+
+  @override
+  Widget build(BuildContext context) {
+    return CTextFormField(
+      labelText: labelText,
+      hintText: sharedPrefs.translate('Loading...'),
+      readOnly: true,
+      required: required,
+      suffix: const CircularProgressIndicator(),
+      suffixIconConstraints: const BoxConstraints(
+        maxHeight: mediumTextSize * 1.5,
+        maxWidth: mediumTextSize * 1.5,
+      ),
+    );
+  }
+}
+
 class KOnLoadingDropdownMenu extends StatelessWidget {
   final Widget? label;
   final bool? required;
@@ -297,13 +580,90 @@ class KOnLoadingDropdownMenu extends StatelessWidget {
         readOnly: true,
         suffixIcon: const CircularProgressIndicator(),
         suffixIconConstraints: const BoxConstraints(
-          maxHeight: defaultTextSize * 1.5,
-          maxWidth: defaultTextSize * 1.5,
+          maxHeight: mediumTextSize * 1.5,
+          maxWidth: mediumTextSize * 1.5,
         ));
   }
 }
 
 /// CUSTOM FUTURE DROPDOWN MENU
+class CFutureDropdownMenu extends StatelessWidget {
+  final String? labelText;
+  final Future<List<CDropdownMenuEntry>> dropdownMenuEntries;
+  final List<CDropdownMenuEntry>? selectedMenuEntries;
+  final List<CDropdownMenuEntry>? disabledMenuEntries;
+  final bool? enabled, enableSearch, enableFilter, required, showDivider;
+  final MultiSelectController<dynamic>? controller;
+  final String? hintText;
+  final String? Function(String?)? validator;
+  final Function(dynamic)? onSelected;
+
+  const CFutureDropdownMenu(
+      {super.key,
+      required this.dropdownMenuEntries,
+      this.selectedMenuEntries,
+      this.disabledMenuEntries,
+      this.labelText,
+      this.controller,
+      this.onSelected,
+      this.hintText,
+      this.enableSearch = false,
+      this.enableFilter = true,
+      this.enabled = true,
+      this.required = false,
+      this.showDivider = true,
+      this.validator});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: dropdownMenuEntries,
+      builder: (context, snapshot) {
+        Widget child = Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return COnLoadingDropdownMenu(
+            required: required,
+            labelText: labelText,
+          );
+        }
+        if (snapshot.hasData) {
+          // child = LayoutBuilder(
+          //     builder: (BuildContext context, BoxConstraints constraints) {
+          //       var parentWidth = constraints.maxWidth;
+          //       return DropdownMenu(
+          //         width: parentWidth,
+          //         controller: controller,
+          //         enabled: enabled ?? true,
+          //         enableSearch: enableSearch ?? true,
+          //         enableFilter: enableFilter ?? false,
+          //         hintText: hintText,
+          //         dropdownMenuEntries: snapshot.data != null ? snapshot.data! : [],
+          //         initialSelection: initialSelection,
+          //         onSelected: onSelected,
+          //         menuHeight: 400,
+          //         inputDecorationTheme: const InputDecorationTheme(),
+          //       );
+          //     });
+
+          child = CDropdownMenu(
+            dropdownMenuEntries: snapshot.data ?? [],
+            selectedMenuEntries: selectedMenuEntries ?? [],
+            disabledMenuEntries: disabledMenuEntries ?? [],
+            controller: controller,
+            enabled: enabled ?? true,
+            enableSearch: enableSearch ?? true,
+            hintText: hintText,
+            onSelected: onSelected,
+          );
+        }
+        return Container(
+          child: child,
+        );
+      },
+    );
+  }
+}
+
 class KFutureDropdownMenu extends StatelessWidget {
   final Widget? label;
   final Future<List<DropdownMenuEntry>> dropdownMenuEntries;
@@ -384,6 +744,96 @@ class KFutureDropdownMenu extends StatelessWidget {
 }
 
 /// CUSTOM ELEVATED BUTTON
+class CElevatedButton extends StatelessWidget {
+  final String? labelText;
+  final Widget? child;
+  final dynamic buttonType;
+  final WidgetStateProperty<Color?>? msBackgroundColor;
+  final Color? textColor,
+      backgroundColor,
+      hoveredBgColor,
+      pressedBgColor,
+      borderColor;
+  final void Function()? onPressed;
+
+  const CElevatedButton({
+    super.key,
+    this.child,
+    this.labelText,
+    this.buttonType = ButtonType.normal,
+    this.textColor = cButtonTextColor,
+    this.backgroundColor = cButtonBgColor,
+    this.hoveredBgColor = cButtonBgHoverColor,
+    this.pressedBgColor = cButtonBgHoverColor,
+    this.borderColor = cButtonBorderColor,
+    this.msBackgroundColor,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var definedTextColor = textColor;
+    var definedBgColor = backgroundColor;
+    var defineBgHoverColor = hoveredBgColor;
+    var definedPressedBgColor = pressedBgColor;
+    var definedBorColor = borderColor;
+
+    if (buttonType == ButtonType.success) {
+      definedTextColor = Colors.white;
+      definedBgColor = Colors.green;
+      defineBgHoverColor = const Color(0xFF009A0A);
+      definedPressedBgColor = const Color(0xFF00770A);
+      definedBorColor = const Color(0xFF01720B);
+    } else if (buttonType == ButtonType.danger) {
+      definedTextColor = Colors.white;
+      definedBgColor = Colors.red;
+      defineBgHoverColor = Colors.redAccent;
+      definedPressedBgColor = Colors.redAccent;
+      definedBorColor = borderColor;
+    } else if (buttonType == ButtonType.warning) {
+      definedTextColor = Colors.white;
+      definedBgColor = Colors.orangeAccent;
+      defineBgHoverColor = Colors.orange;
+      definedPressedBgColor = Colors.deepOrangeAccent;
+      definedBorColor = Colors.deepOrange;
+    } else if (buttonType == ButtonType.discard) {
+      definedTextColor = Colors.white;
+      definedBgColor = Colors.grey;
+      defineBgHoverColor = const Color(0xFF4D4C4C);
+      definedPressedBgColor = Colors.blueGrey;
+      definedBorColor = Colors.black38;
+    }
+
+    return ElevatedButton(
+      style: ButtonStyle(
+        // padding:
+        //     WidgetStateProperty.all(const EdgeInsets.only(left: 10, right: 10)),
+        backgroundColor: msBackgroundColor ??
+            WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.pressed)) {
+                return definedPressedBgColor;
+              } else if (states.contains(WidgetState.hovered)) {
+                return defineBgHoverColor;
+              }
+              return definedBgColor;
+            }),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+            side: BorderSide(color: definedBorColor!),
+          ),
+        ),
+        elevation: WidgetStateProperty.all(0),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        '$labelText',
+        style: TextStyle(color: definedTextColor, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
 class KElevatedButton extends StatelessWidget {
   final Widget child;
   final WidgetStateProperty<Color?>? msBackgroundColor;
@@ -442,6 +892,9 @@ class CTextFormField extends StatelessWidget {
       boldText,
       showDivider;
   final int? maxLines;
+  final Widget? suffix;
+  final BoxConstraints? suffixIconConstraints;
+  final TextAlign? textAlign;
   final void Function()? onTap;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
@@ -451,8 +904,11 @@ class CTextFormField extends StatelessWidget {
     this.controller,
     this.labelText,
     this.labelTextAsHint = false,
+    this.textAlign,
     this.boldText = false,
     this.hintText,
+    this.suffix,
+    this.suffixIconConstraints,
     this.initialValue,
     this.enabled = true,
     this.required = false,
@@ -471,7 +927,7 @@ class CTextFormField extends StatelessWidget {
     if (initialValue != null && controller != null) {
       controller!.text = initialValue!;
     }
-    var tempHintText = labelTextAsHint == true ? labelText : hintText;
+    var newHintText = labelTextAsHint == true ? labelText : hintText;
     var textFormField = TextFormField(
       controller: controller,
       validator: validator,
@@ -481,10 +937,17 @@ class CTextFormField extends StatelessWidget {
         enabledBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
-        hintText: tempHintText != null && required == true
-            ? '$tempHintText*'
-            : tempHintText,
-        hintStyle: const TextStyle(fontSize: defaultTextSize),
+        hintText: newHintText != null && required == true
+            ? '$newHintText*'
+            : newHintText,
+        hintStyle: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+        suffix: Container(
+          width: 36,
+          alignment: Alignment.center,
+        ),
+        suffixStyle: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
       ),
       initialValue: controller != null ? null : initialValue,
       onTap: onTap,
@@ -494,15 +957,18 @@ class CTextFormField extends StatelessWidget {
       autofocus: autoFocus ?? false,
       maxLines: maxLines,
       style: boldText == true
-          ? const TextStyle(fontWeight: FontWeight.bold)
-          : labelTextAsHint == true
-              ? null
-              : const TextStyle(fontWeight: FontWeight.bold),
-      textAlign: wrap == true || labelTextAsHint == true
-          ? TextAlign.start
-          : Responsive.isSmallWidth(context)
-              ? TextAlign.end
-              : TextAlign.start,
+          ? TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize)
+          : TextStyle(
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
+      // textAlign: textAlign != null
+      //     ? textAlign!
+      //     : wrap == true || labelTextAsHint == true
+      //         ? TextAlign.start
+      //         : Responsive.isSmallWidth(context)
+      //             ? TextAlign.end
+      //             : TextAlign.start,
     );
     var requireSign = required == true
         ? const Text(
@@ -510,11 +976,12 @@ class CTextFormField extends StatelessWidget {
             style: TextStyle(color: Colors.red),
           )
         : const SizedBox();
+
     return Container(
-      padding:
-          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
-          ? const BoxDecoration(border: Border(bottom: BorderSide(width: 1)))
+          ? const BoxDecoration(
+              border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
           : null,
       child: wrap == true
           ? Column(
@@ -525,28 +992,51 @@ class CTextFormField extends StatelessWidget {
                   children: [
                     Text(
                       '$labelText',
-                      style: const TextStyle(fontSize: defaultTextSize),
+                      // style: const TextStyle(fontSize: mediumTextSize),
+                      style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize),
                     ),
                     requireSign,
                   ],
                 ),
                 textFormField,
-                const SizedBox(height: defaultPadding * 2),
+                SizedBox(
+                  width: suffixIconConstraints?.maxWidth,
+                  height: suffixIconConstraints?.maxHeight,
+                  // padding: const EdgeInsets.all(3),
+                  child: suffix,
+                ),
               ],
             )
-          : Row(
+          : Column(
               children: [
-                labelTextAsHint == true
-                    ? const SizedBox()
-                    : Text(
-                        '$labelText',
-                        style: const TextStyle(fontSize: defaultTextSize),
-                      ),
-                labelTextAsHint == true ? const SizedBox() : requireSign,
-                labelTextAsHint == true
-                    ? const SizedBox()
-                    : const SizedBox(width: defaultPadding),
-                Expanded(child: textFormField),
+                Row(
+                  children: [
+                    labelTextAsHint == true
+                        ? const SizedBox()
+                        : Text(
+                            '$labelText',
+                            style: TextStyle(
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .fontSize),
+                          ),
+                    labelTextAsHint == true ? const SizedBox() : requireSign,
+                    labelTextAsHint == true
+                        ? const SizedBox()
+                        : const SizedBox(width: defaultPadding * 4),
+                    Expanded(child: textFormField),
+                    Container(
+                      width: suffixIconConstraints?.maxWidth,
+                      height: suffixIconConstraints?.maxHeight,
+                      padding: const EdgeInsets.only(right: defaultPadding),
+                      child: suffix,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
               ],
             ),
     );
@@ -645,6 +1135,33 @@ class KTextFormField extends StatelessWidget {
 }
 
 /// CUSTOM TEXT
+class CText extends StatelessWidget {
+  const CText(
+    this.data, {
+    super.key,
+    this.warpText,
+    this.style,
+  });
+
+  final String data;
+  final bool? warpText;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    var dataWidget = Text(
+      data,
+      style: style,
+      overflow: TextOverflow.clip,
+    );
+    if (warpText == true) {
+      return Flexible(child: dataWidget);
+    } else {
+      return dataWidget;
+    }
+  }
+}
+
 class KText extends StatelessWidget {
   const KText(
     this.data, {
@@ -673,6 +1190,35 @@ class KText extends StatelessWidget {
 }
 
 /// CUSTOM SELECTABLE TEXT
+class CSelectableText extends StatelessWidget {
+  const CSelectableText(
+    this.data, {
+    super.key,
+    this.style,
+    this.warpText = false,
+  });
+
+  final String data;
+  final bool? warpText;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    var dataWidget = SelectableText(
+      data,
+      style: style ??
+          const TextStyle(
+            overflow: TextOverflow.clip,
+          ),
+    );
+    if (warpText == true) {
+      return Flexible(child: dataWidget);
+    } else {
+      return dataWidget;
+    }
+  }
+}
+
 class KSelectableText extends StatelessWidget {
   const KSelectableText(
     this.data, {
@@ -702,6 +1248,29 @@ class KSelectableText extends StatelessWidget {
   }
 }
 
+/// CUSTOM ICON
+class CIcon extends StatelessWidget {
+  const CIcon(
+    this.icon, {
+    super.key,
+    this.size,
+    this.color,
+  });
+
+  final IconData? icon;
+  final double? size;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      icon,
+      size: size ?? mediumTextSize * 1.5,
+      color: color,
+    );
+  }
+}
+
 class KIcon extends StatelessWidget {
   const KIcon(
     this.icon, {
@@ -718,7 +1287,7 @@ class KIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      size: size ?? defaultTextSize * 1.5,
+      size: size ?? mediumTextSize * 1.5,
       color: color,
     );
   }

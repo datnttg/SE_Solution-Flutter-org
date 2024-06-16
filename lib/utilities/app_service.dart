@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:open_app_file/open_app_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
-import '../screens/dashboard/dashboard_screen.dart';
+import '../features/dashboard/dashboard_screen.dart';
 import 'configs.dart';
 import 'constants/core_constants.dart';
 import 'custom_widgets.dart';
@@ -323,11 +323,11 @@ kShowDialog(Widget child, {String? title}) {
                     sharedPrefs.translate(title),
                   )),
         KElevatedButton(
-          msBackgroundColor: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.hovered)) {
+          msBackgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
               return kSecondaryColor;
             }
-            if (states.contains(MaterialState.pressed)) {
+            if (states.contains(WidgetState.pressed)) {
               return kButtonPressedBgColor;
             }
             return kButtonBgColor1;

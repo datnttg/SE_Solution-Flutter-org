@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:universal_io/io.dart';
-import 'screens/login/login_screen.dart';
+import 'features/login/login_screen.dart';
 import 'utilities/app_service.dart';
 import 'utilities/configs.dart';
 import 'utilities/constants/core_constants.dart';
