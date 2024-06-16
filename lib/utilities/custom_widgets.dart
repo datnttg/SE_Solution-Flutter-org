@@ -76,7 +76,7 @@ class CDropdownMenu extends StatelessWidget {
     this.showDivider = true,
     this.showClearIcon = false,
     this.width,
-    this.menuHeight = 200,
+    this.menuHeight = 240,
   });
 
   List<ValueItem> convertToValueItem(List<CDropdownMenuEntry>? values) {

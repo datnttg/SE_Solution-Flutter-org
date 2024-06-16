@@ -78,10 +78,12 @@ class ResponsiveRow extends StatelessWidget {
               ? parentWidth * (child.percentWidthOnParent ?? 100) / 100
               : width * (child.widthRatio!);
           var item = SizedBox(
-            width: columns == 1 || parentWidth ~/ elementWidth < 1
-                ? parentWidth
-                : elementWidth -
-                    (parentWidth ~/ elementWidth - 1) * horizontalSpacing!,
+            width: elementWidth > 0
+                ? columns == 1 || parentWidth ~/ elementWidth < 1
+                    ? parentWidth
+                    : elementWidth -
+                        (parentWidth ~/ elementWidth - 1) * horizontalSpacing!
+                : 0,
             child: child.child,
           );
           items.add(item);

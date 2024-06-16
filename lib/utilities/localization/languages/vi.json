@@ -90,6 +90,10 @@
   "Result": "Kết quả",
   "Be assigned": "Được giao",
   "Assigned": "Đã giao",
+  "Wait to confirm": "Chờ xác nhận",
+  "Not completed": "Chưa hoàn thành",
+  "Completed": "Đã hoàn thành",
+  "Rejected": "Đã từ chối",
   "Addition information": "Thông tin thêm",
   "Accept": "Chấp nhận",
   "Reject": "Từ chối",
@@ -110,5 +114,7 @@
   "Others": "Khác",
   "Type": "Loại",
   "Creator": "Người tạo",
-  "Confirm": "Xác nhận"
+  "Confirm": "Xác nhận",
+  "Invalid format": "Sai định dạng",
+  "Assigned date must be formated like: dd/mm/yyyy - dd/mm/yyyy": "Ngày giao phải được định dạng: ngày/tháng/năm - ngày/tháng/năm"
 }

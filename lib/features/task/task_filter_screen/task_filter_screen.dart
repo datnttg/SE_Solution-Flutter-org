@@ -23,7 +23,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     bloc.loadData();
     super.initState();
   }
@@ -35,9 +35,10 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
   }
 
   List<TaskFilterItemModel> allTasks = [];
-  List<TaskFilterItemModel> beAssignedTasks = [];
-  List<TaskFilterItemModel> assignedTasks = [];
-  List<TaskFilterItemModel> otherTasks = [];
+  List<TaskFilterItemModel> waitToConfirm = [];
+  List<TaskFilterItemModel> notCompleted = [];
+  List<TaskFilterItemModel> completed = [];
+  List<TaskFilterItemModel> rejected = [];
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +52,18 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
                   ? 1
                   : b.createdTime!.compareTo(a.createdTime!));
         }
-        beAssignedTasks = allTasks
-            .where((e) => e.userIdAssigned == sharedPrefs.getUserId())
+        waitToConfirm = allTasks
+            .where((e) => ['WaitToConfirm'].any((u) => u == e.taskStatusCode))
             .toList();
-        assignedTasks = allTasks
-            .where((e) => e.createdUserId == sharedPrefs.getUserId())
+        completed = allTasks
+            .where((e) => ['Completed'].any((u) => u == e.taskStatusCode))
             .toList();
-        otherTasks = allTasks
-            .where((e) =>
-                e.createdUserId != sharedPrefs.getUserId() &&
-                e.userIdAssigned != sharedPrefs.getUserId())
+        rejected = allTasks
+            .where((e) => ['Rejected'].any((u) => u == e.taskStatusCode))
+            .toList();
+        notCompleted = allTasks
+            .where((e) => !['WaitToConfirm', 'Completed', 'Rejected']
+                .any((u) => u == e.taskStatusCode))
             .toList();
       });
     });
@@ -120,17 +123,22 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
                   tabs: [
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Be assigned")} (${assignedTasks.length})',
+                            '${sharedPrefs.translate("Not completed")} (${notCompleted.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Assigned")} (${beAssignedTasks.length})',
+                            '${sharedPrefs.translate("Wait to confirm")} (${waitToConfirm.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Others")} (${otherTasks.length})',
+                            '${sharedPrefs.translate("Completed")} (${completed.length})',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold))),
+                    Tab(
+                        child: Text(
+                            '${sharedPrefs.translate("Rejected")} (${rejected.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
@@ -148,9 +156,10 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
           child: TabBarView(
             controller: _tabController,
             children: [
-              TaskList(tasks: assignedTasks),
-              TaskList(tasks: beAssignedTasks),
-              TaskList(tasks: otherTasks),
+              TaskList(tasks: notCompleted),
+              TaskList(tasks: waitToConfirm),
+              TaskList(tasks: completed),
+              TaskList(tasks: rejected),
               TaskList(tasks: allTasks),
             ],
           ),

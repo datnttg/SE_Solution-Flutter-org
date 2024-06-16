@@ -2,6 +2,11 @@ import '../../../../utilities/classes/custom_widget_models.dart';
 
 abstract class TaskFilterEvents {}
 
+class ChangeCreatedDate extends TaskFilterEvents {
+  String? dateRange;
+  ChangeCreatedDate(this.dateRange);
+}
+
 class ChangeTaskFilterType extends TaskFilterEvents {
   List<CDropdownMenuEntry>? selected;
   ChangeTaskFilterType(this.selected);

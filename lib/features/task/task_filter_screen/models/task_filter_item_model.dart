@@ -8,7 +8,7 @@ class TaskFilterItemModel {
   String? taskDescription;
   String? taskStatusCode;
   String? taskStatusText;
-  String? userIdAssigned;
+  String? assignedUserId;
   String? assignedName;
   String? deadline;
   String? beginningDateTime;
@@ -29,7 +29,7 @@ class TaskFilterItemModel {
     this.taskDescription,
     this.taskStatusCode,
     this.taskStatusText,
-    this.userIdAssigned,
+    this.assignedUserId,
     this.assignedName,
     this.deadline,
     this.beginningDateTime,
@@ -53,7 +53,7 @@ class TaskFilterItemModel {
         taskDescription: json['taskDescription'],
         taskStatusCode: json['taskStatusCode'],
         taskStatusText: json['taskStatusText'],
-        userIdAssigned: json['userIdAssigned'],
+        assignedUserId: json['assignedUserId'],
         assignedName: json['assignedName'],
         deadline: json['deadline'],
         beginningDateTime: json['beginningDateTime'],
@@ -86,7 +86,7 @@ class TaskFilterItemModel {
       'taskDescription': taskDescription,
       'taskStatusCode': taskStatusCode,
       'taskStatusText': taskStatusText,
-      'userIdAssigned': userIdAssigned,
+      'assignedUserId': assignedUserId,
       'assignedName': assignedName,
       'deadline': deadline,
       'beginningDateTime': beginningDateTime,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
@@ -7,7 +8,7 @@ import '../bloc/task_filter_bloc.dart';
 import '../bloc/task_filter_events.dart';
 import '../services/task_fetch_data_service.dart';
 
-class TaskFilterForm extends StatelessWidget {
+class TaskFilterForm extends StatefulWidget {
   final TaskInfoBloc bloc;
 
   const TaskFilterForm({
@@ -16,7 +17,28 @@ class TaskFilterForm extends StatelessWidget {
   });
 
   @override
+  State<TaskFilterForm> createState() => _TaskFilterFormState();
+}
+
+class _TaskFilterFormState extends State<TaskFilterForm> {
+  final dateRangeInputController = TextEditingController();
+
+  @override
+  void initState() {
+    dateRangeInputController.text = widget.bloc.initialDateRange;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    void changeDate(DateTimeRange? pickedDateRange) {
+      if (pickedDateRange != null) {
+        String formattedDateRange =
+            '${DateFormat('dd/MM/yyyy').format(pickedDateRange.start)} - ${DateFormat('dd/MM/yyyy').format(pickedDateRange.end)}';
+        dateRangeInputController.text = formattedDateRange;
+      }
+    }
+
     return Form(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,10 +53,35 @@ class TaskFilterForm extends StatelessWidget {
               labelText: sharedPrefs.translate('Assigned date'),
               // wrap: true,
               hintText: '--${sharedPrefs.translate('All')}--',
+              controller: dateRangeInputController,
               suffix: IconButton(
                 icon: const Icon(Icons.calendar_month_outlined),
-                onPressed: () {},
+                onPressed: () async {
+                  var dateRange =
+                      dateRangeInputController.text.split(' - ').toList();
+                  var initialDateRange = dateRangeInputController.text == ''
+                      ? DateTimeRange(
+                          start: DateTime(
+                              DateTime.now().year, DateTime.now().month, 1),
+                          end: DateTime.now(),
+                        )
+                      : DateTimeRange(
+                          start: DateFormat('dd/MM/yyyy').parse(dateRange[0]),
+                          end: DateFormat('dd/MM/yyyy').parse(dateRange[1]),
+                        );
+                  DateTimeRange? pickedDateRange = await showDateRangePicker(
+                    context: context,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now(),
+                    initialDateRange: initialDateRange,
+                    initialEntryMode: DatePickerEntryMode.calendarOnly,
+                  );
+                  changeDate(pickedDateRange);
+                },
               ),
+              onChanged: (value) {
+                widget.bloc.eventController.add(ChangeCreatedDate(value));
+              },
             )),
 
             /// CREATED USER
@@ -53,7 +100,7 @@ class TaskFilterForm extends StatelessWidget {
                         hintText: '--${sharedPrefs.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,
                         onSelected: (values) {
-                          bloc.eventController
+                          widget.bloc.eventController
                               .add(ChangeTaskFilterCreatedUser(values));
                         },
                       );
@@ -77,11 +124,8 @@ class TaskFilterForm extends StatelessWidget {
                         multiSelect: true,
                         hintText: '--${sharedPrefs.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,
-                        selectedMenuEntries: snapshot.data!
-                            .where((e) => e.value == sharedPrefs.getUserId())
-                            .toList(),
                         onSelected: (values) {
-                          bloc.eventController
+                          widget.bloc.eventController
                               .add(ChangeTaskFilterAssignedUser(values));
                         },
                       );
@@ -108,7 +152,7 @@ class TaskFilterForm extends StatelessWidget {
                           hintText: '--${sharedPrefs.translate('All')}--',
                           dropdownMenuEntries: snapshot.data!,
                           onSelected: (values) {
-                            bloc.eventController
+                            widget.bloc.eventController
                                 .add(ChangeTaskFilterType(values));
                           },
                         );
@@ -116,38 +160,38 @@ class TaskFilterForm extends StatelessWidget {
                       return child;
                     })),
 
-            /// TASK STATUS
-            ResponsiveItem(
-                // percentWidthOnParent:
-                //     Responsive.isSmallWidth(context) == true ? 100 : 50,
-                widthRatio: 2,
-                child: StreamBuilder(
-                  stream: fetchTaskCategory(categoryProperty: 'TaskStatus'),
-                  builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Status');
-                    Widget child = COnLoadingDropdownMenu(labelText: labelText);
-                    if (snapshot.hasData) {
-                      child = CDropdownMenu(
-                        labelText: labelText,
-                        multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
-                        dropdownMenuEntries: snapshot.data!,
-                        selectedMenuEntries: snapshot.data!
-                            .where((e) => [
-                                  "WaitToConfirm",
-                                  "OnProgress",
-                                  "CoordinatedTransfer"
-                                ].any((u) => u == e.value))
-                            .toList(),
-                        onSelected: (values) {
-                          bloc.eventController
-                              .add(ChangeTaskFilterStatus(values));
-                        },
-                      );
-                    }
-                    return child;
-                  },
-                )),
+            // /// TASK STATUS
+            // ResponsiveItem(
+            //     // percentWidthOnParent:
+            //     //     Responsive.isSmallWidth(context) == true ? 100 : 50,
+            //     widthRatio: 2,
+            //     child: StreamBuilder(
+            //       stream: fetchTaskCategory(categoryProperty: 'TaskStatus'),
+            //       builder: (context, snapshot) {
+            //         var labelText = sharedPrefs.translate('Status');
+            //         Widget child = COnLoadingDropdownMenu(labelText: labelText);
+            //         if (snapshot.hasData) {
+            //           child = CDropdownMenu(
+            //             labelText: labelText,
+            //             multiSelect: true,
+            //             hintText: '--${sharedPrefs.translate('All')}--',
+            //             dropdownMenuEntries: snapshot.data!,
+            //             selectedMenuEntries: snapshot.data!
+            //                 .where((e) => [
+            //                       "WaitToConfirm",
+            //                       "OnProgress",
+            //                       "CoordinatedTransfer"
+            //                     ].any((u) => u == e.value))
+            //                 .toList(),
+            //             onSelected: (values) {
+            //               bloc.eventController
+            //                   .add(ChangeTaskFilterStatus(values));
+            //             },
+            //           );
+            //         }
+            //         return child;
+            //       },
+            //     )),
           ],
         ),
       ),
