@@ -128,6 +128,8 @@ import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
 
 class DemoScreen extends StatefulWidget {
+  const DemoScreen({super.key});
+
   @override
   _DemoScreenState createState() => _DemoScreenState();
 }
