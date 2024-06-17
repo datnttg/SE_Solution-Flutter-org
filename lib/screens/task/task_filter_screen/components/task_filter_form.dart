@@ -9,12 +9,9 @@ import '../bloc/task_filter_events.dart';
 import '../services/task_fetch_data_service.dart';
 
 class TaskFilterForm extends StatefulWidget {
-  final TaskInfoBloc bloc;
+  final TaskFilterBloc bloc;
 
-  const TaskFilterForm({
-    super.key,
-    required this.bloc,
-  });
+  const TaskFilterForm({super.key, required this.bloc});
 
   @override
   State<TaskFilterForm> createState() => _TaskFilterFormState();

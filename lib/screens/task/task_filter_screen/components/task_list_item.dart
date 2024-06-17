@@ -9,12 +9,13 @@ import '../models/task_filter_item_model.dart';
 
 class TaskListItem extends StatelessWidget {
   final TaskFilterItemModel dataItem;
+
   const TaskListItem({super.key, required this.dataItem});
 
   @override
   Widget build(BuildContext context) {
-    TaskInfoBloc bloc = TaskInfoBloc();
-    String beginningDateTime =
+    var bloc = TaskFilterBloc();
+    var beginningDateTime =
         dataItem.beginningDateTime ?? dataItem.createdTime ?? '';
     var duration = DateTime.parse(dataItem.deadline ?? '')
         .difference(DateTime.parse(beginningDateTime));

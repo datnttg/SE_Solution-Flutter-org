@@ -6,6 +6,39 @@ import 'shared_preferences.dart';
 import 'ui_styles.dart';
 
 /// CUSTOM SCAFFOLD
+class CScaffold extends StatelessWidget {
+  final AppBar? appBar;
+  final Widget? body, drawer, bottomNavigationBar;
+
+  const CScaffold(
+      {super.key,
+      this.appBar,
+      this.body,
+      this.drawer,
+      this.bottomNavigationBar});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar == null
+          ? null
+          : PreferredSize(
+              preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
+              child: appBar!,
+            ),
+      drawer: drawer,
+      body: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor:
+              Colors.blue.shade200, // Set your desired background color
+        ),
+        child: body ?? Container(),
+      ),
+      bottomNavigationBar: bottomNavigationBar,
+    );
+  }
+}
+
 class KScaffold extends StatelessWidget {
   final AppBar? appBar;
   final Widget? body, drawer, bottomNavigationBar;

@@ -116,5 +116,11 @@
   "Creator": "Người tạo",
   "Confirm": "Xác nhận",
   "Invalid format": "Sai định dạng",
-  "Assigned date must be formated like: dd/mm/yyyy - dd/mm/yyyy": "Ngày giao phải được định dạng: ngày/tháng/năm - ngày/tháng/năm"
+  "Assigned date must be formated like: dd/mm/yyyy - dd/mm/yyyy": "Ngày giao phải được định dạng: ngày/tháng/năm - ngày/tháng/năm",
+  "Product code": "Mã sản phẩm",
+  "Product name": "Tên sản phẩm",
+  "Category": "Danh mục",
+  "Normal": "Bình thường",
+  "Locked": "Khoá",
+  "Cancelled": "Huỷ"
 }

@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:open_app_file/open_app_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
-import '../features/dashboard/dashboard_screen.dart';
+import '../screens/dashboard/dashboard_screen.dart';
 import 'configs.dart';
 import 'constants/core_constants.dart';
 import 'custom_widgets.dart';

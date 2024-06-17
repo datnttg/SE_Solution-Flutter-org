@@ -1,59 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../features/_demo/demo_screen.dart';
-import '../features/login/login_screen.dart';
-import '../features/owner_project_overview/owner_project_overview_screen.dart';
-import '../features/power_station_monitor/power_station_monitor_screen.dart';
-import '../features/task/task_filter_screen/task_filter_screen.dart';
-import '../features/task_old/task_detail/task_detail_screen.dart';
+import '../screens/_demo/demo_screen.dart';
+import '../screens/login/login_screen.dart';
+import '../screens/owner_project_overview/owner_project_overview_screen.dart';
+import '../screens/power_station_monitor/power_station_monitor_screen.dart';
+import '../screens/product/product_filter_sreen/product_filter_sreen.dart';
+import '../screens/task/task_filter_screen/task_filter_screen.dart';
+import '../screens/task_old/task_detail/task_detail_screen.dart';
 import 'shared_preferences.dart';
 
 class Config {
   String appVersion = sharedPrefs.getVersion();
-}
-
-Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-  List<String>? pathComponents = settings.name?.toLowerCase().split('/detail/');
-  if (pathComponents?.length == 1) {
-    switch (settings.name?.toLowerCase()) {
-      /// Demo
-      case '/demo':
-        return MaterialPageRoute(builder: (_) => DemoScreen());
-
-      /// Implement
-      case '/':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/login':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/logout':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/task':
-        return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
-      case '/task/create':
-        return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
-      case '/powerStation/monitoring':
-        return MaterialPageRoute(
-            builder: (_) => const PowerStationMonitorScreen());
-      case '/my/project':
-        return MaterialPageRoute(
-            builder: (_) => const OwnerProjectOverviewScreen());
-      default:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-    }
-  }
-
-  /// DETAIL routing
-  else if (pathComponents?.length == 2) {
-    switch (pathComponents?[0]) {
-      case '/task':
-        return MaterialPageRoute(
-            builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
-      default:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-    }
-  }
-  return null;
 }
 
 var customRouteMapping = CustomRouteMapping();
@@ -75,6 +32,9 @@ class CustomRouteMapping {
   String task = '/Task';
   String taskAdd = '/Task/Create';
   String taskDetail = '/Task/Detail';
+  String product = '/Product';
+  String productAdd = '/Product/Create';
+  String productDetail = '/Product/Detail';
 
   //
   String myProject = '/My/Project';
@@ -101,6 +61,51 @@ class CustomRouteMapping {
 //   //
 //   customRouteMapping.myProject: (_) => const OwnerProjectOverviewScreen(),
 // };
+
+Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  List<String>? pathComponents = settings.name?.toLowerCase().split('/detail/');
+  if (pathComponents?.length == 1) {
+    switch (settings.name?.toLowerCase()) {
+      /// Demo
+      case '/demo':
+        return MaterialPageRoute(builder: (_) => const DemoScreen());
+
+      /// Implement
+      case '/':
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case '/logout':
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case '/task':
+        return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
+      case '/task/create':
+        return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
+      case '/product':
+        return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
+      case '/powerStation/monitoring':
+        return MaterialPageRoute(
+            builder: (_) => const PowerStationMonitorScreen());
+      case '/my/project':
+        return MaterialPageRoute(
+            builder: (_) => const OwnerProjectOverviewScreen());
+      default:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+    }
+  }
+
+  /// DETAIL routing
+  else if (pathComponents?.length == 2) {
+    switch (pathComponents?[0]) {
+      case '/task':
+        return MaterialPageRoute(
+            builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
+      default:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+    }
+  }
+  return null;
+}
 
 var nf0 = NumberFormat("#,##0", sharedPrefs.getLocale().toString());
 var nf1 = NumberFormat("#,##0.0", sharedPrefs.getLocale().toString());

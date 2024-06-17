@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
+import 'package:se_solution/screens/product/product_filter_sreen/bloc/product_filter_bloc.dart';
+
 import '../../../utilities/configs.dart';
+import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
-import 'bloc/task_filter_bloc.dart';
-import 'components/task_filter_form.dart';
-import 'components/task_list.dart';
-import 'models/task_filter_item_model.dart';
+import 'components/product_filter_form.dart';
+import 'components/product_list.dart';
+import 'models/product_filter_item_model.dart';
 
-class TaskFilterScreen extends StatefulWidget {
-  const TaskFilterScreen({super.key});
+class ProductFilterScreen extends StatefulWidget {
+  const ProductFilterScreen({super.key});
 
   @override
-  State<TaskFilterScreen> createState() => _TaskFilterScreenState();
+  State<ProductFilterScreen> createState() => _ProductFilterScreenState();
 }
 
-class _TaskFilterScreenState extends State<TaskFilterScreen>
+class _ProductFilterScreenState extends State<ProductFilterScreen>
     with SingleTickerProviderStateMixin {
+  final bloc = ProductFilterBloc();
   late final TabController _tabController;
-  final TaskInfoBloc bloc = TaskInfoBloc();
 
   @override
   void initState() {
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     bloc.loadData();
     super.initState();
   }
@@ -34,42 +35,15 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
     super.dispose();
   }
 
-  List<TaskFilterItemModel> allTasks = [];
-  List<TaskFilterItemModel> waitToConfirm = [];
-  List<TaskFilterItemModel> notCompleted = [];
-  List<TaskFilterItemModel> completed = [];
-  List<TaskFilterItemModel> rejected = [];
+  List<ProductFilterItemModel> all = [];
+  List<ProductFilterItemModel> normal = [];
+  List<ProductFilterItemModel> locked = [];
+  List<ProductFilterItemModel> cancelled = [];
 
   @override
   Widget build(BuildContext context) {
-    bloc.stateController.stream.listen((data) {
-      setState(() {
-        allTasks = data.taskList ?? [];
-        if (allTasks.isNotEmpty) {
-          allTasks.sort((a, b) => b.createdTime == null
-              ? -1
-              : a.createdTime == null
-                  ? 1
-                  : b.createdTime!.compareTo(a.createdTime!));
-        }
-        waitToConfirm = allTasks
-            .where((e) => ['WaitToConfirm'].any((u) => u == e.taskStatusCode))
-            .toList();
-        completed = allTasks
-            .where((e) => ['Completed'].any((u) => u == e.taskStatusCode))
-            .toList();
-        rejected = allTasks
-            .where((e) => ['Rejected'].any((u) => u == e.taskStatusCode))
-            .toList();
-        notCompleted = allTasks
-            .where((e) => !['WaitToConfirm', 'Completed', 'Rejected']
-                .any((u) => u == e.taskStatusCode))
-            .toList();
-      });
-    });
-
     /// RETURN WIDGET
-    return KScaffold(
+    return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
         title: Text(sharedPrefs.translate('Task management'),
@@ -103,7 +77,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
               child: Container(
                 color: kBgColor,
                 padding: const EdgeInsets.all(defaultPadding),
-                child: TaskFilterForm(bloc: bloc),
+                child: ProductFilterForm(bloc: bloc),
               ),
             ),
             const SliverToBoxAdapter(
@@ -123,27 +97,22 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
                   tabs: [
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Not completed")} (${notCompleted.length})',
+                            '${sharedPrefs.translate("Normal")} (${normal.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Wait to confirm")} (${waitToConfirm.length})',
+                            '${sharedPrefs.translate("Locked")} (${locked.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Completed")} (${completed.length})',
+                            '${sharedPrefs.translate("Cancelled")} (${cancelled.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Rejected")} (${rejected.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPrefs.translate("All")} (${allTasks.length})',
+                            '${sharedPrefs.translate("All")} (${all.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                   ],
@@ -156,11 +125,10 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
           child: TabBarView(
             controller: _tabController,
             children: [
-              TaskList(tasks: notCompleted),
-              TaskList(tasks: waitToConfirm),
-              TaskList(tasks: completed),
-              TaskList(tasks: rejected),
-              TaskList(tasks: allTasks),
+              ProductList(list: normal),
+              ProductList(list: locked),
+              ProductList(list: cancelled),
+              ProductList(list: all),
             ],
           ),
         ),
@@ -172,8 +140,6 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar _tabBar;
   _SliverAppBarDelegate(this._tabBar);
-
-  final TaskInfoBloc bloc = TaskInfoBloc();
 
   @override
   double get minExtent => _tabBar.preferredSize.height;

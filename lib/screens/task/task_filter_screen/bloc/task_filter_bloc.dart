@@ -9,7 +9,7 @@ import '../services/task_fetch_data_service.dart';
 import 'task_filter_events.dart';
 import 'task_filter_states.dart';
 
-class TaskInfoBloc {
+class TaskFilterBloc {
   final eventController = StreamController<TaskFilterEvents>();
   final stateController = StreamController<TaskListState>.broadcast();
 
@@ -17,7 +17,7 @@ class TaskInfoBloc {
       '${DateFormat('dd/MM/yyyy').format(DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day + 1))} - ${DateFormat('dd/MM/yyyy').format(DateTime.now())}';
   var params = TaskFilterParameterModel();
 
-  TaskInfoBloc() {
+  TaskFilterBloc() {
     setDateRange(initialDateRange);
     eventController.stream.listen((event) {
       if (event is ChangeCreatedDate) {

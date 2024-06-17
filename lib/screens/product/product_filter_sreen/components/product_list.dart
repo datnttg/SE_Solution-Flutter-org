@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
-import '../models/task_filter_item_model.dart';
-import 'task_list_item.dart';
+import '../models/product_filter_item_model.dart';
+import 'product_list_item.dart';
 
-class TaskList extends StatelessWidget {
-  final List<TaskFilterItemModel> tasks;
-
-  const TaskList({super.key, required this.tasks});
+class ProductList extends StatelessWidget {
+  const ProductList({super.key, required this.list});
+  final List<ProductFilterItemModel> list;
 
   @override
   Widget build(BuildContext context) {
-    if (tasks.isEmpty) {
+    if (list.isEmpty) {
       return Center(
         child: SelectableText('(${sharedPrefs.translate('Empty list')})'),
       );
@@ -21,7 +21,7 @@ class TaskList extends StatelessWidget {
         color: kBgColor,
         child: ListView.builder(
             shrinkWrap: true,
-            itemCount: tasks.length,
+            itemCount: list.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(
@@ -30,8 +30,8 @@ class TaskList extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: index.isEven ? kBgColorRow1 : null,
                       borderRadius: BorderRadius.circular(defaultRadius)),
-                  child: TaskListItem(
-                    dataItem: tasks[index],
+                  child: ProductListItem(
+                    dataItem: list[index],
                   ),
                 ),
               );
