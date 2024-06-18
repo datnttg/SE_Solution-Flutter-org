@@ -1,42 +1,58 @@
 import 'dart:async';
 
+import 'package:se_solution/screens/product/product_detail_screen/models/product_detail_model.dart';
+import 'package:se_solution/utilities/enums/ui_enums.dart';
+
 import '../services/fetch_data_service.dart';
 import 'product_detail_events.dart';
 import 'product_detail_states.dart';
 
 class ProductDetailBloc {
   var eventController = StreamController<ChangeProductDetailEvents>();
+  var stateController = StreamController<ProductDetailState>.broadcast();
+  var screenModeController = StreamController<ScreenModeState>.broadcast();
 
-  var params = ProductDetailStates();
+  var state = ProductDetailState(
+    productDetail: ProductDetailModel(typeCode: 'SingleProduct'),
+  );
+
+  var screenMode = ScreenModeState(screenMode: ScreenModeEnum.view);
 
   ProductDetailBloc() {
     eventController.stream.listen((event) {
-      if (event is ChangeProductCategory) {
-        params.categoryCode = event.category;
+      if (event is ChangeScreenMode) {
+        screenMode.screenMode = event.screenMode;
+      } else if (event is ChangeProductCategory) {
+        state.productDetail.categoryCode = event.category;
       } else if (event is ChangeProductUnit) {
-        params.unitCode = event.unit;
+        state.productDetail.unitCode = event.unit;
       } else if (event is ChangeProductType) {
-        params.typeCode = event.type;
+        state.productDetail.typeCode = event.type;
+        state.productDetail.children = null;
       } else if (event is ChangeProductCode) {
-        params.code = event.code;
+        state.productDetail.code = event.code;
+        print(state.productDetail.code);
       } else if (event is ChangeProductName) {
-        params.name = event.name;
+        state.productDetail.name = event.name;
       } else if (event is ChangeProductUnit) {
-        params.unitCode = event.unit;
+        state.productDetail.unitCode = event.unit;
       } else if (event is ChangeProductDescription) {
-        params.description = event.description;
+        state.productDetail.description = event.description;
       } else if (event is ChangeProductMonthsOfWarranty) {
-        params.monthsOfWarranty = event.monthsOfWarranty;
+        state.productDetail.monthsOfWarranty = event.monthsOfWarranty;
       } else if (event is ChangeProductMinPrice) {
-        params.minPrice = event.minPrice;
+        state.productDetail.minPrice = event.minPrice;
       } else if (event is ChangeProductChildren) {
-        params.children = event.children;
+        state.children = event.children;
       }
+      stateController.add(state);
+      screenModeController.add(screenMode);
     });
+    screenModeController.add(screenMode);
   }
 
   void postData() async {
-    await postProductDetail(params);
+    await postProductDetail(state);
   }
 
   void dispose() {

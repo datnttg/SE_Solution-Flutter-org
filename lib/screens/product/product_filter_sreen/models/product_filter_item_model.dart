@@ -5,6 +5,8 @@ class ProductFilterItemModel {
   String? description;
   String? unitCode;
   String? unitText;
+  String? statusCode;
+  String? statusText;
   String? categoryCode;
   String? categoryText;
   bool? serialRequired;
@@ -18,6 +20,8 @@ class ProductFilterItemModel {
     this.description,
     this.unitCode,
     this.unitText,
+    this.statusCode,
+    this.statusText,
     this.categoryCode,
     this.categoryText,
     this.serialRequired,
@@ -33,6 +37,8 @@ class ProductFilterItemModel {
       description: json['description'],
       unitCode: json['unitCode'],
       unitText: json['unitText'],
+      statusCode: json['statusCode'],
+      statusText: json['statusText'],
       categoryCode: json['categoryCode'],
       categoryText: json['categoryText'],
       serialRequired: json['serialRequired'],
@@ -49,6 +55,8 @@ class ProductFilterItemModel {
       'description': description,
       'unitCode': unitCode,
       'unitText': unitText,
+      'statusCode': statusCode,
+      'statusText': statusText,
       'categoryCode': categoryCode,
       'categoryText': categoryText,
       'serialRequired': serialRequired,

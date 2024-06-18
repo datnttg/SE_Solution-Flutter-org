@@ -1,10 +1,8 @@
 import '../../utilities/enums/ui_enums.dart';
 
-class ScreenModeStates {}
-
-class ScreenModelStates {
+class ScreenModeStates {
   ScreenModeEnum? screenMode;
-  ScreenModelStates({this.screenMode});
+  ScreenModeStates({this.screenMode});
 }
 
 class DisplayTypeStates {

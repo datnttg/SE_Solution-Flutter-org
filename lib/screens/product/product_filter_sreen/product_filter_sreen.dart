@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_filter_sreen/bloc/product_filter_bloc.dart';
 
 import '../../../utilities/configs.dart';
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
+import 'bloc/product_filter_bloc.dart';
 import 'components/product_filter_form.dart';
 import 'components/product_list.dart';
 import 'models/product_filter_item_model.dart';
@@ -42,6 +42,26 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
 
   @override
   Widget build(BuildContext context) {
+    bloc.stateController.stream.listen((data) {
+      setState(() {
+        all = data.products ?? [];
+        if (all.isNotEmpty) {
+          all.sort((a, b) => b.name == null
+              ? -1
+              : a.name == null
+                  ? 1
+                  : b.name!.compareTo(a.name!));
+        }
+        normal =
+            all.where((e) => ['Normal'].any((u) => u == e.statusCode)).toList();
+        locked =
+            all.where((e) => ['Locked'].any((u) => u == e.statusCode)).toList();
+        cancelled = all
+            .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
+            .toList();
+      });
+    });
+
     /// RETURN WIDGET
     return CScaffold(
       drawer: const MainMenu(),

@@ -1,6 +1,12 @@
+import '../../../../utilities/enums/ui_enums.dart';
 import '../models/child_product_model.dart';
 
 abstract class ChangeProductDetailEvents {}
+
+class ChangeScreenMode extends ChangeProductDetailEvents {
+  ScreenModeEnum? screenMode;
+  ChangeScreenMode(this.screenMode);
+}
 
 class ChangeProductCode extends ChangeProductDetailEvents {
   String? code;
@@ -20,6 +26,11 @@ class ChangeProductUnit extends ChangeProductDetailEvents {
 class ChangeProductDescription extends ChangeProductDetailEvents {
   String? description;
   ChangeProductDescription(this.description);
+}
+
+class ChangeProductStatus extends ChangeProductDetailEvents {
+  String? status;
+  ChangeProductStatus(this.status);
 }
 
 class ChangeProductCategory extends ChangeProductDetailEvents {
@@ -50,4 +61,8 @@ class ChangeProductMinPrice extends ChangeProductDetailEvents {
 class ChangeProductChildren extends ChangeProductDetailEvents {
   List<ChildProductModel> children;
   ChangeProductChildren(this.children);
+}
+
+class SubmitData extends ChangeProductDetailEvents {
+  SubmitData();
 }

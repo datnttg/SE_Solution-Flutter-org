@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
@@ -75,12 +77,13 @@ class KScaffold extends StatelessWidget {
 /// CUSTOM DROPDOWN MENU
 class CDropdownMenu extends StatelessWidget {
   final String? labelText;
-  final List<CDropdownMenuEntry>? dropdownMenuEntries;
+  final List<CDropdownMenuEntry> dropdownMenuEntries;
   final List<CDropdownMenuEntry>? selectedMenuEntries;
   final List<CDropdownMenuEntry>? disabledMenuEntries;
   final bool? multiSelect,
       wrap,
       enabled,
+      readOnly,
       enableSearch,
       required,
       showDivider,
@@ -93,7 +96,7 @@ class CDropdownMenu extends StatelessWidget {
 
   const CDropdownMenu({
     super.key,
-    this.dropdownMenuEntries,
+    required this.dropdownMenuEntries,
     this.selectedMenuEntries,
     this.disabledMenuEntries,
     this.labelText,
@@ -104,6 +107,7 @@ class CDropdownMenu extends StatelessWidget {
     this.multiSelect = false,
     this.wrap,
     this.enabled = true,
+    this.readOnly = false,
     this.enableSearch = false,
     this.required = false,
     this.showDivider = true,
@@ -147,19 +151,28 @@ class CDropdownMenu extends StatelessWidget {
       newHintText = sharedPrefs.translate('Choose many');
     }
 
+    var newMenuHeight = min(dropdownMenuEntries.length * 50, 240).toDouble();
+    if (readOnly == true) {
+      newMenuHeight = 0;
+    }
+
     var dropdownMenu = MultiSelectDropDown(
       dropdownMargin: 1,
+      animateSuffixIcon: newMenuHeight == 0 ? false : true,
       clearIcon: showClearIcon == true
           ? const Icon(Icons.close_outlined, size: 20)
           : null,
       options: dropdownEntries,
       selectedOptions: selectedEntries,
       disabledOptions: disabledEntries,
-      dropdownHeight: menuHeight!,
-      chipConfig: const ChipConfig(
+      dropdownHeight: newMenuHeight,
+      chipConfig: ChipConfig(
           backgroundColor: Colors.white,
-          labelStyle: TextStyle(color: Colors.black87),
-          deleteIconColor: Colors.black54),
+          labelStyle: const TextStyle(color: Colors.black87),
+          deleteIconColor: Colors.black54,
+          deleteIcon: newMenuHeight == 0
+              ? const Icon(Icons.close_outlined, size: 0)
+              : null),
       onOptionSelected: newOnSelected,
       searchEnabled: enableSearch!,
       hint: newHintText ?? sharedPrefs.translate('Select'),
@@ -913,6 +926,7 @@ class KElevatedButton extends StatelessWidget {
 }
 
 /// CUSTOM TEXT FORM FIELD
+
 class CTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? labelText, hintText, initialValue;
@@ -960,6 +974,7 @@ class CTextFormField extends StatelessWidget {
     if (initialValue != null && controller != null) {
       controller!.text = initialValue!;
     }
+
     var newHintText = labelTextAsHint == true ? labelText : hintText;
     var textFormField = TextFormField(
       controller: controller,

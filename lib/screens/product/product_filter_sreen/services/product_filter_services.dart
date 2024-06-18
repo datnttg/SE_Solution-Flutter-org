@@ -24,12 +24,12 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
 Future<List<ProductFilterItemModel>> fetchProductList(
     ProductFilterParameters params) async {
   var data = await fetchData(
-    Uri.parse('$hostAddress/Task/List'),
+    Uri.parse('$hostAddress/Product/List'),
     parameters: params.toMap(),
   );
   if (data['success'] == false) return [];
   var result = data['responseData']
-      .map<ProductFilterItemModel>((e) => ProductFilterItemModel.fromJson(e))
+      .map<ProductFilterItemModel>((e) => ProductFilterItemModel?.fromJson(e))
       .toList();
   return result;
 }

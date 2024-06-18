@@ -7,8 +7,12 @@ class ProductDetailModel {
   String? description;
   String? unitCode;
   String? unitText;
+  String? statusCode;
+  String? statusText;
   String? categoryCode;
   String? categoryText;
+  String? typeCode;
+  String? typeText;
   bool? serialRequired;
   int? monthsOfWarranty;
   double? minPrice;
@@ -21,11 +25,15 @@ class ProductDetailModel {
     this.description,
     this.unitCode,
     this.unitText,
-    this.categoryCode,
-    this.categoryText,
     this.serialRequired,
     this.monthsOfWarranty,
     this.minPrice,
+    this.statusCode,
+    this.statusText,
+    this.categoryCode,
+    this.categoryText,
+    this.typeCode,
+    this.typeText,
     this.children,
   });
 
@@ -37,11 +45,15 @@ class ProductDetailModel {
       description: json['description'],
       unitCode: json['unitCode'],
       unitText: json['unitText'],
-      categoryCode: json['categoryCode'],
-      categoryText: json['categoryText'],
       serialRequired: json['serialRequired'],
       monthsOfWarranty: json['monthsOfWarranty'],
       minPrice: (json['minPrice'] as num).toDouble(),
+      statusCode: json['statusCode'],
+      statusText: json['statusText'],
+      categoryCode: json['categoryCode'],
+      categoryText: json['categoryText'],
+      typeCode: json['typeCode'],
+      typeText: json['typeText'],
       children: List<ChildProductModel>.from(
           json['children'].map((x) => ChildProductModel.fromJson(x))),
     );
@@ -55,10 +67,14 @@ class ProductDetailModel {
       'description': description,
       'unitCode': unitCode,
       'unitText': unitText,
-      'categoryCode': categoryCode,
-      'categoryText': categoryText,
       'serialRequired': serialRequired,
       'monthsOfWarranty': monthsOfWarranty,
+      'statusCode': statusCode,
+      'statusText': statusText,
+      'categoryCode': categoryCode,
+      'categoryText': categoryText,
+      'typeCode': typeCode,
+      'typeText': typeText,
       'minPrice': minPrice,
       'children': children?.map((x) => x.toMap()).toList(),
     };

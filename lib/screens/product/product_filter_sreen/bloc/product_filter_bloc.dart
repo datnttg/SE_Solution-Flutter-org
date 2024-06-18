@@ -7,7 +7,7 @@ import 'product_filter_states.dart';
 
 class ProductFilterBloc {
   final StreamController eventController = StreamController();
-  final StreamController stateController = StreamController();
+  final StreamController stateController = StreamController.broadcast();
 
   var params = ProductFilterParameters();
 
