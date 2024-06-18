@@ -4,6 +4,7 @@ import '../screens/_demo/demo_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/owner_project_overview/owner_project_overview_screen.dart';
 import '../screens/power_station_monitor/power_station_monitor_screen.dart';
+import '../screens/product/product_detail_screen/product_detail_screen.dart';
 import '../screens/product/product_filter_sreen/product_filter_sreen.dart';
 import '../screens/task/task_filter_screen/task_filter_screen.dart';
 import '../screens/task_old/task_detail/task_detail_screen.dart';
@@ -83,6 +84,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
         return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
       case '/product':
         return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
+      case '/product/create':
+        return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
       case '/powerStation/monitoring':
         return MaterialPageRoute(
             builder: (_) => const PowerStationMonitorScreen());
@@ -100,6 +103,10 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
       case '/task':
         return MaterialPageRoute(
             builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
+      case '/product':
+        return MaterialPageRoute(
+            builder: (context) =>
+                ProductDetailScreen(productId: pathComponents?[1]));
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

@@ -72,7 +72,7 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
     return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate('Task management'),
+        title: Text(sharedPrefs.translate('Task'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
         actions: [

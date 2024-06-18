@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_filter_sreen/bloc/product_filter_events.dart';
 
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../bloc/product_filter_bloc.dart';
-import '../bloc/product_filter_services.dart';
+import '../bloc/product_filter_events.dart';
+import '../services/product_filter_services.dart';
 
 class ProductFilterForm extends StatefulWidget {
   final ProductFilterBloc bloc;
@@ -89,6 +89,7 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
                     if (snapshot.hasData) {
                       child = CDropdownMenu(
                         labelText: labelText,
+                        menuHeight: 80,
                         multiSelect: true,
                         hintText: '--${sharedPrefs.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,

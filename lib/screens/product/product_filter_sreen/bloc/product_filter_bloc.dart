@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../models/product_filter_parameter_model.dart';
 import 'product_filter_events.dart';
-import 'product_filter_services.dart';
+import '../services/product_filter_services.dart';
 import 'product_filter_states.dart';
 
 class ProductFilterBloc {

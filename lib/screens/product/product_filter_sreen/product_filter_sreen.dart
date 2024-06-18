@@ -46,17 +46,17 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
     return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate('Task management'),
+        title: Text(sharedPrefs.translate('Product'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Create'),
+              labelText: sharedPrefs.translate('Add'),
               onPressed: () async {
                 final isReload = await Navigator.pushNamed(
-                    context, customRouteMapping.taskAdd);
+                    context, customRouteMapping.productAdd);
                 if (isReload == true) {
                   bloc.loadData();
                 }

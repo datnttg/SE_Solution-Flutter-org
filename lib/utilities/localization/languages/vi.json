@@ -122,5 +122,9 @@
   "Category": "Danh mục",
   "Normal": "Bình thường",
   "Locked": "Khoá",
-  "Cancelled": "Huỷ"
+  "Cancelled": "Huỷ",
+  "Task": "Công việc",
+  "Product": "Sản phẩm",
+  "Add product": "Thêm sản phẩm",
+  "Discard": "Bỏ qua"
 }
