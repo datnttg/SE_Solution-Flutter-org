@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '_custom_demo/demo_screen.dart';
 import 'action_bar_demo_screen/action_bar_demo_screen.dart';
 import 'bloc_screen/bloc_screen.dart';
-import 'dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'multi_dropdown_screen/multi_dropdown_screen.dart';
 import 'on_processing/on_processing_screen.dart';
 import 'responsive_tabs_screen/responsive_tabs_screen.dart';
@@ -60,14 +59,6 @@ class _DemoHomePageState extends State<DemoHomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const MultiDropdownScreen()));
-                }),
-            ElevatedButton(
-                child: const Text('Dropdown FormField'),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const DropdownPlusPlus()));
                 }),
             ElevatedButton(
                 child: const Text('TabView screen'),

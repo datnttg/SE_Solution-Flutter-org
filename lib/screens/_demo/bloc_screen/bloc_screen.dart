@@ -9,7 +9,7 @@ class BlocScreen extends StatefulWidget {
   final String title;
 
   @override
-  _BlocScreenState createState() => _BlocScreenState();
+  State<BlocScreen> createState() => _BlocScreenState();
 }
 
 class _BlocScreenState extends State<BlocScreen> {

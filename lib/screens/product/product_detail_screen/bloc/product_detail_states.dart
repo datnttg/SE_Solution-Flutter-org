@@ -1,6 +1,4 @@
 import '../../../../utilities/enums/ui_enums.dart';
-import '../models/child_product_model.dart';
-import '../models/product_detail_model.dart';
 
 class ScreenModeState {
   ScreenModeEnum? state;

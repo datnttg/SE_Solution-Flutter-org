@@ -14,10 +14,10 @@ class _MultiDropdownScreenState extends State<MultiDropdownScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MultiDropdown'),
+        title: const Text('MultiDropdown'),
         centerTitle: true,
       ),
-      body: MultiDropdownBody(),
+      body: const MultiDropdownBody(),
     );
   }
 }

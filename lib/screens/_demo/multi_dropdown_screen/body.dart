@@ -18,7 +18,7 @@ class _MultiDropdownBodyState extends State<MultiDropdownBody> {
           children: [
             MultiSelectDropDown(
               clearIcon: null,
-              hint: 'Chon',
+              hint: 'Select',
               selectionType: SelectionType.single,
               // searchEnabled: true,
               onOptionSelected: (List<ValueItem> selectedOptions) {},
@@ -33,12 +33,12 @@ class _MultiDropdownBodyState extends State<MultiDropdownBody> {
               chipConfig: const ChipConfig(wrapType: WrapType.wrap),
               dropdownHeight: 300,
               selectedOptionIcon: const Icon(Icons.check_circle),
-              inputDecoration: BoxDecoration(
+              inputDecoration: const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(width: 1, color: Colors.black38))),
             ),
             MultiSelectDropDown(
-              hint: 'Chon',
+              hint: 'Select',
               selectionType: SelectionType.multi,
               // searchEnabled: true,
               onOptionSelected: (List<ValueItem> selectedOptions) {},
@@ -53,7 +53,7 @@ class _MultiDropdownBodyState extends State<MultiDropdownBody> {
               chipConfig: const ChipConfig(wrapType: WrapType.wrap),
               dropdownHeight: 300,
               selectedOptionIcon: const Icon(Icons.check_circle),
-              inputDecoration: BoxDecoration(
+              inputDecoration: const BoxDecoration(
                   border: Border(
                       bottom: BorderSide(width: 1, color: Colors.black38))),
             ),

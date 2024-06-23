@@ -17,7 +17,7 @@ class _TabViewScreenState extends State<TabViewScreen>
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -28,28 +28,26 @@ class _TabViewScreenState extends State<TabViewScreen>
         centerTitle: true,
       ),
       body: TabBarView(
-        children: <Widget>[
+        controller: tabController,
+        children: const <Widget>[
           FirstTab(),
           MyBody("Page Two"),
           MyBody("Page Three")
         ],
-// if you want yo disable swiping in tab the use below code
-//            physics: NeverScrollableScrollPhysics(),
-        controller: tabController,
       ),
       bottomNavigationBar: Material(
         color: Colors.purple,
         child: TabBar(
-          onTap: (indedx) {
-            if (indedx == 0) {
+          onTap: (index) {
+            if (index == 0) {
               setState(() {
                 title = "Home";
               });
-            } else if (indedx == 1) {
+            } else if (index == 1) {
               setState(() {
                 title = "Tab Two";
               });
-            } else if (indedx == 2) {
+            } else if (index == 2) {
               setState(() {
                 title = "Tab Three";
               });
@@ -57,7 +55,7 @@ class _TabViewScreenState extends State<TabViewScreen>
           },
           indicatorColor: Colors.blue,
           unselectedLabelColor: Colors.grey,
-          tabs: <Widget>[
+          tabs: const <Widget>[
             Tab(
               icon: Icon(Icons.favorite_border),
               text: "ONE",

@@ -15,17 +15,17 @@ class FloatingActionButtons extends StatelessWidget {
         FloatingActionButton(
           onPressed: () => bloc.eventController.sink
               .add(IncrementEvent(5)), // add event <=== new
-          child: Icon(Icons.volume_up),
+          child: const Icon(Icons.volume_up),
         ),
         FloatingActionButton(
           onPressed: () => bloc.eventController.sink
               .add(DecrementEvent(10)), // add event <=== new
-          child: Icon(Icons.volume_down),
+          child: const Icon(Icons.volume_down),
         ),
         FloatingActionButton(
           onPressed: () =>
               bloc.eventController.sink.add(MuteEvent()), // add event <=== new
-          child: Icon(Icons.volume_mute),
+          child: const Icon(Icons.volume_mute),
         )
       ],
     );

@@ -24,6 +24,11 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final bloc = ProductDetailBloc();
 
+  Future<void> loadProduct(String productId) async {
+    var productDetail = await fetchProductDetail(productId);
+    bloc.eventController.add(LoadProductDetail(productDetail));
+  }
+
   @override
   void initState() {
     if (widget.productId == null) {
@@ -33,11 +38,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       loadProduct(widget.productId!);
     }
     super.initState();
-  }
-
-  void loadProduct(String productId) async {
-    var productDetail = await fetchProductDetail(productId);
-    bloc.eventController.add(LoadProductDetail(productDetail));
   }
 
   @override
