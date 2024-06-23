@@ -1,10 +1,20 @@
+import 'package:se_solution/screens/product/product_detail_screen/models/product_detail_model.dart';
+
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';
 import '../../../../utilities/shared_preferences.dart';
-import '../bloc/product_detail_states.dart';
 
 var hostAddress = constants.hostAddress;
+
+Future<ProductDetailModel> fetchProductDetail(String productId) async {
+  var params = {"id": productId};
+  var data = await fetchData(Uri.parse('$hostAddress/Product/Detail'),
+      parameters: params);
+  var detail = data['responseData']
+      .map<ProductDetailModel>((e) => ProductDetailModel.fromJson(e));
+  return detail;
+}
 
 Future<List<CDropdownMenuEntry>> fetchProductCategory(
     {String? categoryProperty}) async {
@@ -20,7 +30,7 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
   return listEntries;
 }
 
-Future postProductDetail(ProductDetailState params) async {
+Future postProductDetail(ProductDetailModel params) async {
   var response =
       await fetchDataUI(Uri.parse(hostAddress), parameters: params.toMap());
   if (response['success'] == true) {

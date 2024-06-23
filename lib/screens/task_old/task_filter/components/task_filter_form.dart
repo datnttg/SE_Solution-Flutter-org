@@ -60,10 +60,9 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
             children: [
               ResponsiveItem(
                 // widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
-                child: CTextFormField(
+                child: KTextFormField(
                   controller: dateRangeInputController,
                   // label: Text(sharedPrefs.translate('Assigned date')),
-                  textAlign: TextAlign.start,
                   labelText: sharedPrefs.translate('Assigned date'),
                   hintText: sharedPrefs.translate('dd/mm/yyyy - dd/mm/yyyy'),
                   suffix: InkWell(
@@ -105,8 +104,8 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                   builder: (context, snapshot) {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return COnLoadingDropdownMenu(
-                        labelText: sharedPrefs.translate('Status'),
+                      return KOnLoadingDropdownMenu(
+                        label: Text(sharedPrefs.translate('Status')),
                       );
                     }
                     if (snapshot.hasData) {
@@ -138,8 +137,8 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                   builder: (context, snapshot) {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return COnLoadingDropdownMenu(
-                        labelText: sharedPrefs.translate('Task type'),
+                      return KOnLoadingDropdownMenu(
+                        label: Text(sharedPrefs.translate('Task type')),
                       );
                     }
                     if (snapshot.hasData) {
@@ -173,8 +172,8 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                   builder: (context, snapshot) {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return COnLoadingDropdownMenu(
-                        labelText: sharedPrefs.translate('Assigned to'),
+                      return KOnLoadingDropdownMenu(
+                        label: Text(sharedPrefs.translate('Assigned to')),
                       );
                     }
                     if (snapshot.hasData) {

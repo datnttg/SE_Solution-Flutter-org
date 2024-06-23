@@ -31,7 +31,7 @@ class ProductFilterBloc {
   }
 
   void loadData() async {
-    var data = await fetchProductList(params);
+    var data = await fetchProductListModel(params);
     if (data.isNotEmpty) {
       stateController.sink.add(ProductListState(data));
     } else {

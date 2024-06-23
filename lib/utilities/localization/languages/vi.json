@@ -127,5 +127,7 @@
   "Product": "Sản phẩm",
   "Add product": "Thêm sản phẩm",
   "Discard": "Bỏ qua",
-  "Warranty (month)": "Bảo hành (tháng)"
+  "Warranty (month)": "Bảo hành (tháng)",
+  "Elements": "Thành phần",
+  "Warranty must be a number": "Bảo hành phải là số"
 }

@@ -56,8 +56,8 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: FutureBuilder(
-                  future:
-                      fetchProductCategory(categoryProperty: 'ProductCategory'),
+                  future: fetchProductCategoryEntry(
+                      categoryProperty: 'ProductCategory'),
                   builder: (context, snapshot) {
                     var labelText = sharedPrefs.translate('Category');
                     Widget child = COnLoadingDropdownMenu(labelText: labelText);
@@ -82,14 +82,14 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: FutureBuilder(
-                  future: fetchProductCategory(categoryProperty: 'ProductType'),
+                  future: fetchProductCategoryEntry(
+                      categoryProperty: 'ProductType'),
                   builder: (context, snapshot) {
                     var labelText = sharedPrefs.translate('Type');
                     Widget child = COnLoadingDropdownMenu(labelText: labelText);
                     if (snapshot.hasData) {
                       child = CDropdownMenu(
                         labelText: labelText,
-                        menuHeight: 80,
                         multiSelect: true,
                         hintText: '--${sharedPrefs.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,

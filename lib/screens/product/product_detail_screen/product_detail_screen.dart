@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../utilities/configs.dart';
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
+import '../product_filter_screen/services/product_filter_services.dart';
 import 'bloc/product_detail_bloc.dart';
 import 'bloc/product_detail_events.dart';
 import 'components/product_detail.dart';
@@ -30,8 +30,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
     } else {
       bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+      loadProduct(widget.productId!);
     }
     super.initState();
+  }
+
+  void loadProduct(String productId) async {
+    var productDetail = await fetchProductDetail(productId);
+    bloc.eventController.add(LoadProductDetail(productDetail));
   }
 
   @override
@@ -42,11 +48,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bloc.screenModeController.stream.listen((data) {
+    bloc.dataController.stream.listen((data) {
       setState(() {});
     });
 
-    Widget btnUpdate = bloc.screenMode.screenMode == ScreenModeEnum.view
+    Widget btnUpdate = bloc.screenMode.state == ScreenModeEnum.view
         ? Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
@@ -57,9 +63,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ))
         : const SizedBox();
 
-    Widget btnSave = bloc.screenMode.screenMode == ScreenModeEnum.edit
+    Widget btnSave = bloc.screenMode.state == ScreenModeEnum.edit
         ? Padding(
-            padding: const EdgeInsets.all(defaultPadding),
+            padding: const EdgeInsets.only(
+                left: defaultPadding, right: defaultPadding),
             child: CElevatedButton(
               labelText: sharedPrefs.translate('Save'),
               onPressed: () async {
@@ -69,7 +76,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         : const SizedBox();
 
     Widget btnDiscard = Padding(
-        padding: const EdgeInsets.all(defaultPadding),
+        padding:
+            const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
         child: CElevatedButton(
           labelText: sharedPrefs.translate('Discard'),
           onPressed: () {
@@ -85,7 +93,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
           actions: [
             Responsive.isPortrait(context)
-                ? Container()
+                ? const SizedBox()
                 : Row(
                     children: [btnSave, btnUpdate, btnDiscard],
                   ),
@@ -100,25 +108,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     const SizedBox(height: defaultPadding * 2),
 
                     /// PRODUCT DETAIL
-                    ProductDetail(bloc: bloc, data: null),
+                    ProductDetail(bloc: bloc),
                     const SizedBox(height: defaultPadding * 2),
 
                     /// CHILD PRODUCTS
-                    bloc.state.productDetail.typeCode == 'BundleProduct'
+                    bloc.data.typeCode == 'BundleProduct'
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              /// TEXT: CHILD
                               Padding(
                                 padding: const EdgeInsets.all(defaultPadding),
                                 child: CText(
-                                  sharedPrefs.translate('Child products'),
+                                  sharedPrefs.translate('Elements'),
                                   style: const TextStyle(
                                       fontSize: largeTextSize,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              ProductDetailChildren(
-                                  bloc: bloc, childProducts: null),
+
+                              /// LIST: CHILD
+                              ProductDetailChildren(bloc: bloc),
                             ],
                           )
                         : const SizedBox(),
@@ -127,9 +137,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             !Responsive.isPortrait(context)
-                ? Container()
+                ? const SizedBox()
                 : Container(
-                    height: 50,
                     width: double.infinity,
                     color: cAppBarColor,
                     child: Row(

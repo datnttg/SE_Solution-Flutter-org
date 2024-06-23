@@ -64,29 +64,27 @@ class ResponsiveRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         var parentWidth = constraints.maxWidth;
-        // var tempWidth = basicWidth ??
-        //     (Responsive.isSmallWidth(context)
-        //         ? mobileBaseWidth
-        //         : desktopBaseWidth);
         var columns =
             parentWidth ~/ basicWidth! < 1 ? 1 : parentWidth ~/ basicWidth!;
         var width = parentWidth / columns;
 
         List<Widget> items = [];
         for (var child in children) {
-          var elementWidth = child.percentWidthOnParent != null
-              ? parentWidth * (child.percentWidthOnParent ?? 100) / 100
-              : width * (child.widthRatio!);
-          var item = SizedBox(
-            width: elementWidth > 0
-                ? columns == 1 || parentWidth ~/ elementWidth < 1
-                    ? parentWidth
-                    : elementWidth -
-                        (parentWidth ~/ elementWidth - 1) * horizontalSpacing!
-                : 0,
-            child: child.child,
-          );
-          items.add(item);
+          if (child.child != null) {
+            var elementWidth = child.percentWidthOnParent != null
+                ? parentWidth * (child.percentWidthOnParent ?? 100) / 100
+                : width * (child.widthRatio!);
+            var item = SizedBox(
+              width: elementWidth > 0
+                  ? columns == 1 || parentWidth ~/ elementWidth < 1
+                      ? parentWidth
+                      : elementWidth -
+                          (parentWidth ~/ elementWidth - 1) * horizontalSpacing!
+                  : 0,
+              child: child.child,
+            );
+            items.add(item);
+          }
         }
         return SizedBox(
           width: parentWidth,
@@ -111,7 +109,7 @@ class ResponsiveRow extends StatelessWidget {
 }
 
 class ResponsiveItem extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
   final int? widthRatio;
   final double? percentWidthOnParent;
   final Function(bool)? onHover;
@@ -120,7 +118,7 @@ class ResponsiveItem extends StatelessWidget {
 
   const ResponsiveItem({
     super.key,
-    required this.child,
+    this.child,
     this.widthRatio = 1,
     this.percentWidthOnParent,
     this.onTap,

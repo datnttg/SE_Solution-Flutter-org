@@ -7,11 +7,13 @@ class ProductFilterItemModel {
   String? unitText;
   String? statusCode;
   String? statusText;
+  bool? serialRequired;
+  int? monthsOfWarranty;
+  double? minPrice;
   String? categoryCode;
   String? categoryText;
-  bool? serialRequired;
-  int? monthOfWarranty;
-  double? minPrice;
+  String? typeCode;
+  String? typeText;
 
   ProductFilterItemModel({
     this.id,
@@ -22,11 +24,13 @@ class ProductFilterItemModel {
     this.unitText,
     this.statusCode,
     this.statusText,
+    this.serialRequired,
+    this.monthsOfWarranty,
+    this.minPrice,
     this.categoryCode,
     this.categoryText,
-    this.serialRequired,
-    this.monthOfWarranty,
-    this.minPrice,
+    this.typeCode,
+    this.typeText,
   });
 
   factory ProductFilterItemModel.fromJson(Map<String, dynamic> json) {
@@ -39,11 +43,13 @@ class ProductFilterItemModel {
       unitText: json['unitText'],
       statusCode: json['statusCode'],
       statusText: json['statusText'],
+      serialRequired: json['serialRequired'],
+      monthsOfWarranty: json['monthsOfWarranty'],
+      minPrice: (json['minPrice'] as num?)?.toDouble(),
       categoryCode: json['categoryCode'],
       categoryText: json['categoryText'],
-      serialRequired: json['serialRequired'],
-      monthOfWarranty: json['monthOfWarranty'],
-      minPrice: (json['minPrice'] as num?)?.toDouble(),
+      typeCode: json['typeCode'],
+      typeText: json['typeText'],
     );
   }
 
@@ -57,11 +63,13 @@ class ProductFilterItemModel {
       'unitText': unitText,
       'statusCode': statusCode,
       'statusText': statusText,
+      'serialRequired': serialRequired,
+      'monthsOfWarranty': monthsOfWarranty,
+      'minPrice': minPrice,
       'categoryCode': categoryCode,
       'categoryText': categoryText,
-      'serialRequired': serialRequired,
-      'monthOfWarranty': monthOfWarranty,
-      'minPrice': minPrice,
+      'typeCode': typeCode,
+      'typeText': typeText,
     };
   }
 }

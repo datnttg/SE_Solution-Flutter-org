@@ -34,7 +34,7 @@ class CScaffold extends StatelessWidget {
           canvasColor:
               Colors.blue.shade200, // Set your desired background color
         ),
-        child: body ?? Container(),
+        child: body ?? const SizedBox(),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );
@@ -113,7 +113,7 @@ class CDropdownMenu extends StatelessWidget {
     this.showDivider = true,
     this.showClearIcon = false,
     this.width,
-    this.menuHeight = 240,
+    this.menuHeight,
   });
 
   List<ValueItem> convertToValueItem(List<CDropdownMenuEntry>? values) {
@@ -151,7 +151,8 @@ class CDropdownMenu extends StatelessWidget {
       newHintText = sharedPrefs.translate('Choose many');
     }
 
-    var newMenuHeight = min(dropdownMenuEntries.length * 50, 240).toDouble();
+    var newMenuHeight =
+        menuHeight ?? min(dropdownMenuEntries.length * 50, 240).toDouble();
     if (readOnly == true) {
       newMenuHeight = 0;
     }
@@ -577,9 +578,16 @@ class KDropdownSearch extends StatelessWidget {
 /// CUSTOM LOADING DROPDOWN MENU
 class COnLoadingDropdownMenu extends StatelessWidget {
   final String? labelText;
-  final bool? required;
+  final bool? required, labelTextAsHint, wrap, showDivider;
 
-  const COnLoadingDropdownMenu({super.key, this.labelText, this.required});
+  const COnLoadingDropdownMenu({
+    super.key,
+    this.labelText,
+    this.required,
+    this.labelTextAsHint = false,
+    this.wrap = false,
+    this.showDivider = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -588,6 +596,9 @@ class COnLoadingDropdownMenu extends StatelessWidget {
       hintText: sharedPrefs.translate('Loading...'),
       readOnly: true,
       required: required,
+      wrap: wrap,
+      showDivider: showDivider,
+      labelTextAsHint: labelTextAsHint,
       suffix: const CircularProgressIndicator(),
       suffixIconConstraints: const BoxConstraints(
         maxHeight: mediumTextSize * 1.5,
@@ -926,7 +937,6 @@ class KElevatedButton extends StatelessWidget {
 }
 
 /// CUSTOM TEXT FORM FIELD
-
 class CTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? labelText, hintText, initialValue;
@@ -937,11 +947,13 @@ class CTextFormField extends StatelessWidget {
       labelTextAsHint,
       wrap,
       boldText,
-      showDivider;
+      showDivider,
+      isDense;
   final int? maxLines;
   final Widget? suffix;
   final BoxConstraints? suffixIconConstraints;
   final TextAlign? textAlign;
+  final TextInputType? keyboardType;
   final void Function()? onTap;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
@@ -952,6 +964,7 @@ class CTextFormField extends StatelessWidget {
     this.labelText,
     this.labelTextAsHint = false,
     this.textAlign,
+    this.keyboardType,
     this.boldText = false,
     this.hintText,
     this.suffix,
@@ -963,6 +976,7 @@ class CTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.wrap = false,
     this.showDivider = true,
+    this.isDense,
     this.maxLines = 1,
     this.validator,
     this.onTap,
@@ -971,16 +985,13 @@ class CTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (initialValue != null && controller != null) {
-      controller!.text = initialValue!;
-    }
-
     var newHintText = labelTextAsHint == true ? labelText : hintText;
     var textFormField = TextFormField(
       controller: controller,
+      keyboardType: keyboardType,
       validator: validator,
       decoration: InputDecoration(
-        isDense: wrap,
+        isDense: isDense ?? wrap,
         border: InputBorder.none,
         enabledBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
@@ -990,14 +1001,14 @@ class CTextFormField extends StatelessWidget {
             : newHintText,
         hintStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-        suffix: Container(
-          width: 36,
-          alignment: Alignment.center,
-        ),
+        // suffix: Container(
+        //   width: 36,
+        //   alignment: Alignment.center,
+        // ),
         suffixStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
       ),
-      initialValue: controller != null ? null : initialValue,
+      initialValue: initialValue,
       onTap: onTap,
       onChanged: onChanged,
       readOnly: readOnly ?? false,
@@ -1010,14 +1021,9 @@ class CTextFormField extends StatelessWidget {
               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize)
           : TextStyle(
               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-      // textAlign: textAlign != null
-      //     ? textAlign!
-      //     : wrap == true || labelTextAsHint == true
-      //         ? TextAlign.start
-      //         : Responsive.isSmallWidth(context)
-      //             ? TextAlign.end
-      //             : TextAlign.start,
+      textAlign: textAlign != null ? textAlign! : TextAlign.start,
     );
+
     var requireSign = required == true
         ? const Text(
             '*',
@@ -1048,13 +1054,17 @@ class CTextFormField extends StatelessWidget {
                     requireSign,
                   ],
                 ),
-                textFormField,
-                SizedBox(
-                  width: suffixIconConstraints?.maxWidth,
-                  height: suffixIconConstraints?.maxHeight,
-                  // padding: const EdgeInsets.all(3),
-                  child: suffix,
-                ),
+                Row(
+                  children: [
+                    Expanded(child: textFormField),
+                    SizedBox(
+                      width: suffixIconConstraints?.maxWidth,
+                      height: suffixIconConstraints?.maxHeight,
+                      // padding: const EdgeInsets.all(3),
+                      child: suffix,
+                    ),
+                  ],
+                )
               ],
             )
           : Column(
@@ -1079,7 +1089,7 @@ class CTextFormField extends StatelessWidget {
                     Container(
                       width: suffixIconConstraints?.maxWidth,
                       height: suffixIconConstraints?.maxHeight,
-                      padding: const EdgeInsets.only(right: defaultPadding),
+                      padding: const EdgeInsets.all(defaultPadding / 2),
                       child: suffix,
                     ),
                   ],

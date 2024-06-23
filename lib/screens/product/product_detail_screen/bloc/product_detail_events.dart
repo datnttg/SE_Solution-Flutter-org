@@ -1,11 +1,17 @@
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/child_product_model.dart';
+import '../models/product_detail_model.dart';
 
 abstract class ChangeProductDetailEvents {}
 
 class ChangeScreenMode extends ChangeProductDetailEvents {
   ScreenModeEnum? screenMode;
   ChangeScreenMode(this.screenMode);
+}
+
+class LoadProductDetail extends ChangeProductDetailEvents {
+  ProductDetailModel detail;
+  LoadProductDetail(this.detail);
 }
 
 class ChangeProductCode extends ChangeProductDetailEvents {
@@ -49,7 +55,7 @@ class ChangeProductSerialRequired extends ChangeProductDetailEvents {
 }
 
 class ChangeProductMonthsOfWarranty extends ChangeProductDetailEvents {
-  int? monthsOfWarranty;
+  String? monthsOfWarranty;
   ChangeProductMonthsOfWarranty(this.monthsOfWarranty);
 }
 
@@ -58,9 +64,26 @@ class ChangeProductMinPrice extends ChangeProductDetailEvents {
   ChangeProductMinPrice(this.minPrice);
 }
 
-class ChangeProductChildren extends ChangeProductDetailEvents {
+class RemoveChildProduct extends ChangeProductDetailEvents {
+  int item;
+  RemoveChildProduct(this.item);
+}
+
+class ChangeChildProductId extends ChangeProductDetailEvents {
+  int item;
+  String productId;
+  ChangeChildProductId(this.item, this.productId);
+}
+
+class ChangeChildProductQuantity extends ChangeProductDetailEvents {
+  int item;
+  double quantity;
+  ChangeChildProductQuantity(this.item, this.quantity);
+}
+
+class ChangeChildrenProducts extends ChangeProductDetailEvents {
   List<ChildProductModel> children;
-  ChangeProductChildren(this.children);
+  ChangeChildrenProducts(this.children);
 }
 
 class SubmitData extends ChangeProductDetailEvents {

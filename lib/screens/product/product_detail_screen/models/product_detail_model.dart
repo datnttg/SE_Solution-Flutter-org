@@ -47,7 +47,7 @@ class ProductDetailModel {
       unitText: json['unitText'],
       serialRequired: json['serialRequired'],
       monthsOfWarranty: json['monthsOfWarranty'],
-      minPrice: (json['minPrice'] as num).toDouble(),
+      minPrice: json['minPrice']?.toDouble(),
       statusCode: json['statusCode'],
       statusText: json['statusText'],
       categoryCode: json['categoryCode'],

@@ -1,12 +1,12 @@
 class ChildProductModel {
-  final String childId;
-  final int quantityOfChild;
-  final String note;
+  String childId;
+  double quantityOfChild;
+  String? note;
 
   ChildProductModel({
     required this.childId,
     required this.quantityOfChild,
-    required this.note,
+    this.note,
   });
 
   factory ChildProductModel.fromJson(Map<String, dynamic> json) {

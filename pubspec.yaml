@@ -54,10 +54,9 @@ dependencies:
   open_app_file: ^4.0.2
   firebase_app_installations: ^0.3.0+1
   package_info_plus: ^8.0.0
+  multi_dropdown: ^2.1.4
   dropdown_plus_plus: ^0.1.1+1
   device_info_plus: ^10.1.0
-  dropdown_search: ^5.0.6
-  multi_dropdown: ^2.1.4
 
 dev_dependencies:
   flutter_test:

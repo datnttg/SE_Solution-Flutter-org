@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../screens/_demo/demo_screen.dart';
+import '../screens/_demo/_navigator_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/owner_project_overview/owner_project_overview_screen.dart';
 import '../screens/power_station_monitor/power_station_monitor_screen.dart';
 import '../screens/product/product_detail_screen/product_detail_screen.dart';
-import '../screens/product/product_filter_sreen/product_filter_sreen.dart';
+import '../screens/product/product_filter_screen/product_filter_screen.dart';
 import '../screens/task/task_filter_screen/task_filter_screen.dart';
 import '../screens/task_old/task_detail/task_detail_screen.dart';
 import 'shared_preferences.dart';
@@ -69,7 +69,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name?.toLowerCase()) {
       /// Demo
       case '/demo':
-        return MaterialPageRoute(builder: (_) => const DemoScreen());
+        return MaterialPageRoute(
+            builder: (_) => const DemoHomePage(title: 'Demo'));
 
       /// Implement
       case '/':

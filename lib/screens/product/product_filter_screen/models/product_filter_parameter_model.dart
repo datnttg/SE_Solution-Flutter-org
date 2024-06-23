@@ -1,12 +1,14 @@
 class ProductFilterParameters {
   String? code;
   String? name;
+  String? statusCode;
   List<String>? typeCodes;
   List<String>? categoryCodes;
 
   ProductFilterParameters({
     this.code,
     this.name,
+    this.statusCode,
     this.typeCodes,
     this.categoryCodes,
   });

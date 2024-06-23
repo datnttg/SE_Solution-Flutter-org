@@ -157,6 +157,14 @@ kPushNamed(BuildContext context, String route) {
   Navigator.pushNamed(context, route);
 }
 
+String numberFormat0(double number) {
+  return nf0.format(number);
+}
+
+String numberFormat1(double number) {
+  return nf1.format(number);
+}
+
 DateTime kDateTimeConvert(String dateTimeString) {
   try {
     return DateTime.parse(dateTimeString);

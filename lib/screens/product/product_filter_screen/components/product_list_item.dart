@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_solution/utilities/app_service.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
@@ -39,16 +40,13 @@ class ProductListItem extends StatelessWidget {
               children: [
                 /// TASK TYPE
                 ResponsiveItem(
-                  // percentWidthOnParent: 100,
+                  widthRatio: 2,
                   child: Row(
                     children: [
-                      // CText('${sharedPrefs.translate('Type')}: ',
-                      //     style: const TextStyle(fontSize: smallTextSize)),
                       CText(
                         '${dataItem.name}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: smallTextSize,
                           color: Colors.black,
                         ),
                         warpText: true,
@@ -101,14 +99,14 @@ class ProductListItem extends StatelessWidget {
                   ),
                 ),
 
-                /// MONTHS OF WARRANTY
+                /// TYPE
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPrefs.translate('Warranty (month)')}: ',
+                      CText('${sharedPrefs.translate('Type')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       CText(
-                        '${dataItem.monthOfWarranty}',
+                        '${dataItem.typeText}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
@@ -119,6 +117,55 @@ class ProductListItem extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                /// MONTHS OF WARRANTY
+                dataItem.monthsOfWarranty == null
+                    ? const ResponsiveItem(
+                        widthRatio: 0,
+                        child: SizedBox(),
+                      )
+                    : ResponsiveItem(
+                        child: Row(
+                          children: [
+                            CText(
+                                '${sharedPrefs.translate('Warranty (month)')}: ',
+                                style:
+                                    const TextStyle(fontSize: smallTextSize)),
+                            CText(
+                              numberFormat0(
+                                  dataItem.monthsOfWarranty!.toDouble()),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: smallTextSize,
+                                color: Colors.black,
+                              ),
+                              warpText: true,
+                            )
+                          ],
+                        ),
+                      ),
+
+                /// MIN PRICE
+                dataItem.minPrice == null
+                    ? const ResponsiveItem()
+                    : ResponsiveItem(
+                        child: Row(
+                          children: [
+                            CText('${sharedPrefs.translate('Min price')}: ',
+                                style:
+                                    const TextStyle(fontSize: smallTextSize)),
+                            CText(
+                              numberFormat0(dataItem.minPrice!),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: smallTextSize,
+                                color: Colors.black,
+                              ),
+                              warpText: true,
+                            )
+                          ],
+                        ),
+                      ),
 
                 /// DESCRIPTION
                 ResponsiveItem(

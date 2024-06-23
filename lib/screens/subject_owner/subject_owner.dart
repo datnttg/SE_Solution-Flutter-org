@@ -3,7 +3,7 @@ import '../../utilities/constants/dismention_contants.dart';
 import '../../utilities/custom_widgets.dart';
 import '../../utilities/shared_preferences.dart';
 import '../../utilities/ui_styles.dart';
-import '../_demo/responsive_tabs/components/app_menu.dart';
+import '../common_components/main_menu.dart';
 import 'components/remuneration_body.dart';
 import 'components/customers_body.dart';
 import 'components/dashboard_body.dart';
@@ -40,7 +40,7 @@ class _SubjectOwnerState extends State<SubjectOwner> {
     bool isWidescreen = size.width > size.height;
     return KScaffold(
       appBar: topNavigationBar(isWidescreen) as AppBar,
-      drawer: const AppMenu(),
+      drawer: const MainMenu(),
       bottomNavigationBar: bottomNavigationBar(!isWidescreen),
       body: _body,
       // floatingActionButton: const FloatingActionButton(
