@@ -22,11 +22,12 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  final bloc = ProductDetailBloc();
+  final ProductDetailBloc bloc = ProductDetailBloc();
 
   Future<void> loadProduct(String productId) async {
     var productDetail = await fetchProductDetail(productId);
     bloc.eventController.add(LoadProductDetail(productDetail));
+    bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
   }
 
   @override
@@ -34,7 +35,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (widget.productId == null) {
       bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
     } else {
-      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
       loadProduct(widget.productId!);
     }
     super.initState();
@@ -48,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bloc.dataController.stream.listen((data) {
+    bloc.uiController.stream.listen((data) {
       setState(() {});
     });
 

@@ -1,9 +1,8 @@
-import 'package:se_solution/screens/product/product_detail_screen/models/product_detail_model.dart';
-
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';
 import '../../../../utilities/shared_preferences.dart';
+import '../models/product_detail_model.dart';
 
 var hostAddress = constants.hostAddress;
 
@@ -31,8 +30,8 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
 }
 
 Future postProductDetail(ProductDetailModel params) async {
-  var response =
-      await fetchDataUI(Uri.parse(hostAddress), parameters: params.toMap());
+  var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
+      parameters: params.toMap());
   if (response['success'] == true) {
     kShowToast(
       title: sharedPrefs.translate('Success'),

@@ -12,12 +12,20 @@ import '../services/fetch_data_service.dart';
 
 class ProductDetail extends StatelessWidget {
   final ProductDetailBloc bloc;
+  final codeController = TextEditingController();
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final warrantyController = TextEditingController();
 
-  const ProductDetail({super.key, required this.bloc});
+  ProductDetail({super.key, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
     var readOnly = bloc.screenMode.state == ScreenModeEnum.view;
+    codeController.text = bloc.data.code ?? '';
+    nameController.text = bloc.data.name ?? '';
+    descriptionController.text = bloc.data.description ?? '';
+    warrantyController.text = bloc.data.monthsOfWarranty?.toString() ?? '';
 
     /// RETURN
     return Container(
@@ -32,8 +40,8 @@ class ProductDetail extends StatelessWidget {
               labelText: sharedPrefs.translate('Code'),
               required: true,
               readOnly: readOnly,
-              autoFocus: bloc.data.code == null ? true : false,
-              initialValue: bloc.data.code,
+              autoFocus: codeController.text == '' ? true : false,
+              controller: codeController,
               onChanged: (value) {
                 bloc.eventController.add(ChangeProductCode(value));
               },
@@ -46,7 +54,7 @@ class ProductDetail extends StatelessWidget {
               labelText: sharedPrefs.translate('Name'),
               required: true,
               readOnly: readOnly,
-              initialValue: bloc.data.name,
+              controller: nameController,
               onChanged: (value) {
                 bloc.eventController.add(ChangeProductName(value));
               },
@@ -85,7 +93,7 @@ class ProductDetail extends StatelessWidget {
             child: CTextFormField(
               labelText: sharedPrefs.translate('Description'),
               readOnly: readOnly,
-              initialValue: bloc.data.description,
+              controller: descriptionController,
               onChanged: (value) {
                 bloc.eventController.add(ChangeProductDescription(value));
               },
@@ -98,7 +106,7 @@ class ProductDetail extends StatelessWidget {
               labelText: sharedPrefs.translate('Warranty (month)'),
               keyboardType: TextInputType.number,
               readOnly: readOnly,
-              initialValue: bloc.data.monthsOfWarranty?.toString(),
+              controller: warrantyController,
               onChanged: (value) {
                 bloc.eventController.add(ChangeProductMonthsOfWarranty(value));
               },
