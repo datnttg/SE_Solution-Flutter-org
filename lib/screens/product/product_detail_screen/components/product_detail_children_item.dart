@@ -34,7 +34,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
   Future<void> _loadProductDetails() async {
     if (widget.bloc.data.children != null) {
       final fetchedChild = await fetchProductDetail(
-          widget.bloc.data.children![widget.itemIndex].childId);
+          widget.bloc.data.children![widget.itemIndex].childId ?? '');
       setState(() {
         child = fetchedChild;
       });
@@ -143,7 +143,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               CText(
-                '${child?.unitText}',
+                child?.unitText ?? selectedProduct?.unitText ?? '',
                 style: const TextStyle(fontSize: smallTextSize),
               ),
               const SizedBox(width: 50)

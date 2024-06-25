@@ -38,7 +38,7 @@ class ProductDetail extends StatelessWidget {
           ResponsiveItem(
             child: CTextFormField(
               labelText: sharedPrefs.translate('Code'),
-              required: true,
+              required: bloc.screenMode.state == ScreenModeEnum.edit,
               readOnly: readOnly,
               autoFocus: codeController.text == '' ? true : false,
               controller: codeController,
@@ -50,9 +50,10 @@ class ProductDetail extends StatelessWidget {
 
           /// NAME
           ResponsiveItem(
+            widthRatio: 2,
             child: CTextFormField(
               labelText: sharedPrefs.translate('Name'),
-              required: true,
+              required: bloc.screenMode.state == ScreenModeEnum.edit,
               readOnly: readOnly,
               controller: nameController,
               onChanged: (value) {
@@ -70,7 +71,7 @@ class ProductDetail extends StatelessWidget {
                   if (snapshot.hasData) {
                     return CDropdownMenu(
                       labelText: sharedPrefs.translate(labelText),
-                      required: true,
+                      required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
                       dropdownMenuEntries: snapshot.data!,
                       selectedMenuEntries: snapshot.data!
@@ -115,7 +116,7 @@ class ProductDetail extends StatelessWidget {
 
           /// STATUS
           ResponsiveItem(
-            widthRatio: bloc.data.statusCode != null ? 1 : 0,
+            widthRatio: bloc.data.statusCode != '' ? 1 : 0,
             child: FutureBuilder<List<CDropdownMenuEntry>>(
                 future: fetchProductCategory(categoryProperty: 'ProductStatus'),
                 builder: (context, snapshot) {
@@ -123,7 +124,7 @@ class ProductDetail extends StatelessWidget {
                   if (snapshot.hasData) {
                     return CDropdownMenu(
                       labelText: sharedPrefs.translate(labelText),
-                      required: true,
+                      required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
                       dropdownMenuEntries: snapshot.data!,
                       selectedMenuEntries: snapshot.data!
@@ -150,7 +151,7 @@ class ProductDetail extends StatelessWidget {
                   if (snapshot.hasData) {
                     return CDropdownMenu(
                       labelText: sharedPrefs.translate(labelText),
-                      required: true,
+                      required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
                       dropdownMenuEntries: snapshot.data!,
                       selectedMenuEntries: snapshot.data!
@@ -176,7 +177,7 @@ class ProductDetail extends StatelessWidget {
                   if (snapshot.hasData) {
                     return CDropdownMenu(
                       labelText: sharedPrefs.translate(labelText),
-                      required: true,
+                      required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
                       dropdownMenuEntries: snapshot.data!,
                       selectedMenuEntries: bloc.data.typeCode == null

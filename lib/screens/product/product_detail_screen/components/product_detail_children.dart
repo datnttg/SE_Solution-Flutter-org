@@ -10,12 +10,16 @@ class ProductDetailChildren extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if ((bloc.data.children?.isEmpty ?? false) &&
+        !(bloc.data.children?.any((e) => e.childId == null) ?? true)) {
+      bloc.data.children?.add(bloc.blankChild);
+    }
     return Container(
       color: kBgColor,
       constraints: const BoxConstraints(maxHeight: 360),
       child: ListView.builder(
           shrinkWrap: true,
-          itemCount: 1,
+          itemCount: bloc.data.children?.length,
           itemBuilder: (context, index) {
             return ProductDetailChildrenItem(
               bloc: bloc,

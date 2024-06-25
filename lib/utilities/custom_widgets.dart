@@ -88,7 +88,8 @@ class CDropdownMenu extends StatelessWidget {
       required,
       showDivider,
       showClearIcon,
-      labelTextAsHint;
+      labelTextAsHint,
+      boldText;
   final MultiSelectController<dynamic>? controller;
   final String? hintText;
   final double? width, menuHeight;
@@ -104,6 +105,7 @@ class CDropdownMenu extends StatelessWidget {
     this.controller,
     this.onSelected,
     this.hintText,
+    this.boldText = true,
     this.multiSelect = false,
     this.wrap,
     this.enabled = true,
@@ -158,6 +160,7 @@ class CDropdownMenu extends StatelessWidget {
     }
 
     var dropdownMenu = MultiSelectDropDown(
+      padding: EdgeInsets.zero,
       dropdownMargin: 1,
       animateSuffixIcon: newMenuHeight == 0 ? false : true,
       clearIcon: showClearIcon == true
@@ -182,8 +185,13 @@ class CDropdownMenu extends StatelessWidget {
           multiSelect == true ? SelectionType.multi : SelectionType.single,
       inputDecoration: const BoxDecoration(),
       optionTextStyle: const TextStyle(fontSize: mediumTextSize),
-      singleSelectItemStyle: const TextStyle(fontSize: mediumTextSize),
-      hintStyle: const TextStyle(fontSize: mediumTextSize),
+      singleSelectItemStyle: TextStyle(
+          fontSize: mediumTextSize,
+          fontWeight: boldText == true ? FontWeight.bold : null),
+      hintStyle: TextStyle(
+          fontSize: mediumTextSize,
+          fontWeight: boldText == true ? FontWeight.bold : null,
+          color: Colors.black54),
     );
 
     return Container(
@@ -965,7 +973,7 @@ class CTextFormField extends StatelessWidget {
     this.labelTextAsHint = false,
     this.textAlign,
     this.keyboardType,
-    this.boldText = false,
+    this.boldText = true,
     this.hintText,
     this.suffix,
     this.suffixIconConstraints,
@@ -986,6 +994,7 @@ class CTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var newHintText = labelTextAsHint == true ? labelText : hintText;
+
     var textFormField = TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -1060,7 +1069,6 @@ class CTextFormField extends StatelessWidget {
                     SizedBox(
                       width: suffixIconConstraints?.maxWidth,
                       height: suffixIconConstraints?.maxHeight,
-                      // padding: const EdgeInsets.all(3),
                       child: suffix,
                     ),
                   ],
@@ -1094,7 +1102,6 @@ class CTextFormField extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
               ],
             ),
     );

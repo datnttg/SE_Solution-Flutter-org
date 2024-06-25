@@ -19,6 +19,7 @@ class ProductDetailBloc {
 
   var screenMode = ScreenModeState(state: ScreenModeEnum.view);
   var data = ProductDetailModel(typeCode: 'SingleProduct', children: []);
+  var blankChild = ChildProductModel();
 
   ProductDetailBloc() {
     eventController.stream.listen((event) {
@@ -45,6 +46,7 @@ class ProductDetailBloc {
             data.unitCode = event.unit;
           } else if (event is ChangeProductType) {
             data.typeCode = event.type;
+            uiController.add(screenMode);
           } else if (event is ChangeProductCode) {
             data.code = event.code;
           } else if (event is ChangeProductName) {

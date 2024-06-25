@@ -1,11 +1,11 @@
 class ChildProductModel {
-  String childId;
-  double quantityOfChild;
+  String? childId;
+  double? quantityOfChild;
   String? note;
 
   ChildProductModel({
-    required this.childId,
-    required this.quantityOfChild,
+    this.childId,
+    this.quantityOfChild,
     this.note,
   });
 

@@ -41,14 +41,13 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
         padding: const EdgeInsets.all(8.0),
         child: ResponsiveRow(
           context: context,
-          basicWidth: 400,
+          basicWidth: 360,
           horizontalSpacing: 0,
           children: [
             /// CREATED DATE
             ResponsiveItem(
                 child: CTextFormField(
               labelText: sharedPrefs.translate('Assigned date'),
-              // wrap: true,
               hintText: '--${sharedPrefs.translate('All')}--',
               controller: dateRangeInputController,
               suffix: IconButton(

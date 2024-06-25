@@ -26,7 +26,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<void> loadProduct(String productId) async {
     var productDetail = await fetchProductDetail(productId);
-    bloc.eventController.add(LoadProductDetail(productDetail));
+    if (productDetail != null) {
+      bloc.eventController.add(LoadProductDetail(productDetail));
+    }
     bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
   }
 

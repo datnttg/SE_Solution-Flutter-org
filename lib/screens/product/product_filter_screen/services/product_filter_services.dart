@@ -8,11 +8,15 @@ import '../models/product_filter_parameter_model.dart';
 
 var hostAddress = constants.hostAddress;
 
-Future<ProductDetailModel> fetchProductDetail(String productId) async {
+Future<ProductDetailModel?> fetchProductDetail(String productId) async {
   var params = {'id': productId};
   var data = await fetchData(Uri.parse('$hostAddress/Product/Detail'),
       parameters: params);
-  return ProductDetailModel.fromJson(data['responseData']);
+  if (data['responseData'] != null) {
+    return ProductDetailModel.fromJson(data['responseData']);
+  } else {
+    return null;
+  }
 }
 
 Future<ProductDetailModel> fetchProductDetailEntry(String productId) async {
