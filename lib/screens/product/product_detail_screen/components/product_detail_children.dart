@@ -10,9 +10,6 @@ class ProductDetailChildren extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var a = (bloc.data.children?.isEmpty ?? false);
-    var b = !(bloc.data.children?.any((e) => e.childId == null) ?? true);
-    var c = bloc.data.children;
     if ((bloc.data.children?.isEmpty ?? false) &&
         !(bloc.data.children?.any((e) => e.childId == null) ?? true)) {
       bloc.data.children?.add(bloc.blankChild);
