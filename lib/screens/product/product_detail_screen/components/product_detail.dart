@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../../../../utilities/responsive.dart';
@@ -8,7 +7,7 @@ import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
-import '../services/fetch_data_service.dart';
+import '../bloc/product_detail_states.dart';
 
 class ProductDetail extends StatelessWidget {
   final ProductDetailBloc bloc;
@@ -64,8 +63,8 @@ class ProductDetail extends StatelessWidget {
 
           /// UNIT
           ResponsiveItem(
-            child: FutureBuilder<List<CDropdownMenuEntry>>(
-                future: fetchProductCategory(categoryProperty: 'ProductUnit'),
+            child: StreamBuilder<ProductDetailDataState>(
+                stream: bloc.dropdownDataController.stream,
                 builder: (context, snapshot) {
                   var labelText = 'Unit';
                   if (snapshot.hasData) {
@@ -73,8 +72,8 @@ class ProductDetail extends StatelessWidget {
                       labelText: sharedPrefs.translate(labelText),
                       required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!,
-                      selectedMenuEntries: snapshot.data!
+                      dropdownMenuEntries: snapshot.data!.listUnit ?? [],
+                      selectedMenuEntries: snapshot.data!.listUnit!
                           .where((e) => e.value == bloc.data.unitCode)
                           .toList(),
                       onSelected: (value) {
@@ -86,6 +85,19 @@ class ProductDetail extends StatelessWidget {
                   return COnLoadingDropdownMenu(
                       labelText: sharedPrefs.translate(labelText));
                 }),
+          ),
+
+          /// SERIAL REQUIRED
+          ResponsiveItem(
+            widthRatio: 2,
+            child: CSwitch(
+              labelText: sharedPrefs.translate('Serial monitoring'),
+              readOnly: readOnly,
+              value: bloc.data.serialRequired ?? false,
+              onChanged: (value) {
+                bloc.eventController.add(ChangeProductRequiredSerial(value));
+              },
+            ),
           ),
 
           /// DESCRIPTION
@@ -117,8 +129,8 @@ class ProductDetail extends StatelessWidget {
           /// STATUS
           ResponsiveItem(
             widthRatio: bloc.data.statusCode != '' ? 1 : 0,
-            child: FutureBuilder<List<CDropdownMenuEntry>>(
-                future: fetchProductCategory(categoryProperty: 'ProductStatus'),
+            child: StreamBuilder<ProductDetailDataState>(
+                stream: bloc.dropdownDataController.stream,
                 builder: (context, snapshot) {
                   var labelText = 'Status';
                   if (snapshot.hasData) {
@@ -126,8 +138,8 @@ class ProductDetail extends StatelessWidget {
                       labelText: sharedPrefs.translate(labelText),
                       required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!,
-                      selectedMenuEntries: snapshot.data!
+                      dropdownMenuEntries: snapshot.data!.listStatus ?? [],
+                      selectedMenuEntries: snapshot.data!.listStatus!
                           .where((e) => e.value == bloc.data.statusCode)
                           .toList(),
                       onSelected: (value) {
@@ -143,9 +155,8 @@ class ProductDetail extends StatelessWidget {
 
           /// CATEGORY
           ResponsiveItem(
-            child: FutureBuilder<List<CDropdownMenuEntry>>(
-                future:
-                    fetchProductCategory(categoryProperty: 'ProductCategory'),
+            child: StreamBuilder<ProductDetailDataState>(
+                stream: bloc.dropdownDataController.stream,
                 builder: (context, snapshot) {
                   var labelText = 'Category';
                   if (snapshot.hasData) {
@@ -153,8 +164,8 @@ class ProductDetail extends StatelessWidget {
                       labelText: sharedPrefs.translate(labelText),
                       required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!,
-                      selectedMenuEntries: snapshot.data!
+                      dropdownMenuEntries: snapshot.data!.listCategory!,
+                      selectedMenuEntries: snapshot.data!.listCategory!
                           .where((e) => e.value == bloc.data.categoryCode)
                           .toList(),
                       onSelected: (value) {
@@ -170,8 +181,8 @@ class ProductDetail extends StatelessWidget {
 
           /// TYPE
           ResponsiveItem(
-            child: FutureBuilder<List<CDropdownMenuEntry>>(
-                future: fetchProductCategory(categoryProperty: 'ProductType'),
+            child: StreamBuilder<ProductDetailDataState>(
+                stream: bloc.dropdownDataController.stream,
                 builder: (context, snapshot) {
                   var labelText = 'Type';
                   if (snapshot.hasData) {
@@ -179,12 +190,12 @@ class ProductDetail extends StatelessWidget {
                       labelText: sharedPrefs.translate(labelText),
                       required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!,
+                      dropdownMenuEntries: snapshot.data!.listType!,
                       selectedMenuEntries: bloc.data.typeCode == null
-                          ? snapshot.data!
+                          ? snapshot.data!.listType!
                               .where((e) => e.value == bloc.data.typeCode)
                               .toList()
-                          : snapshot.data!
+                          : snapshot.data!.listType!
                               .where((e) => e.value == bloc.data.typeCode)
                               .toList(),
                       onSelected: (value) {

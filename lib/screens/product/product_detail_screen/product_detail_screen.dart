@@ -6,11 +6,12 @@ import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
-import '../product_filter_screen/services/product_filter_services.dart';
 import 'bloc/product_detail_bloc.dart';
 import 'bloc/product_detail_events.dart';
 import 'components/product_detail.dart';
 import 'components/product_detail_children.dart';
+import 'models/product_detail_model.dart';
+import 'services/fetch_data_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String? productId;
@@ -24,12 +25,29 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ProductDetailBloc bloc = ProductDetailBloc();
 
-  Future<void> loadProduct(String productId) async {
-    var productDetail = await fetchProductDetail(productId);
-    if (productDetail != null) {
-      bloc.eventController.add(LoadProductDetail(productDetail));
+  Future<void> loadData(String? productId) async {
+    var productDetailModel = ProductDetailModel();
+    if (productId != null) {
+      var productDetail = await fetchProductDetail(productId);
+      if (productDetail != null) {
+        productDetailModel = productDetail;
+      }
     }
-    bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+    var lstProduct = await fetchProductList();
+    var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
+    var lstStatus =
+        await fetchProductCategory(categoryProperty: 'ProductStatus');
+    var lstCategory =
+        await fetchProductCategory(categoryProperty: 'ProductCategory');
+    var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
+    bloc.eventController.add(LoadData(
+      detail: productDetailModel,
+      listProduct: lstProduct,
+      listUnit: lstUnit,
+      listCategory: lstCategory,
+      listStatus: lstStatus,
+      listType: lstType,
+    ));
   }
 
   @override
@@ -37,8 +55,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (widget.productId == null) {
       bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
     } else {
-      loadProduct(widget.productId!);
+      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
     }
+    loadData(widget.productId);
     super.initState();
   }
 

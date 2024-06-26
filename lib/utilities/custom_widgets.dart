@@ -194,6 +194,7 @@ class CDropdownMenu extends StatelessWidget {
           color: Colors.black54),
     );
 
+    /// RETURN
     return Container(
       padding:
           const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
@@ -804,6 +805,59 @@ class KFutureDropdownMenu extends StatelessWidget {
           child: child,
         );
       },
+    );
+  }
+}
+
+/// CUSTOM SWITCH
+class CSwitch extends StatelessWidget {
+  final bool value;
+  final bool? readOnly, showDivider;
+  final void Function(bool) onChanged;
+  final String? labelText;
+
+  const CSwitch({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.labelText,
+    this.readOnly = false,
+    this.showDivider = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final WidgetStateProperty<Icon?> thumbIcon =
+        WidgetStateProperty.resolveWith<Icon?>(
+      (Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return Icon(
+            Icons.check,
+            color: readOnly == false ? Colors.green : Colors.grey,
+          );
+        }
+        return const Icon(Icons.close, color: Colors.grey);
+      },
+    );
+    return Container(
+      padding:
+          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      decoration: showDivider == true
+          ? const BoxDecoration(
+              border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
+          : null,
+      child: Row(
+        children: [
+          Expanded(child: Text(labelText ?? '')),
+          Switch(
+            value: value,
+            onChanged: readOnly == false ? onChanged : null,
+            activeTrackColor: readOnly == false ? Colors.green : Colors.grey,
+            inactiveTrackColor: Colors.grey,
+            thumbIcon: thumbIcon,
+          ),
+        ],
+      ),
     );
   }
 }

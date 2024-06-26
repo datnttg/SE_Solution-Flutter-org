@@ -54,8 +54,9 @@ class ProductDetailModel {
       categoryText: json['categoryText'],
       typeCode: json['typeCode'],
       typeText: json['typeText'],
-      children: List<ChildProductModel>.from(
-          json['children'].map((x) => ChildProductModel.fromJson(x))),
+      children: (json['children'] as List<dynamic>?)
+          ?.map((childJson) => ChildProductModel.fromJson(childJson))
+          .toList(),
     );
   }
 

@@ -1,4 +1,6 @@
+import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../models/child_product_model.dart';
 import '../models/product_detail_model.dart';
 
@@ -9,9 +11,21 @@ class ChangeScreenMode extends ChangeProductDetailEvents {
   ChangeScreenMode(this.screenMode);
 }
 
-class LoadProductDetail extends ChangeProductDetailEvents {
-  ProductDetailModel detail;
-  LoadProductDetail(this.detail);
+class LoadData extends ChangeProductDetailEvents {
+  ProductDetailModel? detail;
+  List<ProductFilterItemModel> listProduct;
+  List<CDropdownMenuEntry> listUnit;
+  List<CDropdownMenuEntry> listStatus;
+  List<CDropdownMenuEntry> listCategory;
+  List<CDropdownMenuEntry> listType;
+  LoadData({
+    this.detail,
+    required this.listProduct,
+    required this.listUnit,
+    required this.listStatus,
+    required this.listCategory,
+    required this.listType,
+  });
 }
 
 class ChangeProductCode extends ChangeProductDetailEvents {
@@ -27,6 +41,11 @@ class ChangeProductName extends ChangeProductDetailEvents {
 class ChangeProductUnit extends ChangeProductDetailEvents {
   String? unit;
   ChangeProductUnit(this.unit);
+}
+
+class ChangeProductRequiredSerial extends ChangeProductDetailEvents {
+  bool? require;
+  ChangeProductRequiredSerial(this.require);
 }
 
 class ChangeProductDescription extends ChangeProductDetailEvents {

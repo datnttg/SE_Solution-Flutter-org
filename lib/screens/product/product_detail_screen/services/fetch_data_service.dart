@@ -1,18 +1,41 @@
+import 'dart:async';
+
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';
 import '../../../../utilities/shared_preferences.dart';
+import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../models/product_detail_model.dart';
 
 var hostAddress = constants.hostAddress;
 
-Future<ProductDetailModel> fetchProductDetail(String productId) async {
-  var params = {"id": productId};
-  var data = await fetchData(Uri.parse('$hostAddress/Product/Detail'),
+Future<List<ProductFilterItemModel>> fetchProductList() async {
+  var params = {};
+  var data = await fetchData(Uri.parse('$hostAddress/Product/List'),
       parameters: params);
   var detail = data['responseData']
-      .map<ProductDetailModel>((e) => ProductDetailModel.fromJson(e));
+      .map<ProductFilterItemModel>((e) => ProductFilterItemModel.fromJson(e))
+      .toList();
   return detail;
+}
+
+// Future<ProductDetailModel> fetchProductDetail(String productId) async {
+//   var params = {"id": productId};
+//   var data = await fetchData(Uri.parse('$hostAddress/Product/Detail'),
+//       parameters: params);
+//   var detail = data['responseData']
+//       .map<ProductDetailModel>((e) => ProductDetailModel.fromJson(e));
+//   return detail;
+// }
+Future<ProductDetailModel?> fetchProductDetail(String productId) async {
+  var params = {'id': productId};
+  var data = await fetchData(Uri.parse('$hostAddress/Product/Detail'),
+      parameters: params);
+  if (data['responseData'] != null) {
+    return ProductDetailModel.fromJson(data['responseData']);
+  } else {
+    return null;
+  }
 }
 
 Future<List<CDropdownMenuEntry>> fetchProductCategory(
