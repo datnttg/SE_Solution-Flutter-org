@@ -20,7 +20,8 @@ class ProductDetailBloc {
       StreamController<ProductDetailDataState>.broadcast();
 
   var screenMode = ScreenModeState(state: ScreenModeEnum.view);
-  var data = ProductDetailModel(typeCode: 'SingleProduct', children: []);
+  var data = ProductDetailModel(
+      typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
   var blankChild = ChildProductModel();
   var dropdownData = ProductDetailDataState();
 
@@ -40,12 +41,14 @@ class ProductDetailBloc {
           dropdownData.listStatus = event.listStatus;
           dropdownData.listCategory = event.listCategory;
           dropdownData.listType = event.listType;
+
+          dropdownDataController.add(dropdownData);
           if (event.detail?.id != null) {
             data = event.detail!;
             uiController.add(ScreenModeState(state: ScreenModeEnum.view));
+          } else {
+            uiController.add(ScreenModeState(state: ScreenModeEnum.edit));
           }
-
-          dropdownDataController.add(dropdownData);
         }
 
         /// SUBMIT
@@ -59,6 +62,9 @@ class ProductDetailBloc {
         } else if (event is ChangeProductUnit) {
           data.unitCode = event.unit;
         } else if (event is ChangeProductType) {
+          if (event.type == 'SingleProduct') {
+            data.children = [];
+          }
           data.typeCode = event.type;
           uiController.add(screenMode);
         } else if (event is ChangeProductCode) {
@@ -67,6 +73,8 @@ class ProductDetailBloc {
           data.name = event.name;
         } else if (event is ChangeProductUnit) {
           data.unitCode = event.unit;
+        } else if (event is ChangeProductStatus) {
+          data.statusCode = event.status;
         } else if (event is ChangeProductRequiredSerial) {
           data.serialRequired = event.require;
           uiController.add(screenMode);
@@ -113,7 +121,11 @@ class ProductDetailBloc {
   }
 
   void postData() async {
-    await postProductDetail(data);
+    var productId = await postProductDetail(data);
+    if (productId != null) {
+      data.id = productId;
+      uiController.add(ScreenModeState(state: ScreenModeEnum.view));
+    }
   }
 
   void dispose() {

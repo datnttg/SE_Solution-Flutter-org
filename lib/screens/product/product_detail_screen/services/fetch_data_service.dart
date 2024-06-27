@@ -52,7 +52,7 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
   return listEntries;
 }
 
-Future postProductDetail(ProductDetailModel params) async {
+Future<String?> postProductDetail(ProductDetailModel params) async {
   var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
       parameters: params.toMap());
   if (response['success'] == true) {
@@ -61,5 +61,8 @@ Future postProductDetail(ProductDetailModel params) async {
       content: response['responseMessage'],
       style: 'success',
     );
+    return response['responseData'];
+  } else {
+    return null;
   }
 }

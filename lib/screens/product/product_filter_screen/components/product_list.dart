@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_bloc.dart';
 
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
@@ -6,7 +7,8 @@ import '../models/product_filter_item_model.dart';
 import 'product_list_item.dart';
 
 class ProductList extends StatelessWidget {
-  const ProductList({super.key, required this.list});
+  const ProductList({super.key, required this.list, required this.bloc});
+  final ProductFilterBloc bloc;
   final List<ProductFilterItemModel> list;
 
   @override
@@ -30,9 +32,9 @@ class ProductList extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: index.isEven ? kBgColorRow1 : null,
                       borderRadius: BorderRadius.circular(defaultRadius)),
-                  child: ProductListItem(
-                    dataItem: list[index],
-                  ),
+
+                  /// PRODUCT ITEM
+                  child: ProductListItem(bloc: bloc, dataItem: list[index]),
                 ),
               );
             }),

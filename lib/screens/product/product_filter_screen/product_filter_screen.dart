@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../utilities/configs.dart';
 import '../../../utilities/custom_widgets.dart';
+import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
+import '../product_detail_screen/bloc/product_detail_bloc.dart';
+import '../product_detail_screen/product_detail_body.dart';
 import 'bloc/product_filter_bloc.dart';
-import 'components/product_filter_form.dart';
-import 'components/product_list.dart';
-import 'models/product_filter_item_model.dart';
+import 'components/product_filter_action_buttons.dart';
+import 'product_filter_body.dart';
 
 class ProductFilterScreen extends StatefulWidget {
   const ProductFilterScreen({super.key});
@@ -20,11 +21,10 @@ class ProductFilterScreen extends StatefulWidget {
 class _ProductFilterScreenState extends State<ProductFilterScreen>
     with SingleTickerProviderStateMixin {
   final bloc = ProductFilterBloc();
-  late final TabController _tabController;
+  final blocDetail = ProductDetailBloc();
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
     bloc.loadData();
     super.initState();
   }
@@ -32,34 +32,14 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
   @override
   void dispose() {
     bloc.dispose();
+    blocDetail.dispose();
     super.dispose();
   }
 
-  List<ProductFilterItemModel> all = [];
-  List<ProductFilterItemModel> normal = [];
-  List<ProductFilterItemModel> locked = [];
-  List<ProductFilterItemModel> cancelled = [];
-
   @override
   Widget build(BuildContext context) {
-    bloc.stateController.stream.listen((data) {
-      setState(() {
-        all = data.products ?? [];
-        if (all.isNotEmpty) {
-          all.sort((a, b) => b.name == null
-              ? -1
-              : a.name == null
-                  ? 1
-                  : b.name!.compareTo(a.name!));
-        }
-        normal =
-            all.where((e) => ['Normal'].any((u) => u == e.statusCode)).toList();
-        locked =
-            all.where((e) => ['Locked'].any((u) => u == e.statusCode)).toList();
-        cancelled = all
-            .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
-            .toList();
-      });
+    bloc.selectionController.stream.listen((data) {
+      setState(() {});
     });
 
     /// RETURN WIDGET
@@ -69,115 +49,100 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
         title: Text(sharedPrefs.translate('Product'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.all(defaultPadding),
+        //     child: CElevatedButton(
+        //       labelText: sharedPrefs.translate('Add'),
+        //       onPressed: () async {
+        //         final isReload = await Navigator.pushNamed(
+        //             context, customRouteMapping.productAdd);
+        //         if (isReload == true) {
+        //           blocFilter.loadData();
+        //         }
+        //       },
+        //     ),
+        //   )
+        // ],
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: CElevatedButton(
-              labelText: sharedPrefs.translate('Add'),
-              onPressed: () async {
-                final isReload = await Navigator.pushNamed(
-                    context, customRouteMapping.productAdd);
-                if (isReload == true) {
-                  bloc.loadData();
-                }
-              },
-            ),
-          )
+          /// ADD BUTTON
+          bloc.selectedProductId == null
+              ? AddProductFilterButton(blocFilter: bloc, blocDetail: blocDetail)
+              : const SizedBox(),
+
+          /// SAVE BUTTON
+          bloc.selectedProductId != null &&
+                  blocDetail.screenMode.state == ScreenModeEnum.edit
+              ? SaveProductFilterButton(
+                  blocFilter: bloc, blocDetail: blocDetail)
+              : const SizedBox(),
+
+          /// UPDATE BUTTON
+          bloc.selectedProductId != null &&
+                  blocDetail.screenMode.state == ScreenModeEnum.view
+              ? UpdateProductFilterButton(
+                  blocFilter: bloc, blocDetail: blocDetail)
+              : const SizedBox(),
+
+          /// DISCARD BUTTON
+          bloc.selectedProductId != null &&
+                  blocDetail.screenMode.state == ScreenModeEnum.view
+              // ? const DiscardProductButton()
+              ? BackToProductFilterButton(bloc: bloc)
+              : const SizedBox(),
         ],
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: defaultPadding * 2,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: kBgColor,
-                padding: const EdgeInsets.all(defaultPadding),
-                child: ProductFilterForm(bloc: bloc),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: defaultPadding * 2,
-              ),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.black87,
-                  unselectedLabelColor: Colors.grey,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.center,
-                  tabs: [
-                    Tab(
-                        child: Text(
-                            '${sharedPrefs.translate("Normal")} (${normal.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPrefs.translate("Locked")} (${locked.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPrefs.translate("Cancelled")} (${cancelled.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPrefs.translate("All")} (${all.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                  ],
-                ),
-              ),
-            ),
-          ];
-        },
-        body: Center(
-          child: TabBarView(
-            controller: _tabController,
+      body: Padding(
+        padding: const EdgeInsets.only(top: defaultPadding * 2),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Row(
             children: [
-              ProductList(list: normal),
-              ProductList(list: locked),
-              ProductList(list: cancelled),
-              ProductList(list: all),
+              SizedBox(
+                width: constraints.maxWidth < 850 ? constraints.maxWidth : 450,
+
+                /// PRODUCT FILTER BODY
+                child: ProductFilterBody(bloc: bloc),
+              ),
+              Expanded(
+                  child: constraints.maxWidth < 850
+                      ? const SizedBox()
+                      : Padding(
+                          padding:
+                              const EdgeInsets.only(left: defaultPadding * 2),
+
+                          /// PRODUCT DETAIL BODY
+                          child: bloc.selectedProductId != null
+                              ? ProductDetailBody(
+                                  bloc: blocDetail,
+                                  productId: bloc.selectedProductId,
+                                )
+                              : Center(
+                                  child: CText(sharedPrefs
+                                      .translate('Please select a product'))),
+
+                          /// start
+                          //   child: StreamBuilder(
+                          //     stream: bloc.selectionController.stream,
+                          //     builder: (context, snapshot) {
+                          //       if (snapshot.hasData) {
+                          //         return ProductDetailBody(
+                          //           bloc: blocDetail,
+                          //           productId: snapshot.data!.productId,
+                          //         );
+                          //       } else {
+                          //         return Center(
+                          //             child: CText(sharedPrefs
+                          //                 .translate('Please select a product')));
+                          //       }
+                          //     },
+                          //   ),
+
+                          /// end
+                        )),
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
-  _SliverAppBarDelegate(this._tabBar);
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
   }
 }

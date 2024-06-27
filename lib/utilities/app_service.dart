@@ -284,15 +284,13 @@ kShowToast({required String title, required String content, String? style}) {
       size: iconSize,
     );
   }
-  Get.snackbar(
-    title,
-    content,
-    maxWidth: 300,
-    isDismissible: false,
-    backgroundColor: bgColor,
-    icon: icon,
-    snackPosition: SnackPosition.BOTTOM,
-  );
+  Get.snackbar(title, content,
+      maxWidth: 300,
+      isDismissible: false,
+      backgroundColor: bgColor,
+      icon: icon,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.only(bottom: 70));
 }
 
 kShowAlert({required Widget body, String? title}) {

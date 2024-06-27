@@ -89,26 +89,12 @@ class ProductDetail extends StatelessWidget {
 
           /// SERIAL REQUIRED
           ResponsiveItem(
-            widthRatio: 2,
             child: CSwitch(
               labelText: sharedPrefs.translate('Serial monitoring'),
               readOnly: readOnly,
               value: bloc.data.serialRequired ?? false,
               onChanged: (value) {
                 bloc.eventController.add(ChangeProductRequiredSerial(value));
-              },
-            ),
-          ),
-
-          /// DESCRIPTION
-          ResponsiveItem(
-            widthRatio: 2,
-            child: CTextFormField(
-              labelText: sharedPrefs.translate('Description'),
-              readOnly: readOnly,
-              controller: descriptionController,
-              onChanged: (value) {
-                bloc.eventController.add(ChangeProductDescription(value));
               },
             ),
           ),
@@ -124,6 +110,45 @@ class ProductDetail extends StatelessWidget {
                 bloc.eventController.add(ChangeProductMonthsOfWarranty(value));
               },
             ),
+          ),
+
+          /// DESCRIPTION
+          ResponsiveItem(
+            percentWidthOnParent: 100,
+            child: CTextFormField(
+              labelText: sharedPrefs.translate('Description'),
+              readOnly: readOnly,
+              controller: descriptionController,
+              onChanged: (value) {
+                bloc.eventController.add(ChangeProductDescription(value));
+              },
+            ),
+          ),
+
+          /// CATEGORY
+          ResponsiveItem(
+            child: StreamBuilder<ProductDetailDataState>(
+                stream: bloc.dropdownDataController.stream,
+                builder: (context, snapshot) {
+                  var labelText = 'Category';
+                  if (snapshot.hasData) {
+                    return CDropdownMenu(
+                      labelText: sharedPrefs.translate(labelText),
+                      required: bloc.screenMode.state == ScreenModeEnum.edit,
+                      readOnly: readOnly,
+                      dropdownMenuEntries: snapshot.data!.listCategory!,
+                      selectedMenuEntries: snapshot.data!.listCategory!
+                          .where((e) => e.value == bloc.data.categoryCode)
+                          .toList(),
+                      onSelected: (value) {
+                        bloc.eventController
+                            .add(ChangeProductCategory(value.first.value));
+                      },
+                    );
+                  }
+                  return COnLoadingDropdownMenu(
+                      labelText: sharedPrefs.translate(labelText));
+                }),
           ),
 
           /// STATUS
@@ -153,32 +178,6 @@ class ProductDetail extends StatelessWidget {
                 }),
           ),
 
-          /// CATEGORY
-          ResponsiveItem(
-            child: StreamBuilder<ProductDetailDataState>(
-                stream: bloc.dropdownDataController.stream,
-                builder: (context, snapshot) {
-                  var labelText = 'Category';
-                  if (snapshot.hasData) {
-                    return CDropdownMenu(
-                      labelText: sharedPrefs.translate(labelText),
-                      required: bloc.screenMode.state == ScreenModeEnum.edit,
-                      readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!.listCategory!,
-                      selectedMenuEntries: snapshot.data!.listCategory!
-                          .where((e) => e.value == bloc.data.categoryCode)
-                          .toList(),
-                      onSelected: (value) {
-                        bloc.eventController
-                            .add(ChangeProductCategory(value.first.value));
-                      },
-                    );
-                  }
-                  return COnLoadingDropdownMenu(
-                      labelText: sharedPrefs.translate(labelText));
-                }),
-          ),
-
           /// TYPE
           ResponsiveItem(
             child: StreamBuilder<ProductDetailDataState>(
@@ -192,9 +191,7 @@ class ProductDetail extends StatelessWidget {
                       readOnly: readOnly,
                       dropdownMenuEntries: snapshot.data!.listType!,
                       selectedMenuEntries: bloc.data.typeCode == null
-                          ? snapshot.data!.listType!
-                              .where((e) => e.value == bloc.data.typeCode)
-                              .toList()
+                          ? []
                           : snapshot.data!.listType!
                               .where((e) => e.value == bloc.data.typeCode)
                               .toList(),

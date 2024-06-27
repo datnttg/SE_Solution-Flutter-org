@@ -20,90 +20,87 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ResponsiveRow(
-          context: context,
-          basicWidth: 400,
-          horizontalSpacing: 0,
-          children: [
-            /// CODE
-            ResponsiveItem(
-                child: CTextFormField(
-              labelText: sharedPrefs.translate('Product code'),
-              // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
-              controller: null,
-              onChanged: (value) {
-                widget.bloc.eventController.add(ChangeProductCode(value));
-              },
-            )),
+      child: ResponsiveRow(
+        context: context,
+        basicWidth: 400,
+        horizontalSpacing: 0,
+        children: [
+          /// CODE
+          ResponsiveItem(
+              child: CTextFormField(
+            labelText: sharedPrefs.translate('Product code'),
+            // wrap: true,
+            hintText: '--${sharedPrefs.translate('All')}--',
+            controller: null,
+            onChanged: (value) {
+              widget.bloc.eventController.add(ChangeProductCode(value));
+            },
+          )),
 
-            /// NAME
-            ResponsiveItem(
-                child: CTextFormField(
-              labelText: sharedPrefs.translate('Product name'),
-              // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
-              controller: null,
-              onChanged: (value) {
-                widget.bloc.eventController.add(ChangeProductName(value));
-              },
-            )),
+          /// NAME
+          ResponsiveItem(
+              child: CTextFormField(
+            labelText: sharedPrefs.translate('Product name'),
+            // wrap: true,
+            hintText: '--${sharedPrefs.translate('All')}--',
+            controller: null,
+            onChanged: (value) {
+              widget.bloc.eventController.add(ChangeProductName(value));
+            },
+          )),
 
-            /// ASSIGNED USER
-            ResponsiveItem(
-              percentWidthOnParent:
-                  Responsive.isSmallWidth(context) == true ? 100 : null,
-              child: FutureBuilder(
-                  future: fetchProductCategoryEntry(
-                      categoryProperty: 'ProductCategory'),
-                  builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Category');
-                    Widget child = COnLoadingDropdownMenu(labelText: labelText);
-                    if (snapshot.hasData) {
-                      child = CDropdownMenu(
-                        labelText: labelText,
-                        multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
-                        dropdownMenuEntries: snapshot.data!,
-                        onSelected: (values) {
-                          widget.bloc.eventController
-                              .add(ChangeProductCategory(values));
-                        },
-                      );
-                    }
-                    return child;
-                  }),
-            ),
+          /// ASSIGNED USER
+          ResponsiveItem(
+            percentWidthOnParent:
+                Responsive.isSmallWidth(context) == true ? 100 : null,
+            child: FutureBuilder(
+                future: fetchProductCategoryEntry(
+                    categoryProperty: 'ProductCategory'),
+                builder: (context, snapshot) {
+                  var labelText = sharedPrefs.translate('Category');
+                  Widget child = COnLoadingDropdownMenu(labelText: labelText);
+                  if (snapshot.hasData) {
+                    child = CDropdownMenu(
+                      labelText: labelText,
+                      multiSelect: true,
+                      hintText: '--${sharedPrefs.translate('All')}--',
+                      dropdownMenuEntries: snapshot.data!,
+                      onSelected: (values) {
+                        widget.bloc.eventController
+                            .add(ChangeProductCategory(values));
+                      },
+                    );
+                  }
+                  return child;
+                }),
+          ),
 
-            /// ASSIGNED USER
-            ResponsiveItem(
-              percentWidthOnParent:
-                  Responsive.isSmallWidth(context) == true ? 100 : null,
-              child: FutureBuilder(
-                  future: fetchProductCategoryEntry(
-                      categoryProperty: 'ProductType'),
-                  builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Type');
-                    Widget child = COnLoadingDropdownMenu(labelText: labelText);
-                    if (snapshot.hasData) {
-                      child = CDropdownMenu(
-                        labelText: labelText,
-                        multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
-                        dropdownMenuEntries: snapshot.data!,
-                        onSelected: (values) {
-                          widget.bloc.eventController
-                              .add(ChangeProductType(values));
-                        },
-                      );
-                    }
-                    return child;
-                  }),
-            ),
-          ],
-        ),
+          /// ASSIGNED USER
+          ResponsiveItem(
+            percentWidthOnParent:
+                Responsive.isSmallWidth(context) == true ? 100 : null,
+            child: FutureBuilder(
+                future:
+                    fetchProductCategoryEntry(categoryProperty: 'ProductType'),
+                builder: (context, snapshot) {
+                  var labelText = sharedPrefs.translate('Type');
+                  Widget child = COnLoadingDropdownMenu(labelText: labelText);
+                  if (snapshot.hasData) {
+                    child = CDropdownMenu(
+                      labelText: labelText,
+                      multiSelect: true,
+                      hintText: '--${sharedPrefs.translate('All')}--',
+                      dropdownMenuEntries: snapshot.data!,
+                      onSelected: (values) {
+                        widget.bloc.eventController
+                            .add(ChangeProductType(values));
+                      },
+                    );
+                  }
+                  return child;
+                }),
+          ),
+        ],
       ),
     );
   }

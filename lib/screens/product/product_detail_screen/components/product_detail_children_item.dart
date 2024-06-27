@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:se_solution/utilities/enums/ui_enums.dart';
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/custom_widgets.dart';
@@ -23,7 +24,7 @@ class ProductDetailChildrenItem extends StatefulWidget {
 }
 
 class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
-  final quantityController = TextEditingController(text: '0.0');
+  final quantityController = TextEditingController();
 
   var quantity = 0.0;
   ProductFilterItemModel? child;
@@ -31,8 +32,6 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
 
   Future<void> _loadProductDetails() async {
     if (widget.bloc.data.children != null) {
-      // final fetchedChild = await fetchProductDetail(
-      //     widget.bloc.data.children![widget.itemIndex].childId ?? '');
       setState(() {
         child = widget.bloc.dropdownData.listProduct!
             .where((e) =>
@@ -47,17 +46,24 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
   @override
   void initState() {
     _loadProductDetails();
+    selectedProduct = child;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    quantityController.text =
+        (widget.bloc.data.children?[widget.itemIndex].quantityOfChild ?? 0)
+            .toString();
+
     var productNameWidget = CDropdownMenu(
       labelText: sharedPrefs.translate('Product'),
       labelTextAsHint: true,
-      enableSearch: true,
       showDivider: false,
+      enableSearch: true,
       menuHeight: 200,
+      readOnly:
+          widget.bloc.screenMode.state == ScreenModeEnum.view ? true : false,
       dropdownMenuEntries: (widget.bloc.dropdownData.listProduct!
               .map((e) => CDropdownMenuEntry(value: e.id, labelText: e.name)))
           .toList(),
@@ -67,21 +73,24 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
           .map((e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
           .toList(),
       disabledMenuEntries: widget.bloc.dropdownData.listProduct!
-          .where((e) => e.statusCode != 'Normal' || e.id == widget.bloc.data.id)
+          .where((e) =>
+              e.id == widget.bloc.data.id ||
+              e.statusCode != 'Normal' ||
+              e.typeCode == 'BundleProduct')
           .map((e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
           .toList(),
       onSelected: (selected) {
         setState(() {
+          if (quantity == 0) {
+            quantity = 1;
+            quantityController.text = quantity.toString();
+          }
           selectedProduct = widget.bloc.dropdownData.listProduct!
               .where((e) => selected.any((u) => u.value == e.id))
               .firstOrNull;
           if (selectedProduct != null) {
             widget.bloc.eventController.add(
                 ChangeChildProductId(widget.itemIndex, selectedProduct!.id!));
-          }
-          if (quantity == 0) {
-            quantity = 1;
-            quantityController.text = quantity.toString();
           }
         });
       },
@@ -96,7 +105,8 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
               IconButton(
                   icon: const Icon(Icons.remove),
                   onPressed: () {
-                    if (quantity >= 1) {
+                    if (quantity >= 1 &&
+                        widget.bloc.screenMode.state == ScreenModeEnum.edit) {
                       quantity -= 1;
                       quantityController.text = quantity.toString();
                       widget.bloc.eventController.add(
@@ -112,6 +122,9 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                   labelTextAsHint: true,
                   textAlign: TextAlign.end,
                   isDense: true,
+                  readOnly: widget.bloc.screenMode.state == ScreenModeEnum.edit
+                      ? false
+                      : true,
                   onChanged: (value) {
                     if (!value.isAlphabetOnly) {
                       try {
@@ -139,10 +152,13 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
               IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    quantity += 1;
-                    quantityController.text = quantity.toString();
-                    widget.bloc.eventController.add(
-                        ChangeChildProductQuantity(widget.itemIndex, quantity));
+                    if (widget.bloc.screenMode.state == ScreenModeEnum.edit) {
+                      quantity += 1;
+                      quantityController.text = quantity.toString();
+                      widget.bloc.eventController.add(
+                          ChangeChildProductQuantity(
+                              widget.itemIndex, quantity));
+                    }
                   }),
             ],
           ),

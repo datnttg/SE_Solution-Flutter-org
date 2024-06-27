@@ -9,12 +9,12 @@ class LocaleDescription {
 
 class ResponseModel {
   final bool success;
-  final String responseMessege;
+  final String responseMessage;
   final dynamic responseData;
 
   const ResponseModel({
     required this.success,
-    required this.responseMessege,
+    required this.responseMessage,
     this.responseData,
   });
 }

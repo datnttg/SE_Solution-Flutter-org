@@ -21,3 +21,8 @@ class ChangeProductType extends ProductFilterEvents {
   List<CDropdownMenuEntry>? typeCodes;
   ChangeProductType(this.typeCodes);
 }
+
+class ChangeSelectedProduct extends ProductFilterEvents {
+  String? productId;
+  ChangeSelectedProduct({this.productId});
+}

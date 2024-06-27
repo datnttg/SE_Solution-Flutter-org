@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_events.dart';
 import 'package:se_solution/utilities/app_service.dart';
 
 import '../../../../utilities/configs.dart';
@@ -10,22 +11,28 @@ import '../bloc/product_filter_bloc.dart';
 import '../models/product_filter_item_model.dart';
 
 class ProductListItem extends StatelessWidget {
-  const ProductListItem({super.key, required this.dataItem});
-
+  const ProductListItem(
+      {super.key, required this.dataItem, required this.bloc});
+  final ProductFilterBloc bloc;
   final ProductFilterItemModel dataItem;
 
   @override
   Widget build(BuildContext context) {
-    var bloc = ProductFilterBloc();
-
     return InkWell(
       onTap: () async {
-        final isReload = await Navigator.pushNamed(
-          context, '${customRouteMapping.productDetail}/${dataItem.id}',
-          // arguments: {"taskId": dataItem["taskId"]},
-        );
-        if (isReload == true) {
-          bloc.loadData();
+        bloc.eventController.add(ChangeSelectedProduct(productId: dataItem.id));
+        if (Responsive.isSmallWidth(context)) {
+          final isReload = await Navigator.pushNamed(
+            context,
+            '${customRouteMapping.productDetail}/${dataItem.id}',
+          );
+          if (isReload == true) {
+            bloc.loadData();
+          }
+          // Navigator.pushNamedAndRemoveUntil(
+          //     context,
+          //     '${customRouteMapping.productDetail}/${dataItem.id}',
+          //     (Route<dynamic> route) => false);
         }
       },
       child: Container(
@@ -36,7 +43,8 @@ class ProductListItem extends StatelessWidget {
           children: [
             ResponsiveRow(
               context: context,
-              basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
+              // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
+              basicWidth: 180,
               children: [
                 /// TASK TYPE
                 ResponsiveItem(

@@ -12,7 +12,7 @@ class ChildProductModel {
   factory ChildProductModel.fromJson(Map<String, dynamic> json) {
     return ChildProductModel(
       childId: json['childId'],
-      quantityOfChild: json['QuantityOfChild'],
+      quantityOfChild: json['quantityOfChild'],
       note: json['note'],
     );
   }
@@ -20,7 +20,7 @@ class ChildProductModel {
   Map<String, dynamic> toMap() {
     return {
       'childId': childId,
-      'QuantityOfChild': quantityOfChild,
+      'quantityOfChild': quantityOfChild,
       'note': note,
     };
   }

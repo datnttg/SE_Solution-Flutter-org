@@ -7,6 +7,8 @@ import 'classes/custom_widget_models.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
 
+double fieldHeight = 50;
+
 /// CUSTOM SCAFFOLD
 class CScaffold extends StatelessWidget {
   final AppBar? appBar;
@@ -110,7 +112,7 @@ class CDropdownMenu extends StatelessWidget {
     this.wrap,
     this.enabled = true,
     this.readOnly = false,
-    this.enableSearch = false,
+    this.enableSearch,
     this.required = false,
     this.showDivider = true,
     this.showClearIcon = false,
@@ -178,7 +180,9 @@ class CDropdownMenu extends StatelessWidget {
               ? const Icon(Icons.close_outlined, size: 0)
               : null),
       onOptionSelected: newOnSelected,
-      searchEnabled: enableSearch!,
+      searchEnabled: readOnly == false
+          ? (enableSearch ?? dropdownEntries.length > 5)
+          : false,
       hint: newHintText ?? sharedPrefs.translate('Select'),
       searchLabel: sharedPrefs.translate('Search'),
       selectionType:
@@ -196,6 +200,8 @@ class CDropdownMenu extends StatelessWidget {
 
     /// RETURN
     return Container(
+      height: fieldHeight,
+      alignment: Alignment.centerLeft,
       padding:
           const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
       decoration: showDivider == true
@@ -836,10 +842,19 @@ class CSwitch extends StatelessWidget {
             color: readOnly == false ? Colors.green : Colors.grey,
           );
         }
-        return const Icon(Icons.close, color: Colors.grey);
+        return const Icon(
+          Icons.close,
+          color: Colors.grey,
+        );
       },
     );
+
+    final WidgetStateProperty<Color?> thumbColor =
+        WidgetStateProperty.all(Colors.white);
+
     return Container(
+      height: fieldHeight,
+      alignment: Alignment.centerLeft,
       padding:
           const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
       decoration: showDivider == true
@@ -853,7 +868,9 @@ class CSwitch extends StatelessWidget {
             value: value,
             onChanged: readOnly == false ? onChanged : null,
             activeTrackColor: readOnly == false ? Colors.green : Colors.grey,
+            thumbColor: thumbColor,
             inactiveTrackColor: Colors.grey,
+            inactiveThumbColor: Colors.white,
             thumbIcon: thumbIcon,
           ),
         ],
@@ -1095,6 +1112,8 @@ class CTextFormField extends StatelessWidget {
         : const SizedBox();
 
     return Container(
+      height: wrap == true ? fieldHeight * maxLines! + 8 : fieldHeight,
+      alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
           ? const BoxDecoration(
