@@ -58,7 +58,7 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
         //         final isReload = await Navigator.pushNamed(
         //             context, customRouteMapping.productAdd);
         //         if (isReload == true) {
-        //           blocFilter.loadData();
+        //           bloc.loadData();
         //         }
         //       },
         //     ),
