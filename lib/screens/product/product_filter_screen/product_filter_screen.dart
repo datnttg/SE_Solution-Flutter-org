@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/enums/ui_enums.dart';
+import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
@@ -18,16 +19,9 @@ class ProductFilterScreen extends StatefulWidget {
   State<ProductFilterScreen> createState() => _ProductFilterScreenState();
 }
 
-class _ProductFilterScreenState extends State<ProductFilterScreen>
-    with SingleTickerProviderStateMixin {
+class _ProductFilterScreenState extends State<ProductFilterScreen> {
   final bloc = ProductFilterBloc();
   final blocDetail = ProductDetailBloc();
-
-  @override
-  void initState() {
-    bloc.loadData();
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -38,10 +32,6 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
 
   @override
   Widget build(BuildContext context) {
-    bloc.selectionController.stream.listen((data) {
-      setState(() {});
-    });
-
     /// RETURN WIDGET
     return CScaffold(
       drawer: const MainMenu(),
@@ -66,30 +56,50 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
         // ],
         actions: [
           /// ADD BUTTON
-          bloc.selectedProductId == null
-              ? AddProductFilterButton(blocFilter: bloc, blocDetail: blocDetail)
-              : const SizedBox(),
+          StreamBuilder(
+              stream: blocDetail.uiController.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData ||
+                    snapshot.data?.state == ScreenModeEnum.view) {
+                  return AddProductFilterButton(blocFilter: bloc);
+                }
+                return const SizedBox();
+              }),
 
           /// SAVE BUTTON
-          bloc.selectedProductId != null &&
-                  blocDetail.screenMode.state == ScreenModeEnum.edit
-              ? SaveProductFilterButton(
-                  blocFilter: bloc, blocDetail: blocDetail)
-              : const SizedBox(),
+          StreamBuilder(
+              stream: blocDetail.uiController.stream,
+              builder: (context, snapshot) {
+                if (snapshot.data?.state == ScreenModeEnum.edit &&
+                    !Responsive.isSmallWidth(context)) {
+                  return SaveProductFilterButton(
+                      blocFilter: bloc, blocDetail: blocDetail);
+                }
+                return const SizedBox();
+              }),
 
           /// UPDATE BUTTON
-          bloc.selectedProductId != null &&
-                  blocDetail.screenMode.state == ScreenModeEnum.view
-              ? UpdateProductFilterButton(
-                  blocFilter: bloc, blocDetail: blocDetail)
-              : const SizedBox(),
+          StreamBuilder(
+              stream: blocDetail.uiController.stream,
+              builder: (context, snapshot) {
+                if (snapshot.data?.state == ScreenModeEnum.view &&
+                    (bloc.selectedProductId?.isNotEmpty ?? false) &&
+                    !Responsive.isSmallWidth(context)) {
+                  return UpdateProductFilterButton(blocDetail: blocDetail);
+                }
+                return const SizedBox();
+              }),
 
           /// DISCARD BUTTON
-          bloc.selectedProductId != null &&
-                  blocDetail.screenMode.state == ScreenModeEnum.view
-              // ? const DiscardProductButton()
-              ? BackToProductFilterButton(bloc: bloc)
-              : const SizedBox(),
+          StreamBuilder(
+              stream: blocDetail.uiController.stream,
+              builder: (context, snapshot) {
+                if (snapshot.data?.state == ScreenModeEnum.edit) {
+                  return BackToProductFilterButton(
+                      blocFilter: bloc, blocDetail: blocDetail);
+                }
+                return const SizedBox();
+              }),
         ],
       ),
       body: Padding(
@@ -109,35 +119,24 @@ class _ProductFilterScreenState extends State<ProductFilterScreen>
                       : Padding(
                           padding:
                               const EdgeInsets.only(left: defaultPadding * 2),
-
-                          /// PRODUCT DETAIL BODY
-                          child: bloc.selectedProductId != null
-                              ? ProductDetailBody(
-                                  bloc: blocDetail,
-                                  productId: bloc.selectedProductId,
-                                )
-                              : Center(
+                          child: StreamBuilder(
+                            stream: bloc.selectionController.stream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data!.productId != null) {
+                                  blocDetail.loadData(snapshot.data!.productId);
+                                  //TODO: LỖI Ở ĐÂY
+                                  return ProductDetailBody(
+                                    bloc: blocDetail,
+                                    productId: snapshot.data!.productId,
+                                  );
+                                }
+                              }
+                              return Center(
                                   child: CText(sharedPrefs
-                                      .translate('Please select a product'))),
-
-                          /// start
-                          //   child: StreamBuilder(
-                          //     stream: bloc.selectionController.stream,
-                          //     builder: (context, snapshot) {
-                          //       if (snapshot.hasData) {
-                          //         return ProductDetailBody(
-                          //           bloc: blocDetail,
-                          //           productId: snapshot.data!.productId,
-                          //         );
-                          //       } else {
-                          //         return Center(
-                          //             child: CText(sharedPrefs
-                          //                 .translate('Please select a product')));
-                          //       }
-                          //     },
-                          //   ),
-
-                          /// end
+                                      .translate('Please select a product')));
+                            },
+                          ),
                         )),
             ],
           );

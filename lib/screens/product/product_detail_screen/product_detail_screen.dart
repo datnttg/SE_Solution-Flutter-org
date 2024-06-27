@@ -65,7 +65,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate('Add product'),
+        title: Text(sharedPrefs.translate('Product information'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
         actions: [

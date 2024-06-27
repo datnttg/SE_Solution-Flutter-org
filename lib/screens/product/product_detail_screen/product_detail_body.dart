@@ -10,44 +10,17 @@ import 'bloc/product_detail_events.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'components/product_detail_form.dart';
 import 'components/product_detail_children.dart';
-import 'models/product_detail_model.dart';
-import 'services/fetch_data_service.dart';
 
 class ProductDetailBody extends StatefulWidget {
-  const ProductDetailBody({super.key, required this.bloc, this.productId});
-  final ProductDetailBloc bloc;
+  const ProductDetailBody({super.key, this.productId, required this.bloc});
   final String? productId;
+  final ProductDetailBloc bloc;
 
   @override
   State<ProductDetailBody> createState() => _ProductDetailBodyState();
 }
 
 class _ProductDetailBodyState extends State<ProductDetailBody> {
-  Future<void> loadData(String? productId) async {
-    var productDetailModel = ProductDetailModel();
-    if (productId != null) {
-      var productDetail = await fetchProductDetail(productId);
-      if (productDetail != null) {
-        productDetailModel = productDetail;
-      }
-    }
-    var lstProduct = await fetchProductList();
-    var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
-    var lstStatus =
-        await fetchProductCategory(categoryProperty: 'ProductStatus');
-    var lstCategory =
-        await fetchProductCategory(categoryProperty: 'ProductCategory');
-    var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
-    widget.bloc.eventController.add(LoadData(
-      detail: productDetailModel,
-      listProduct: lstProduct,
-      listUnit: lstUnit,
-      listCategory: lstCategory,
-      listStatus: lstStatus,
-      listType: lstType,
-    ));
-  }
-
   @override
   void initState() {
     if (widget.productId?.isEmpty ?? true) {
@@ -55,7 +28,7 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
     } else {
       widget.bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
     }
-    loadData(widget.productId);
+    widget.bloc.loadData(widget.productId);
     super.initState();
   }
 
@@ -80,7 +53,7 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
                   color: kBgColor,
 
                   /// PRODUCT DETAIL
-                  child: ProductDetail(bloc: widget.bloc),
+                  child: ProductDetailForm(bloc: widget.bloc),
                 ),
                 const SizedBox(height: defaultPadding * 2),
 

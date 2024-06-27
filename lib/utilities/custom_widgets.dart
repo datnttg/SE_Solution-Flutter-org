@@ -1111,8 +1111,10 @@ class CTextFormField extends StatelessWidget {
           )
         : const SizedBox();
 
+    var height = isDense == true ? 40.0 : fieldHeight;
+
     return Container(
-      height: wrap == true ? fieldHeight * maxLines! + 8 : fieldHeight,
+      height: wrap == true ? height * maxLines! + 8 : height,
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
@@ -1149,6 +1151,7 @@ class CTextFormField extends StatelessWidget {
               ],
             )
           : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   children: [

@@ -6,7 +6,7 @@ import '../services/product_filter_services.dart';
 import 'product_filter_states.dart';
 
 class ProductFilterBloc {
-  final eventController = StreamController<ProductFilterEvents>();
+  final eventController = StreamController<ProductFilterEvents>.broadcast();
   final stateController = StreamController<ProductListState>.broadcast();
   final selectionController = StreamController<SelectionState>.broadcast();
 
@@ -17,21 +17,24 @@ class ProductFilterBloc {
     eventController.stream.listen((event) {
       if (event is ChangeProductCode) {
         params.code = event.productCode;
+        loadData();
       } else if (event is ChangeProductName) {
         params.name = event.productName;
+        loadData();
       } else if (event is ChangeProductType) {
         params.typeCodes = event.typeCodes!.isNotEmpty
             ? event.typeCodes!.map<String>((e) => e.value).toList()
             : null;
+        loadData();
       } else if (event is ChangeProductCategory) {
         params.categoryCodes = event.categoryCodes!.isNotEmpty
             ? event.categoryCodes!.map<String>((e) => e.value).toList()
             : null;
+        loadData();
       } else if (event is ChangeSelectedProduct) {
         selectedProductId = event.productId;
-        selectionController.add(SelectionState(productId: event.productId));
+        selectionController.add(SelectionState(productId: selectedProductId));
       }
-      loadData();
     });
   }
 

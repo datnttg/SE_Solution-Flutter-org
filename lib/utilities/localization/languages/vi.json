@@ -134,5 +134,6 @@
   "Quantity must be better than 0": "Số lượng phải lớn hơn 0",
   "Unit": "Đơn vị",
   "Serial monitoring": "Quản lý theo sê-ri",
-  "Please select a product": "Hãy chọn một sản phẩm"
+  "Please select a product": "Hãy chọn một sản phẩm",
+  "Product information": "Thông tin sản phẩm"
 }

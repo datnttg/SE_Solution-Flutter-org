@@ -9,14 +9,13 @@ import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
 
-class ProductDetail extends StatelessWidget {
+class ProductDetailForm extends StatelessWidget {
+  ProductDetailForm({super.key, required this.bloc});
   final ProductDetailBloc bloc;
   final codeController = TextEditingController();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final warrantyController = TextEditingController();
-
-  ProductDetail({super.key, required this.bloc});
 
   @override
   Widget build(BuildContext context) {

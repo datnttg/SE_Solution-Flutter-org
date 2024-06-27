@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_events.dart';
-import 'package:se_solution/utilities/app_service.dart';
 
+import '../../../../utilities/app_service.dart';
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../bloc/product_filter_bloc.dart';
+import '../bloc/product_filter_events.dart';
 import '../models/product_filter_item_model.dart';
 
 class ProductListItem extends StatelessWidget {
@@ -18,9 +18,11 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// RETURN
     return InkWell(
       onTap: () async {
         bloc.eventController.add(ChangeSelectedProduct(productId: dataItem.id));
+
         if (Responsive.isSmallWidth(context)) {
           final isReload = await Navigator.pushNamed(
             context,

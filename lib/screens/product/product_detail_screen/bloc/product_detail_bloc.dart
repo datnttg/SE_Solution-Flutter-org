@@ -13,13 +13,15 @@ import 'product_detail_events.dart';
 import 'product_detail_states.dart';
 
 class ProductDetailBloc {
-  var eventController = StreamController<ChangeProductDetailEvents>();
+  var eventController = StreamController<ChangeProductDetailEvents>.broadcast();
   var uiController = StreamController<ScreenModeState>.broadcast();
   var dataController = StreamController<ProductDetailModel>.broadcast();
   var dropdownDataController =
       StreamController<ProductDetailDataState>.broadcast();
 
   var screenMode = ScreenModeState(state: ScreenModeEnum.view);
+  final initData = ProductDetailModel(
+      typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
   var data = ProductDetailModel(
       typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
   var blankChild = ChildProductModel();
@@ -36,19 +38,19 @@ class ProductDetailBloc {
 
         /// LOAD DETAIL
         else if (event is LoadData) {
+          if (event.detail?.id?.isNotEmpty ?? false) {
+            screenMode = ScreenModeState(state: ScreenModeEnum.view);
+          } else {
+            screenMode = ScreenModeState(state: ScreenModeEnum.edit);
+          }
+          data = event.detail!;
           dropdownData.listProduct = event.listProduct;
           dropdownData.listUnit = event.listUnit;
           dropdownData.listStatus = event.listStatus;
           dropdownData.listCategory = event.listCategory;
           dropdownData.listType = event.listType;
-
           dropdownDataController.add(dropdownData);
-          if (event.detail?.id != null) {
-            data = event.detail!;
-            uiController.add(ScreenModeState(state: ScreenModeEnum.view));
-          } else {
-            uiController.add(ScreenModeState(state: ScreenModeEnum.edit));
-          }
+          uiController.add(screenMode);
         }
 
         /// SUBMIT
@@ -111,13 +113,44 @@ class ProductDetailBloc {
           data.children?.removeAt(event.item);
         }
 
-        dataController.add(data);
+        // dataController.add(data);
       } catch (ex) {
         kShowAlert(
             title: sharedPrefs.translate('Invalid format'),
             body: Text(ex.toString()));
       }
     });
+  }
+
+  Future<void> loadData(String? productId) async {
+    var lstProduct = await fetchProductList();
+    var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
+    var lstStatus =
+        await fetchProductCategory(categoryProperty: 'ProductStatus');
+    var lstCategory =
+        await fetchProductCategory(categoryProperty: 'ProductCategory');
+    var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
+    var productDetailModel = initData;
+    if (productId?.isNotEmpty ?? false) {
+      var productDetail = await fetchProductDetail(productId!);
+      if (productDetail != null) {
+        productDetailModel = productDetail;
+      }
+    }
+    eventController.add(LoadData(
+      detail: productDetailModel,
+      listProduct: lstProduct,
+      listUnit: lstUnit,
+      listCategory: lstCategory,
+      listStatus: lstStatus,
+      listType: lstType,
+    ));
+  }
+
+  void resetData() {
+    data = initData;
+    dataController.add(data);
+    uiController.add(ScreenModeState(state: ScreenModeEnum.edit));
   }
 
   void postData() async {
@@ -130,5 +163,8 @@ class ProductDetailBloc {
 
   void dispose() {
     eventController.close();
+    uiController.close();
+    dataController.close();
+    dropdownDataController.close();
   }
 }

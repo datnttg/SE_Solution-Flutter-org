@@ -169,7 +169,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                 child?.unitText ?? selectedProduct?.unitText ?? '',
                 style: const TextStyle(fontSize: smallTextSize),
               ),
-              const SizedBox(width: 55)
+              const SizedBox(width: 45)
             ],
           ),
         ],

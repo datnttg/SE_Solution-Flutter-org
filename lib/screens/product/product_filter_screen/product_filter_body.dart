@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_events.dart';
-import 'package:se_solution/utilities/responsive.dart';
 
-import '../../../utilities/configs.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import 'bloc/product_filter_bloc.dart';
@@ -138,34 +135,34 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
             ),
           ),
 
-          /// ADD BUTTON
-          Positioned(
-            bottom: 50,
-            right: 50,
-            child: Container(
-              decoration: BoxDecoration(
-                color: kBgColorRow1,
-                border: Border.all(width: 1, color: kBgColorHeader),
-                borderRadius: BorderRadius.circular(800),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.add),
-                padding: const EdgeInsets.all(15),
-                onPressed: () async {
-                  if (Responsive.isSmallWidth(context)) {
-                    final isReload = await Navigator.pushNamed(
-                        context, customRouteMapping.productAdd);
-                    if (isReload == true) {
-                      widget.bloc.loadData();
-                    }
-                  } else {
-                    widget.bloc.eventController
-                        .add(ChangeSelectedProduct(productId: null));
-                  }
-                },
-              ),
-            ),
-          ),
+          /// ADD PRODUCT BUTTON
+          // Positioned(
+          //   bottom: 50,
+          //   right: 50,
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       color: kBgColorRow1,
+          //       border: Border.all(width: 1, color: kBgColorHeader),
+          //       borderRadius: BorderRadius.circular(800),
+          //     ),
+          //     child: IconButton(
+          //       icon: const Icon(Icons.add),
+          //       padding: const EdgeInsets.all(15),
+          //       onPressed: () async {
+          //         if (Responsive.isSmallWidth(context)) {
+          //           final isReload = await Navigator.pushNamed(
+          //               context, customRouteMapping.productAdd);
+          //           if (isReload == true) {
+          //             widget.bloc.loadData();
+          //           }
+          //         } else {
+          //           widget.bloc.eventController
+          //               .add(ChangeSelectedProduct(productId: ''));
+          //         }
+          //       },
+          //     ),
+          //   ),
+          // ),
         ],
       );
     });
