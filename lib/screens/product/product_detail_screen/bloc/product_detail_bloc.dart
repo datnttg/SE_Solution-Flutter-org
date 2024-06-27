@@ -38,11 +38,6 @@ class ProductDetailBloc {
 
         /// LOAD DETAIL
         else if (event is LoadData) {
-          if (event.detail?.id?.isNotEmpty ?? false) {
-            screenMode = ScreenModeState(state: ScreenModeEnum.view);
-          } else {
-            screenMode = ScreenModeState(state: ScreenModeEnum.edit);
-          }
           data = event.detail!;
           dropdownData.listProduct = event.listProduct;
           dropdownData.listUnit = event.listUnit;
@@ -50,6 +45,12 @@ class ProductDetailBloc {
           dropdownData.listCategory = event.listCategory;
           dropdownData.listType = event.listType;
           dropdownDataController.add(dropdownData);
+
+          if (event.detail?.id?.isNotEmpty ?? false) {
+            screenMode = ScreenModeState(state: ScreenModeEnum.view);
+          } else {
+            screenMode = ScreenModeState(state: ScreenModeEnum.edit);
+          }
           uiController.add(screenMode);
         }
 
