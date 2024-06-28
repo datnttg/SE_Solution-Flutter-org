@@ -22,6 +22,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ProductDetailBloc bloc = ProductDetailBloc();
 
   @override
+  void initState() {
+    bloc.loadData(widget.productId);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     bloc.dispose();
     super.dispose();

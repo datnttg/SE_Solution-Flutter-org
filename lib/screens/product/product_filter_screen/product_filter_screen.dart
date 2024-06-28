@@ -125,7 +125,6 @@ class _ProductFilterScreenState extends State<ProductFilterScreen> {
                               if (snapshot.hasData) {
                                 if (snapshot.data!.productId != null) {
                                   blocDetail.loadData(snapshot.data!.productId);
-                                  //TODO: LỖI Ở ĐÂY
                                   return ProductDetailBody(
                                     bloc: blocDetail,
                                     productId: snapshot.data!.productId,
