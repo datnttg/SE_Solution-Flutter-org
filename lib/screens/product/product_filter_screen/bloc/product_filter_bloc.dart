@@ -8,10 +8,14 @@ import 'product_filter_states.dart';
 class ProductFilterBloc {
   final eventController = StreamController<ProductFilterEvents>.broadcast();
   final stateController = StreamController<ProductListState>.broadcast();
-  final selectionController = StreamController<SelectionState>.broadcast();
+
+  void dispose() {
+    eventController.close();
+    stateController.close();
+  }
 
   var params = ProductFilterParameters();
-  String? selectedProductId;
+  var selectionState = SelectionState(productId: null);
 
   ProductFilterBloc() {
     eventController.stream.listen((event) {
@@ -32,8 +36,7 @@ class ProductFilterBloc {
             : null;
         loadData();
       } else if (event is ChangeSelectedProduct) {
-        selectedProductId = event.productId;
-        selectionController.add(SelectionState(productId: selectedProductId));
+        selectionState = SelectionState(productId: event.productId);
       }
     });
   }
@@ -45,10 +48,5 @@ class ProductFilterBloc {
     } else {
       stateController.sink.add(ProductListState(products: null));
     }
-  }
-
-  void dispose() {
-    eventController.close();
-    stateController.close();
   }
 }

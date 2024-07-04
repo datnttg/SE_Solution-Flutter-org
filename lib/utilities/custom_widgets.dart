@@ -183,7 +183,9 @@ class CDropdownMenu extends StatelessWidget {
       searchEnabled: readOnly == false
           ? (enableSearch ?? dropdownEntries.length > 5)
           : false,
-      hint: newHintText ?? sharedPrefs.translate('Select'),
+      hint: labelTextAsHint == true
+          ? labelText ?? ''
+          : newHintText ?? sharedPrefs.translate('Select'),
       searchLabel: sharedPrefs.translate('Search'),
       selectionType:
           multiSelect == true ? SelectionType.multi : SelectionType.single,

@@ -5,21 +5,22 @@ import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import 'bloc/product_detail_bloc.dart';
-import 'bloc/product_detail_states.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'components/product_detail_form.dart';
 import 'components/product_detail_children.dart';
+import 'models/product_detail_model.dart';
 
 class ProductDetailBody extends StatelessWidget {
   const ProductDetailBody({super.key, this.productId, required this.bloc});
+
   final String? productId;
   final ProductDetailBloc bloc;
 
   @override
   Widget build(BuildContext context) {
     /// RETURN
-    return StreamBuilder<ScreenModeState>(
-        stream: bloc.uiController.stream,
+    return StreamBuilder<ProductDetailModel>(
+        stream: bloc.dataController.stream,
         builder: (context, snapshot) {
           return Column(
             children: [

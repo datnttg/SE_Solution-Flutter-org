@@ -12,15 +12,20 @@ class ChangeScreenMode extends ChangeProductDetailEvents {
 }
 
 class LoadData extends ChangeProductDetailEvents {
-  ProductDetailModel? detail;
+  ProductDetailModel detail;
   List<ProductFilterItemModel> listProduct;
+  LoadData({
+    required this.detail,
+    required this.listProduct,
+  });
+}
+
+class LoadDropdownData extends ChangeProductDetailEvents {
   List<CDropdownMenuEntry> listUnit;
   List<CDropdownMenuEntry> listStatus;
   List<CDropdownMenuEntry> listCategory;
   List<CDropdownMenuEntry> listType;
-  LoadData({
-    this.detail,
-    required this.listProduct,
+  LoadDropdownData({
     required this.listUnit,
     required this.listStatus,
     required this.listCategory,
@@ -90,8 +95,8 @@ class RemoveChildProduct extends ChangeProductDetailEvents {
 
 class ChangeChildProductId extends ChangeProductDetailEvents {
   int item;
-  String productId;
-  ChangeChildProductId(this.item, this.productId);
+  String childProductId;
+  ChangeChildProductId(this.item, this.childProductId);
 }
 
 class ChangeChildProductQuantity extends ChangeProductDetailEvents {

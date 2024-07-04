@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../../../../utilities/shared_preferences.dart';
+import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../models/child_product_model.dart';
 import '../models/product_detail_model.dart';
 import '../services/fetch_data_service.dart';
@@ -14,17 +15,21 @@ import 'product_detail_states.dart';
 
 class ProductDetailBloc {
   var eventController = StreamController<ChangeProductDetailEvents>.broadcast();
-  var uiController = StreamController<ScreenModeState>.broadcast();
   var dataController = StreamController<ProductDetailModel>.broadcast();
   var dropdownDataController =
       StreamController<ProductDetailDataState>.broadcast();
+  void dispose() {
+    eventController.close();
+    dataController.close();
+    dropdownDataController.close();
+  }
 
-  var screenMode = ScreenModeState(state: ScreenModeEnum.view);
+  var screenMode = ScreenModeState(ScreenModeEnum.view);
   final initData = ProductDetailModel(
       typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
   var data = ProductDetailModel(
       typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
-  var blankChild = ChildProductModel();
+  List<ProductFilterItemModel> lstProduct = [];
   var dropdownData = ProductDetailDataState();
 
   ProductDetailBloc() {
@@ -33,25 +38,19 @@ class ProductDetailBloc {
         /// CHANGE SCREEN MODE
         if (event is ChangeScreenMode) {
           screenMode.state = event.screenMode;
-          uiController.add(screenMode);
         }
 
         /// LOAD DETAIL
         else if (event is LoadData) {
-          data = event.detail!;
-          dropdownData.listProduct = event.listProduct;
+          data = event.detail;
+          lstProduct = event.listProduct;
+          dataController.add(data);
+        } else if (event is LoadDropdownData) {
           dropdownData.listUnit = event.listUnit;
           dropdownData.listStatus = event.listStatus;
           dropdownData.listCategory = event.listCategory;
           dropdownData.listType = event.listType;
           dropdownDataController.add(dropdownData);
-
-          if (event.detail?.id?.isNotEmpty ?? false) {
-            screenMode = ScreenModeState(state: ScreenModeEnum.view);
-          } else {
-            screenMode = ScreenModeState(state: ScreenModeEnum.edit);
-          }
-          uiController.add(screenMode);
         }
 
         /// SUBMIT
@@ -69,7 +68,7 @@ class ProductDetailBloc {
             data.children = [];
           }
           data.typeCode = event.type;
-          uiController.add(screenMode);
+          eventController.add(ChangeScreenMode(screenMode.state));
         } else if (event is ChangeProductCode) {
           data.code = event.code;
         } else if (event is ChangeProductName) {
@@ -80,7 +79,7 @@ class ProductDetailBloc {
           data.statusCode = event.status;
         } else if (event is ChangeProductRequiredSerial) {
           data.serialRequired = event.require;
-          uiController.add(screenMode);
+          eventController.add(ChangeScreenMode(screenMode.state));
         } else if (event is ChangeProductDescription) {
           data.description = event.description;
         } else if (event is ChangeProductMonthsOfWarranty) {
@@ -101,10 +100,11 @@ class ProductDetailBloc {
         /// CHANGE CHILD PRODUCT DETAIL
         else if (event is ChangeChildProductId) {
           try {
-            data.children?[event.item].childId = event.productId;
+            data.children?[event.item].childId = event.childProductId;
+            dataController.add(data);
           } catch (ex) {
             data.children?.add(ChildProductModel(
-              childId: event.productId,
+              childId: event.childProductId,
               quantityOfChild: 0,
             ));
           }
@@ -113,8 +113,6 @@ class ProductDetailBloc {
         } else if (event is RemoveChildProduct) {
           data.children?.removeAt(event.item);
         }
-
-        // dataController.add(data);
       } catch (ex) {
         kShowAlert(
             title: sharedPrefs.translate('Invalid format'),
@@ -123,49 +121,58 @@ class ProductDetailBloc {
     });
   }
 
-  Future<void> loadData(String? productId) async {
-    var lstProduct = await fetchProductList();
-    var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
-    var lstStatus =
-        await fetchProductCategory(categoryProperty: 'ProductStatus');
-    var lstCategory =
-        await fetchProductCategory(categoryProperty: 'ProductCategory');
-    var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
-    var productDetailModel = initData;
-    if (productId?.isNotEmpty ?? false) {
-      var productDetail = await fetchProductDetail(productId!);
-      if (productDetail != null) {
-        productDetailModel = productDetail;
-      }
+  Future<bool> loadDropdownData() async {
+    try {
+      var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
+      var lstStatus =
+          await fetchProductCategory(categoryProperty: 'ProductStatus');
+      var lstCategory =
+          await fetchProductCategory(categoryProperty: 'ProductCategory');
+      var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
+
+      eventController.add(LoadDropdownData(
+        listUnit: lstUnit,
+        listStatus: lstStatus,
+        listCategory: lstCategory,
+        listType: lstType,
+      ));
+      return true;
+    } catch (ex) {
+      return false;
     }
-    eventController.add(LoadData(
-      detail: productDetailModel,
-      listProduct: lstProduct,
-      listUnit: lstUnit,
-      listCategory: lstCategory,
-      listStatus: lstStatus,
-      listType: lstType,
-    ));
+  }
+
+  Future<bool> loadData({String? productId}) async {
+    try {
+      resetData();
+      var lstProduct = await fetchProductList();
+      var productDetailModel = ProductDetailModel(
+          typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
+      if (productId?.isNotEmpty ?? false) {
+        var productDetail = await fetchProductDetail(productId!);
+        if (productDetail != null) {
+          productDetailModel = productDetail;
+        }
+        eventController.add(LoadData(
+          detail: productDetailModel,
+          listProduct: lstProduct,
+        ));
+      }
+      return true;
+    } catch (ex) {
+      return false;
+    }
   }
 
   void resetData() {
     data = initData;
-    dataController.add(data);
-    uiController.add(ScreenModeState(state: ScreenModeEnum.edit));
   }
 
   void postData() async {
     var productId = await postProductDetail(data);
     if (productId != null) {
       data.id = productId;
-      uiController.add(ScreenModeState(state: ScreenModeEnum.view));
+      eventController.add(ChangeScreenMode(ScreenModeEnum.view));
     }
-  }
-
-  void dispose() {
-    eventController.close();
-    uiController.close();
-    dataController.close();
-    dropdownDataController.close();
   }
 }

@@ -183,15 +183,18 @@ class ProductDetailForm extends StatelessWidget {
                 stream: bloc.dropdownDataController.stream,
                 builder: (context, snapshot) {
                   var labelText = 'Type';
-                  if (snapshot.hasData) {
+                  if (bloc.dropdownData.listType?.isEmpty ?? true) {
+                    return COnLoadingDropdownMenu(
+                        labelText: sharedPrefs.translate(labelText));
+                  } else {
                     return CDropdownMenu(
                       labelText: sharedPrefs.translate(labelText),
                       required: bloc.screenMode.state == ScreenModeEnum.edit,
                       readOnly: readOnly,
-                      dropdownMenuEntries: snapshot.data!.listType!,
+                      dropdownMenuEntries: bloc.dropdownData.listType!,
                       selectedMenuEntries: bloc.data.typeCode == null
                           ? []
-                          : snapshot.data!.listType!
+                          : bloc.dropdownData.listType!
                               .where((e) => e.value == bloc.data.typeCode)
                               .toList(),
                       onSelected: (value) {
@@ -200,10 +203,24 @@ class ProductDetailForm extends StatelessWidget {
                       },
                     );
                   }
-                  return COnLoadingDropdownMenu(
-                      labelText: sharedPrefs.translate(labelText));
                 }),
           ),
+          // ResponsiveItem(
+          //   child: CDropdownMenu(
+          //     labelText: sharedPrefs.translate('Type'),
+          //     required: bloc.screenMode.state == ScreenModeEnum.edit,
+          //     readOnly: readOnly,
+          //     dropdownMenuEntries: bloc.dropdownData.listType ?? [],
+          //     selectedMenuEntries: bloc.data.typeCode == null
+          //         ? []
+          //         : (bloc.dropdownData.listType ?? [])
+          //             .where((e) => e.value == bloc.data.typeCode)
+          //             .toList(),
+          //     onSelected: (value) {
+          //       bloc.eventController.add(ChangeProductType(value.first.value));
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

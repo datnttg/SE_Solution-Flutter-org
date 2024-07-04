@@ -84,7 +84,7 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
       case '/task/create':
         return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
       case '/product':
-        return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
+        return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
       case '/product/create':
         return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
       case '/powerStation/monitoring':

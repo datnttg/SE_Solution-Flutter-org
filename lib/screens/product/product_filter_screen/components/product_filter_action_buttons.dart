@@ -12,8 +12,10 @@ import '../bloc/product_filter_bloc.dart';
 import '../bloc/product_filter_events.dart';
 
 class AddProductFilterButton extends StatelessWidget {
-  const AddProductFilterButton({super.key, required this.blocFilter});
+  const AddProductFilterButton(
+      {super.key, required this.blocFilter, required this.blocDetail});
   final ProductFilterBloc blocFilter;
+  final ProductDetailBloc blocDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,8 @@ class AddProductFilterButton extends StatelessWidget {
         child: CElevatedButton(
           labelText: sharedPrefs.translate('Add'),
           onPressed: () async {
+            blocDetail.eventController
+                .add(ChangeScreenMode(ScreenModeEnum.edit));
             if (Responsive.isSmallWidth(context)) {
               final isReload = await Navigator.pushNamed(
                   context, customRouteMapping.productAdd);
@@ -51,6 +55,8 @@ class SaveProductFilterButton extends StatelessWidget {
           labelText: sharedPrefs.translate('Save'),
           onPressed: () {
             blocDetail.eventController.add(SubmitData());
+            blocDetail.eventController
+                .add(ChangeScreenMode(ScreenModeEnum.view));
             blocFilter.eventController
                 .add(ChangeSelectedProduct(productId: null));
           },

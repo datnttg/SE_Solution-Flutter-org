@@ -135,5 +135,9 @@
   "Unit": "Đơn vị",
   "Serial monitoring": "Quản lý theo sê-ri",
   "Please select a product": "Hãy chọn một sản phẩm",
-  "Product information": "Thông tin sản phẩm"
+  "Product information": "Thông tin sản phẩm",
+  "Select product": "Chọn sản phẩm",
+  "Logged in successfully": "Đăng nhập thành công",
+  "Login failed": "Đăng nhập thất bại",
+  "Detail": "Chi tiết"
 }

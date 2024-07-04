@@ -214,7 +214,8 @@ String kDateTimeFormat(DateTime datetime, DateFormat dateFormat) {
 Future<void> login(BuildContext context, Map payload) async {
   Uri hostAddress = Uri.parse('${constants.hostAddress}/Auth/AccessToken/');
   try {
-    var responseBody = await fetchDataUI(hostAddress, parameters: payload);
+    var responseBody = await fetchDataUI(hostAddress,
+        parameters: payload, showSuccessNotification: false);
     var responseData = responseBody['responseData'];
     if (responseBody['success'] == true) {
       var accessToken = responseData['accessToken'];
@@ -237,6 +238,13 @@ Future<void> login(BuildContext context, Map payload) async {
       } else if (context.mounted) {
         Navigator.pop(context);
       }
+      // } else {
+      //   kShowToast(
+      //     title: sharedPrefs.translate('Fail'),
+      //     content: sharedPrefs.translate('Login failed'),
+      //     detail: responseData?.toString(),
+      //     style: 'danger',
+      //   );
     }
   } catch (e) {
     Get.dialog(
@@ -261,8 +269,11 @@ Future<void> login(BuildContext context, Map payload) async {
   }
 }
 
-kShowToast({required String title, required String content, String? style}) {
-  Color? bgColor = Colors.white;
+kShowToast(
+    {required String title,
+    required String content,
+    String? detail,
+    String? style}) {
   Icon? icon;
   double iconSize = 36;
   if (style == 'success') {
@@ -285,9 +296,32 @@ kShowToast({required String title, required String content, String? style}) {
     );
   }
   Get.snackbar(title, content,
-      maxWidth: 300,
+      messageText: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(content),
+          detail?.isNotEmpty ?? false
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${sharedPrefs.translate('Detail')}: ',
+                      style: const TextStyle(fontSize: smallTextSize),
+                    ),
+                    Flexible(
+                      child: SelectableText(
+                        detail!,
+                        style: const TextStyle(fontSize: smallTextSize),
+                      ),
+                    )
+                  ],
+                )
+              : const SizedBox()
+        ],
+      ),
+      maxWidth: 400,
       isDismissible: false,
-      backgroundColor: bgColor,
+      backgroundColor: kBgColor,
       icon: icon,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.only(bottom: 70));
@@ -423,14 +457,25 @@ Future<bool> refreshToken() async {
 // }
 }
 
-Future<Map> fetchDataUI(Uri hostAddress,
-    {Map? parameters, String? method}) async {
+Future<Map> fetchDataUI(
+  Uri hostAddress, {
+  Map? parameters,
+  String? method,
+  bool? showSuccessNotification = true,
+}) async {
   kShowProcessingDialog(title: sharedPrefs.translate("Processing..."));
   await Future.delayed(const Duration(milliseconds: 300));
   var response =
       await fetchData(hostAddress, parameters: parameters, method: method);
   Get.back();
-  if (response['success'] == false && response['responseMessage'] != '') {
+  if (response['success'] == true && showSuccessNotification == true) {
+    kShowToast(
+      title: sharedPrefs.translate('Success'),
+      content: response['responseMessage'],
+      style: 'success',
+    );
+  } else if (response['success'] == false &&
+      response['responseMessage'] != '') {
     // kShowAlert(
     //     title: sharedPrefs.translate('Fail'),
     //     body: Text(response['responseMessage']));
@@ -440,9 +485,6 @@ Future<Map> fetchDataUI(Uri hostAddress,
       style: 'danger',
     );
   } else if (response['success'] == false) {
-    // kShowAlert(
-    //     title: sharedPrefs.translate('Fail'),
-    //     body: Text(sharedPrefs.translate("Connection failed!")));
     kShowToast(
       title: sharedPrefs.translate('Fail'),
       content: sharedPrefs.translate("Connection failed!"),

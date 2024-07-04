@@ -7,5 +7,5 @@ class ProductListState {
 
 class SelectionState {
   String? productId;
-  SelectionState({this.productId});
+  SelectionState({required this.productId});
 }

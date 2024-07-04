@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../../utilities/custom_widgets.dart';
+import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
+import '../product_filter_screen/bloc/product_filter_bloc.dart';
+import '../product_filter_screen/bloc/product_filter_events.dart';
+import '../product_filter_screen/product_filter_body.dart';
 import 'bloc/product_detail_bloc.dart';
+import 'bloc/product_detail_events.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'product_detail_body.dart';
 
@@ -20,10 +25,19 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ProductDetailBloc bloc = ProductDetailBloc();
+  final ProductFilterBloc blocFilter = ProductFilterBloc();
 
   @override
   void initState() {
-    bloc.loadData(widget.productId);
+    if (widget.productId?.isNotEmpty ?? false) {
+      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+      blocFilter.selectionState.productId = widget.productId;
+    } else {
+      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
+    }
+
+    bloc.loadData(productId: blocFilter.selectionState.productId);
+    bloc.loadDropdownData();
     super.initState();
   }
 
@@ -35,38 +49,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Widget btnUpdate = bloc.screenMode.state == ScreenModeEnum.view
-    //     ? Padding(
-    //         padding: const EdgeInsets.all(defaultPadding),
-    //         child: CElevatedButton(
-    //           labelText: sharedPrefs.translate('Update'),
-    //           onPressed: () {
-    //             bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
-    //           },
-    //         ))
-    //     : const SizedBox();
-    //
-    // Widget btnSave = bloc.screenMode.state == ScreenModeEnum.edit
-    //     ? Padding(
-    //         padding: const EdgeInsets.only(
-    //             left: defaultPadding, right: defaultPadding),
-    //         child: CElevatedButton(
-    //           labelText: sharedPrefs.translate('Save'),
-    //           onPressed: () async {
-    //             bloc.eventController.add(SubmitData());
-    //           },
-    //         ))
-    //     : const SizedBox();
-    //
-    // Widget btnDiscard = Padding(
-    //     padding:
-    //         const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
-    //     child: CElevatedButton(
-    //       labelText: sharedPrefs.translate('Discard'),
-    //       onPressed: () {
-    //         Navigator.pop(context);
-    //       },
-    //     ));
+    blocFilter.eventController.stream.listen((event) {
+      if (event is ChangeSelectedProduct) {
+        bloc.loadData(productId: event.productId);
+      }
+    });
 
     return CScaffold(
       drawer: const MainMenu(),
@@ -86,7 +73,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
         ],
       ),
-      body: ProductDetailBody(bloc: bloc, productId: widget.productId),
+      // body: StreamBuilder(
+      //   stream: bloc.dataController.stream,
+      //   builder: (context, snapshot) {
+      //     if (Responsive.isSmallWidth(context)) {
+      //       if (blocFilter.selectionState.productId?.isNotEmpty ?? false) {
+      //         return ProductDetailBody(
+      //           bloc: bloc,
+      //           productId: blocFilter.selectionState.productId,
+      //         );
+      //       } else {
+      //         return ProductFilterBody(bloc: blocFilter);
+      //       }
+      //     } else {
+      //       return Row(
+      //         children: [
+      //           Container(
+      //             constraints: const BoxConstraints(maxWidth: 450),
+      //             child: ProductFilterBody(bloc: blocFilter),
+      //           ),
+      //           const SizedBox(width: defaultPadding * 2),
+      //           Expanded(
+      //             child: ProductDetailBody(
+      //               bloc: bloc,
+      //               productId: blocFilter.selectionState.productId,
+      //             ),
+      //           ),
+      //         ],
+      //       );
+      //     }
+      //   },
+      // ),
+
+      body: LayoutBuilder(
+        builder: (context, constrains) {
+          if (Responsive.isSmallWidth(context)) {
+            if (blocFilter.selectionState.productId?.isNotEmpty ?? false) {
+              return ProductDetailBody(
+                bloc: bloc,
+                productId: blocFilter.selectionState.productId,
+              );
+            } else {
+              return ProductFilterBody(bloc: blocFilter);
+            }
+          } else {
+            return Row(
+              children: [
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 450),
+                  child: ProductFilterBody(bloc: blocFilter),
+                ),
+                const SizedBox(width: defaultPadding * 2),
+                Expanded(
+                  child: ProductDetailBody(
+                    bloc: bloc,
+                    productId: blocFilter.selectionState.productId,
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }
