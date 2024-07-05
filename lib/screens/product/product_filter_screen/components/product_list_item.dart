@@ -23,18 +23,25 @@ class ProductListItem extends StatelessWidget {
       onTap: () async {
         bloc.eventController.add(ChangeSelectedProduct(productId: dataItem.id));
 
-        if (Responsive.isSmallWidth(context)) {
-          final isReload = await Navigator.pushNamed(
-            context,
-            '${customRouteMapping.productDetail}/${dataItem.id}',
-          );
-          if (isReload == true) {
-            bloc.loadData();
-          }
-          // Navigator.pushNamedAndRemoveUntil(
-          //     context,
-          //     '${customRouteMapping.productDetail}/${dataItem.id}',
-          //     (Route<dynamic> route) => false);
+        // if (Responsive.isSmallWidth(context)) {
+        //   final isReload = await Navigator.pushNamed(
+        //     context,
+        //     '${customRouteMapping.productDetail}/${dataItem.id}',
+        //   );
+        //   if (isReload == true) {
+        //     bloc.loadData();
+        //   }
+        //   // Navigator.pushNamedAndRemoveUntil(
+        //   //     context,
+        //   //     '${customRouteMapping.productDetail}/${dataItem.id}',
+        //   //     (Route<dynamic> route) => false);
+        // }
+        final isReload = await Navigator.pushNamed(
+          context,
+          '${customRouteMapping.productDetail}/${dataItem.id}',
+        );
+        if (isReload == true) {
+          bloc.loadData();
         }
       },
       child: Container(
@@ -48,9 +55,9 @@ class ProductListItem extends StatelessWidget {
               // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
               basicWidth: 180,
               children: [
-                /// TASK TYPE
+                /// TYPE
                 ResponsiveItem(
-                  widthRatio: 2,
+                  percentWidthOnParent: 100,
                   child: Row(
                     children: [
                       CText(
