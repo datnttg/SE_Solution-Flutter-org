@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const mediumTextSize = 16.0;
+const mediumTextSize = 14.0;
 const smallTextSize = mediumTextSize * 0.8;
 const largeTextSize = mediumTextSize * 1.1;
 
