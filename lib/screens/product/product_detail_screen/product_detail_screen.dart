@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../utilities/custom_widgets.dart';
-import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
@@ -10,7 +9,6 @@ import '../product_filter_screen/bloc/product_filter_bloc.dart';
 import '../product_filter_screen/bloc/product_filter_events.dart';
 import '../product_filter_screen/product_filter_body.dart';
 import 'bloc/product_detail_bloc.dart';
-import 'bloc/product_detail_events.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'product_detail_body.dart';
 
@@ -30,14 +28,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     if (widget.productId?.isNotEmpty ?? false) {
-      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.view));
       blocFilter.selectionState.productId = widget.productId;
-    } else {
-      bloc.eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
     }
-
-    bloc.loadData(productId: blocFilter.selectionState.productId);
-    bloc.loadDropdownData();
+    bloc.initBLoc(productId: widget.productId);
     super.initState();
   }
 
@@ -51,7 +44,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     blocFilter.eventController.stream.listen((event) {
       if (event is ChangeSelectedProduct) {
-        bloc.loadData(productId: event.productId);
+        bloc.loadDetail(productId: event.productId);
       }
     });
 
@@ -109,10 +102,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         builder: (context, constrains) {
           if (Responsive.isSmallWidth(context)) {
             if (blocFilter.selectionState.productId?.isNotEmpty ?? false) {
-              return ProductDetailBody(
-                bloc: bloc,
-                productId: blocFilter.selectionState.productId,
-              );
+              return ProductDetailBody(bloc: bloc);
             } else {
               return ProductFilterBody(bloc: blocFilter);
             }
@@ -125,10 +115,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 const SizedBox(width: defaultPadding * 2),
                 Expanded(
-                  child: ProductDetailBody(
-                    bloc: bloc,
-                    productId: blocFilter.selectionState.productId,
-                  ),
+                  child: ProductDetailBody(bloc: bloc),
                 ),
               ],
             );

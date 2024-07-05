@@ -9,10 +9,11 @@ class DemoScreen extends StatefulWidget {
 }
 
 class _DemoScreenState extends State<DemoScreen> {
-  TextEditingController textEditingController = TextEditingController();
+  TextEditingController textEditingController =
+      TextEditingController(text: 'Init value');
   @override
   Widget build(BuildContext context) {
-    textEditingController.text = 'Init value';
+    // textEditingController.text = 'Init value';
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Custom Demo'),
@@ -20,6 +21,8 @@ class _DemoScreenState extends State<DemoScreen> {
       body: Column(
         children: [
           CTextFormField(
+            readOnly: false,
+            required: true,
             labelText: 'Test',
             controller: textEditingController,
           )

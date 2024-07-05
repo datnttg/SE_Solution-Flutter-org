@@ -33,6 +33,11 @@ class LoadDropdownData extends ChangeProductDetailEvents {
   });
 }
 
+class ReloadData extends ChangeProductDetailEvents {
+  String? productId;
+  ReloadData(this.productId);
+}
+
 class ChangeProductCode extends ChangeProductDetailEvents {
   String? code;
   ChangeProductCode(this.code);

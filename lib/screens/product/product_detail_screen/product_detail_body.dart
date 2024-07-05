@@ -11,10 +11,12 @@ import 'components/product_detail_children.dart';
 import 'models/product_detail_model.dart';
 
 class ProductDetailBody extends StatelessWidget {
-  const ProductDetailBody({super.key, this.productId, required this.bloc});
-
-  final String? productId;
   final ProductDetailBloc bloc;
+
+  const ProductDetailBody({
+    super.key,
+    required this.bloc,
+  });
 
   @override
   Widget build(BuildContext context) {

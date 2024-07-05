@@ -15,9 +15,11 @@ import 'product_detail_states.dart';
 
 class ProductDetailBloc {
   var eventController = StreamController<ChangeProductDetailEvents>.broadcast();
+  var uiController = StreamController<ChangeProductDetailEvents>.broadcast();
   var dataController = StreamController<ProductDetailModel>.broadcast();
   var dropdownDataController =
       StreamController<ProductDetailDataState>.broadcast();
+
   void dispose() {
     eventController.close();
     dataController.close();
@@ -38,10 +40,13 @@ class ProductDetailBloc {
         /// CHANGE SCREEN MODE
         if (event is ChangeScreenMode) {
           screenMode.state = event.screenMode;
+          uiController.add(ChangeScreenMode(event.screenMode));
         }
 
         /// LOAD DETAIL
-        else if (event is LoadData) {
+        else if (event is ReloadData) {
+          loadDetail(productId: event.productId);
+        } else if (event is LoadData) {
           data = event.detail;
           lstProduct = event.listProduct;
           dataController.add(data);
@@ -55,7 +60,7 @@ class ProductDetailBloc {
 
         /// SUBMIT
         else if (event is SubmitData) {
-          postData();
+          submitData();
         }
 
         /// CHANGE PRODUCT DETAIL
@@ -68,7 +73,7 @@ class ProductDetailBloc {
             data.children = [];
           }
           data.typeCode = event.type;
-          eventController.add(ChangeScreenMode(screenMode.state));
+          uiController.add(ChangeScreenMode(screenMode.state));
         } else if (event is ChangeProductCode) {
           data.code = event.code;
         } else if (event is ChangeProductName) {
@@ -142,7 +147,11 @@ class ProductDetailBloc {
     }
   }
 
-  Future<bool> loadData({String? productId}) async {
+  void resetData() {
+    data = initData;
+  }
+
+  Future<bool> loadDetail({String? productId}) async {
     try {
       resetData();
       var lstProduct = await fetchProductList();
@@ -164,12 +173,20 @@ class ProductDetailBloc {
     }
   }
 
-  void resetData() {
-    data = initData;
+  void initBLoc({String? productId}) {
+    if (productId?.isNotEmpty ?? false) {
+      eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+    } else {
+      eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
+    }
+
+    resetData();
+    loadDropdownData();
+    loadDetail(productId: productId);
   }
 
-  void postData() async {
-    var productId = await postProductDetail(data);
+  void submitData() async {
+    var productId = await submitProductDetail(data);
     if (productId != null) {
       data.id = productId;
       eventController.add(ChangeScreenMode(ScreenModeEnum.view));

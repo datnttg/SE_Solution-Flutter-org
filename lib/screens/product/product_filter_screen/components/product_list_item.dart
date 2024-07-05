@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_events.dart';
 
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/configs.dart';
@@ -6,15 +7,18 @@ import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
+import '../../product_detail_screen/bloc/product_detail_bloc.dart';
 import '../bloc/product_filter_bloc.dart';
 import '../bloc/product_filter_events.dart';
 import '../models/product_filter_item_model.dart';
 
 class ProductListItem extends StatelessWidget {
-  const ProductListItem(
-      {super.key, required this.dataItem, required this.bloc});
   final ProductFilterBloc bloc;
   final ProductFilterItemModel dataItem;
+  final ProductDetailBloc? blocDetail;
+
+  const ProductListItem(
+      {super.key, required this.dataItem, required this.bloc, this.blocDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +27,25 @@ class ProductListItem extends StatelessWidget {
       onTap: () async {
         bloc.eventController.add(ChangeSelectedProduct(productId: dataItem.id));
 
-        // if (Responsive.isSmallWidth(context)) {
-        //   final isReload = await Navigator.pushNamed(
-        //     context,
-        //     '${customRouteMapping.productDetail}/${dataItem.id}',
-        //   );
-        //   if (isReload == true) {
-        //     bloc.loadData();
-        //   }
-        //   // Navigator.pushNamedAndRemoveUntil(
-        //   //     context,
-        //   //     '${customRouteMapping.productDetail}/${dataItem.id}',
-        //   //     (Route<dynamic> route) => false);
-        // }
-        final isReload = await Navigator.pushNamed(
-          context,
-          '${customRouteMapping.productDetail}/${dataItem.id}',
-        );
-        if (isReload == true) {
-          bloc.loadData();
+        if (Responsive.isSmallWidth(context)) {
+          final isReload = await Navigator.pushNamed(
+            context,
+            '${customRouteMapping.productDetail}/${dataItem.id}',
+          );
+          if (isReload == true) {
+            bloc.loadData();
+          }
+          // Navigator.pushNamedAndRemoveUntil(
+          //     context,
+          //     '${customRouteMapping.productDetail}/${dataItem.id}',
+          //     (Route<dynamic> route) => false);
+        } else if (blocDetail != null) {
+          blocDetail!.eventController.add(ReloadData(dataItem.id));
+        } else {
+          kShowToast(
+              style: 'danger',
+              title: sharedPrefs.translate('Error'),
+              content: sharedPrefs.translate('Can not navigating'));
         }
       },
       child: Container(

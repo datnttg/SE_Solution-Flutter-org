@@ -1083,10 +1083,6 @@ class CTextFormField extends StatelessWidget {
             : newHintText,
         hintStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-        // suffix: Container(
-        //   width: 36,
-        //   alignment: Alignment.center,
-        // ),
         suffixStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
       ),

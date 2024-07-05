@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
+import '../product_detail_screen/bloc/product_detail_bloc.dart';
 import 'bloc/product_filter_bloc.dart';
 import 'components/product_filter_form.dart';
 import 'components/product_list.dart';
 import 'models/product_filter_item_model.dart';
 
 class ProductFilterBody extends StatefulWidget {
-  const ProductFilterBody({super.key, required this.bloc});
+  const ProductFilterBody({super.key, required this.bloc, this.blocDetail});
   final ProductFilterBloc bloc;
+  final ProductDetailBloc? blocDetail;
 
   @override
   State<ProductFilterBody> createState() => _ProductFilterBodyState();
@@ -125,10 +127,22 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
                   controller: _tabController,
                   children: [
                     /// PRODUCT LIST
-                    ProductList(bloc: widget.bloc, list: normal),
-                    ProductList(bloc: widget.bloc, list: locked),
-                    ProductList(bloc: widget.bloc, list: cancelled),
-                    ProductList(bloc: widget.bloc, list: all),
+                    ProductList(
+                        bloc: widget.bloc,
+                        blocDetail: widget.blocDetail,
+                        list: normal),
+                    ProductList(
+                        bloc: widget.bloc,
+                        blocDetail: widget.blocDetail,
+                        list: locked),
+                    ProductList(
+                        bloc: widget.bloc,
+                        blocDetail: widget.blocDetail,
+                        list: cancelled),
+                    ProductList(
+                        bloc: widget.bloc,
+                        blocDetail: widget.blocDetail,
+                        list: all),
                   ],
                 ),
               ),
