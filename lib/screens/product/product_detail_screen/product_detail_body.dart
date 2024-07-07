@@ -11,10 +11,12 @@ import 'components/product_detail_children.dart';
 import 'models/product_detail_model.dart';
 
 class ProductDetailBody extends StatelessWidget {
+  final ProductDetailModel productDetail;
   final ProductDetailBloc bloc;
 
   const ProductDetailBody({
     super.key,
+    required this.productDetail,
     required this.bloc,
   });
 
@@ -38,12 +40,13 @@ class ProductDetailBody extends StatelessWidget {
                         color: kBgColor,
 
                         /// PRODUCT DETAIL
-                        child: ProductDetailForm(bloc: bloc),
+                        child: ProductDetailForm(
+                            bloc: bloc, productDetail: productDetail),
                       ),
                       const SizedBox(height: defaultPadding * 2),
 
                       /// CHILD PRODUCTS
-                      bloc.data.typeCode == 'BundleProduct'
+                      productDetail.typeCode == 'BundleProduct'
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -60,9 +63,11 @@ class ProductDetailBody extends StatelessWidget {
 
                                 /// LIST: CHILD
                                 Container(
-                                  // padding: const EdgeInsets.all(defaultPadding * 2),
                                   color: kBgColor,
-                                  child: ProductDetailChildren(bloc: bloc),
+                                  child: ProductDetailChildren(
+                                    bloc: bloc,
+                                    childProducts: productDetail.children,
+                                  ),
                                 ),
                               ],
                             )
@@ -71,7 +76,7 @@ class ProductDetailBody extends StatelessWidget {
                   ),
                 ),
               ),
-              !Responsive.isPortrait(context)
+              !Responsive.isMobileAndPortrait(context)
                   ? const SizedBox()
                   : Container(
                       width: double.infinity,

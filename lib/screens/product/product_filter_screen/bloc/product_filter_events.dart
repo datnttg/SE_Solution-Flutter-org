@@ -2,27 +2,27 @@ import '../../../../utilities/classes/custom_widget_models.dart';
 
 abstract class ProductFilterEvents {}
 
-class ChangeProductCode extends ProductFilterEvents {
+class ChangeProductFilterCode extends ProductFilterEvents {
   String? productCode;
-  ChangeProductCode(this.productCode);
+  ChangeProductFilterCode(this.productCode);
 }
 
-class ChangeProductName extends ProductFilterEvents {
+class ChangeProductFilterName extends ProductFilterEvents {
   String? productName;
-  ChangeProductName(this.productName);
+  ChangeProductFilterName(this.productName);
 }
 
-class ChangeProductCategory extends ProductFilterEvents {
+class ChangeProductFilterCategory extends ProductFilterEvents {
   List<CDropdownMenuEntry>? categoryCodes;
-  ChangeProductCategory(this.categoryCodes);
+  ChangeProductFilterCategory(this.categoryCodes);
 }
 
-class ChangeProductType extends ProductFilterEvents {
+class ChangeProductFilterType extends ProductFilterEvents {
   List<CDropdownMenuEntry>? typeCodes;
-  ChangeProductType(this.typeCodes);
+  ChangeProductFilterType(this.typeCodes);
 }
 
-class ChangeSelectedProduct extends ProductFilterEvents {
+class ChangeFilterSelectedProduct extends ProductFilterEvents {
   String? productId;
-  ChangeSelectedProduct({this.productId});
+  ChangeFilterSelectedProduct({this.productId});
 }

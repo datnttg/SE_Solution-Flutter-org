@@ -33,7 +33,7 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
             hintText: '--${sharedPrefs.translate('All')}--',
             controller: null,
             onChanged: (value) {
-              widget.bloc.eventController.add(ChangeProductCode(value));
+              widget.bloc.eventController.add(ChangeProductFilterCode(value));
             },
           )),
 
@@ -45,7 +45,7 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
             hintText: '--${sharedPrefs.translate('All')}--',
             controller: null,
             onChanged: (value) {
-              widget.bloc.eventController.add(ChangeProductName(value));
+              widget.bloc.eventController.add(ChangeProductFilterName(value));
             },
           )),
 
@@ -67,7 +67,7 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
                       dropdownMenuEntries: snapshot.data!,
                       onSelected: (values) {
                         widget.bloc.eventController
-                            .add(ChangeProductCategory(values));
+                            .add(ChangeProductFilterCategory(values));
                       },
                     );
                   }
@@ -93,7 +93,7 @@ class _ProductFilterFormState extends State<ProductFilterForm> {
                       dropdownMenuEntries: snapshot.data!,
                       onSelected: (values) {
                         widget.bloc.eventController
-                            .add(ChangeProductType(values));
+                            .add(ChangeProductFilterType(values));
                       },
                     );
                   }

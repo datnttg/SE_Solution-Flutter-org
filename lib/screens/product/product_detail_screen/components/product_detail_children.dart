@@ -9,10 +9,15 @@ import 'product_detail_children_item.dart';
 
 class ProductDetailChildren extends StatelessWidget {
   final ProductDetailBloc bloc;
-  const ProductDetailChildren({super.key, required this.bloc});
+  final List<ChildProductModel>? childProducts;
+
+  const ProductDetailChildren(
+      {super.key, required this.bloc, this.childProducts});
 
   @override
   Widget build(BuildContext context) {
+    bloc.data.children = childProducts;
+
     return StreamBuilder<ProductDetailModel>(
       stream: bloc.dataController.stream,
       builder: (context, snapshot) {

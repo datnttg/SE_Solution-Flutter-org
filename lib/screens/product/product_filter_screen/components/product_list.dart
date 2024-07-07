@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_bloc.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_bloc.dart';
 
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
+import '../bloc/product_filter_bloc.dart';
 import '../models/product_filter_item_model.dart';
 import 'product_list_item.dart';
 
 class ProductList extends StatelessWidget {
   final ProductFilterBloc bloc;
   final List<ProductFilterItemModel> list;
-  final ProductDetailBloc? blocDetail;
 
-  const ProductList(
-      {super.key, required this.list, required this.bloc, this.blocDetail});
+  const ProductList({super.key, required this.list, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +35,7 @@ class ProductList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(defaultRadius)),
 
                   /// PRODUCT ITEM
-                  child: ProductListItem(
-                      bloc: bloc,
-                      blocDetail: blocDetail,
-                      dataItem: list[index]),
+                  child: ProductListItem(bloc: bloc, dataItem: list[index]),
                 ),
               );
             }),

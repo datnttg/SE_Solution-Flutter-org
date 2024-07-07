@@ -34,7 +34,7 @@ class AddProductFilterButton extends StatelessWidget {
               }
             } else {
               blocFilter.eventController
-                  .add(ChangeSelectedProduct(productId: ''));
+                  .add(ChangeFilterSelectedProduct(productId: ''));
             }
           },
         ));
@@ -58,7 +58,7 @@ class SaveProductFilterButton extends StatelessWidget {
             blocDetail.eventController
                 .add(ChangeScreenMode(ScreenModeEnum.view));
             blocFilter.eventController
-                .add(ChangeSelectedProduct(productId: null));
+                .add(ChangeFilterSelectedProduct(productId: null));
           },
         ));
   }
@@ -101,7 +101,7 @@ class BackToProductFilterButton extends StatelessWidget {
               blocDetail.eventController
                   .add(ChangeScreenMode(ScreenModeEnum.view));
               blocFilter.eventController
-                  .add(ChangeSelectedProduct(productId: null));
+                  .add(ChangeFilterSelectedProduct(productId: null));
             }
             // blocDetail.eventController
             //     .add(ChangeScreenMode(ScreenModeEnum.view));

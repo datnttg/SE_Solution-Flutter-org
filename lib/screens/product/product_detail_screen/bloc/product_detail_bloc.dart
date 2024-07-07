@@ -14,10 +14,11 @@ import 'product_detail_events.dart';
 import 'product_detail_states.dart';
 
 class ProductDetailBloc {
-  var eventController = StreamController<ChangeProductDetailEvents>.broadcast();
-  var uiController = StreamController<ChangeProductDetailEvents>.broadcast();
-  var dataController = StreamController<ProductDetailModel>.broadcast();
-  var dropdownDataController =
+  final eventController =
+      StreamController<ChangeProductDetailEvents>.broadcast();
+  final uiController = StreamController<ChangeProductDetailEvents>.broadcast();
+  final dataController = StreamController<ProductDetailModel>.broadcast();
+  final dropdownDataController =
       StreamController<ProductDetailDataState>.broadcast();
 
   void dispose() {
@@ -35,27 +36,30 @@ class ProductDetailBloc {
   var dropdownData = ProductDetailDataState();
 
   ProductDetailBloc() {
-    eventController.stream.listen((event) {
+    eventController.stream.listen((event) async {
       try {
         /// CHANGE SCREEN MODE
         if (event is ChangeScreenMode) {
           screenMode.state = event.screenMode;
           uiController.add(ChangeScreenMode(event.screenMode));
+          dataController.add(data);
+          dropdownDataController.add(dropdownData);
         }
 
         /// LOAD DETAIL
         else if (event is ReloadData) {
-          loadDetail(productId: event.productId);
-        } else if (event is LoadData) {
-          data = event.detail;
-          lstProduct = event.listProduct;
-          dataController.add(data);
-        } else if (event is LoadDropdownData) {
-          dropdownData.listUnit = event.listUnit;
-          dropdownData.listStatus = event.listStatus;
-          dropdownData.listCategory = event.listCategory;
-          dropdownData.listType = event.listType;
-          dropdownDataController.add(dropdownData);
+          await loadData(productId: event.productId);
+          await loadDropdownData();
+          // } else if (event is LoadData) {
+          //   data = event.detail;
+          //   lstProduct = event.listProduct;
+          //   dataController.add(data);
+          // } else if (event is LoadDropdownData) {
+          //   dropdownData.listUnit = event.listUnit;
+          //   dropdownData.listStatus = event.listStatus;
+          //   dropdownData.listCategory = event.listCategory;
+          //   dropdownData.listType = event.listType;
+          //   dropdownDataController.add(dropdownData);
         }
 
         /// SUBMIT
@@ -74,6 +78,7 @@ class ProductDetailBloc {
           }
           data.typeCode = event.type;
           uiController.add(ChangeScreenMode(screenMode.state));
+          dropdownDataController.add(dropdownData);
         } else if (event is ChangeProductCode) {
           data.code = event.code;
         } else if (event is ChangeProductName) {
@@ -126,6 +131,36 @@ class ProductDetailBloc {
     });
   }
 
+  void resetData() {
+    data = initData;
+    dataController.add(data);
+  }
+
+  Future<bool> loadData({String? productId}) async {
+    try {
+      resetData();
+      var listProduct = await fetchProductList();
+      var productDetailModel = ProductDetailModel(
+          typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
+      if (productId?.isNotEmpty ?? false) {
+        var productDetail = await fetchProductDetail(productId!);
+        if (productDetail != null) {
+          productDetailModel = productDetail;
+        }
+        // eventController.add(LoadData(
+        //   detail: productDetailModel,
+        //   listProduct: listProduct,
+        // ));
+        data = productDetailModel;
+        lstProduct = listProduct;
+        dataController.add(data);
+      }
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
   Future<bool> loadDropdownData() async {
     try {
       var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
@@ -134,55 +169,33 @@ class ProductDetailBloc {
       var lstCategory =
           await fetchProductCategory(categoryProperty: 'ProductCategory');
       var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
-
-      eventController.add(LoadDropdownData(
+      dropdownData = ProductDetailDataState(
         listUnit: lstUnit,
         listStatus: lstStatus,
         listCategory: lstCategory,
         listType: lstType,
-      ));
+      );
+      dropdownDataController.add(dropdownData);
       return true;
     } catch (ex) {
       return false;
     }
   }
 
-  void resetData() {
-    data = initData;
-  }
-
-  Future<bool> loadDetail({String? productId}) async {
+  Future<bool> init({String? productId}) async {
     try {
-      resetData();
-      var lstProduct = await fetchProductList();
-      var productDetailModel = ProductDetailModel(
-          typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
       if (productId?.isNotEmpty ?? false) {
-        var productDetail = await fetchProductDetail(productId!);
-        if (productDetail != null) {
-          productDetailModel = productDetail;
-        }
-        eventController.add(LoadData(
-          detail: productDetailModel,
-          listProduct: lstProduct,
-        ));
+        eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+      } else {
+        eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
       }
+      resetData();
+      await loadData(productId: productId);
+      await loadDropdownData();
       return true;
     } catch (ex) {
       return false;
     }
-  }
-
-  void initBLoc({String? productId}) {
-    if (productId?.isNotEmpty ?? false) {
-      eventController.add(ChangeScreenMode(ScreenModeEnum.view));
-    } else {
-      eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
-    }
-
-    resetData();
-    loadDropdownData();
-    loadDetail(productId: productId);
   }
 
   void submitData() async {

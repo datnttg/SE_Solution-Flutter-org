@@ -1,4 +1,3 @@
-import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../models/child_product_model.dart';
@@ -11,27 +10,27 @@ class ChangeScreenMode extends ChangeProductDetailEvents {
   ChangeScreenMode(this.screenMode);
 }
 
-class LoadData extends ChangeProductDetailEvents {
-  ProductDetailModel detail;
-  List<ProductFilterItemModel> listProduct;
-  LoadData({
-    required this.detail,
-    required this.listProduct,
-  });
-}
+// class LoadData extends ChangeProductDetailEvents {
+//   ProductDetailModel detail;
+//   List<ProductFilterItemModel> listProduct;
+//   LoadData({
+//     required this.detail,
+//     required this.listProduct,
+//   });
+// }
 
-class LoadDropdownData extends ChangeProductDetailEvents {
-  List<CDropdownMenuEntry> listUnit;
-  List<CDropdownMenuEntry> listStatus;
-  List<CDropdownMenuEntry> listCategory;
-  List<CDropdownMenuEntry> listType;
-  LoadDropdownData({
-    required this.listUnit,
-    required this.listStatus,
-    required this.listCategory,
-    required this.listType,
-  });
-}
+// class LoadDropdownData extends ChangeProductDetailEvents {
+//   List<CDropdownMenuEntry> listUnit;
+//   List<CDropdownMenuEntry> listStatus;
+//   List<CDropdownMenuEntry> listCategory;
+//   List<CDropdownMenuEntry> listType;
+//   LoadDropdownData({
+//     required this.listUnit,
+//     required this.listStatus,
+//     required this.listCategory,
+//     required this.listType,
+//   });
+// }
 
 class ReloadData extends ChangeProductDetailEvents {
   String? productId;
