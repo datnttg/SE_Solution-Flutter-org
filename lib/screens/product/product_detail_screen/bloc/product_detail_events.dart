@@ -1,7 +1,5 @@
 import '../../../../utilities/enums/ui_enums.dart';
-import '../../product_filter_screen/models/product_filter_item_model.dart';
-import '../models/child_product_model.dart';
-import '../models/product_detail_model.dart';
+import 'product_detail_states.dart';
 
 abstract class ChangeProductDetailEvents {}
 
@@ -10,108 +8,81 @@ class ChangeScreenMode extends ChangeProductDetailEvents {
   ChangeScreenMode(this.screenMode);
 }
 
-// class LoadData extends ChangeProductDetailEvents {
-//   ProductDetailModel detail;
-//   List<ProductFilterItemModel> listProduct;
-//   LoadData({
-//     required this.detail,
-//     required this.listProduct,
-//   });
-// }
-
-// class LoadDropdownData extends ChangeProductDetailEvents {
-//   List<CDropdownMenuEntry> listUnit;
-//   List<CDropdownMenuEntry> listStatus;
-//   List<CDropdownMenuEntry> listCategory;
-//   List<CDropdownMenuEntry> listType;
-//   LoadDropdownData({
-//     required this.listUnit,
-//     required this.listStatus,
-//     required this.listCategory,
-//     required this.listType,
-//   });
-// }
-
-class ReloadData extends ChangeProductDetailEvents {
+class InitProductDetailData extends ChangeProductDetailEvents {
   String? productId;
-  ReloadData(this.productId);
+  InitProductDetailData({this.productId});
 }
 
-class ChangeProductCode extends ChangeProductDetailEvents {
+class DataLoaded extends ChangeProductDetailEvents {
+  ProductDetailState state;
+  DataLoaded(this.state);
+}
+
+class ProductCodeChanged extends ChangeProductDetailEvents {
   String? code;
-  ChangeProductCode(this.code);
+  ProductCodeChanged(this.code);
 }
 
-class ChangeProductName extends ChangeProductDetailEvents {
+class ProductNameChanged extends ChangeProductDetailEvents {
   String? name;
-  ChangeProductName(this.name);
+  ProductNameChanged(this.name);
 }
 
-class ChangeProductUnit extends ChangeProductDetailEvents {
+class ProductUnitChanged extends ChangeProductDetailEvents {
   String? unit;
-  ChangeProductUnit(this.unit);
+  ProductUnitChanged(this.unit);
 }
 
-class ChangeProductRequiredSerial extends ChangeProductDetailEvents {
-  bool? require;
-  ChangeProductRequiredSerial(this.require);
-}
-
-class ChangeProductDescription extends ChangeProductDetailEvents {
+class ProductDescriptionChanged extends ChangeProductDetailEvents {
   String? description;
-  ChangeProductDescription(this.description);
+  ProductDescriptionChanged(this.description);
 }
 
-class ChangeProductStatus extends ChangeProductDetailEvents {
+class ProductStatusChanged extends ChangeProductDetailEvents {
   String? status;
-  ChangeProductStatus(this.status);
+  ProductStatusChanged(this.status);
 }
 
-class ChangeProductCategory extends ChangeProductDetailEvents {
+class ProductCategoryChanged extends ChangeProductDetailEvents {
   String? category;
-  ChangeProductCategory(this.category);
+  ProductCategoryChanged(this.category);
 }
 
-class ChangeProductType extends ChangeProductDetailEvents {
+class ProductTypeChanged extends ChangeProductDetailEvents {
   String? type;
-  ChangeProductType(this.type);
+  ProductTypeChanged(this.type);
 }
 
-class ChangeProductSerialRequired extends ChangeProductDetailEvents {
+class ProductSerialRequiredChanged extends ChangeProductDetailEvents {
   bool? serialRequired;
-  ChangeProductSerialRequired(this.serialRequired);
+  ProductSerialRequiredChanged(this.serialRequired);
 }
 
-class ChangeProductMonthsOfWarranty extends ChangeProductDetailEvents {
-  String? monthsOfWarranty;
-  ChangeProductMonthsOfWarranty(this.monthsOfWarranty);
+class ProductMonthsOfWarrantyChanged extends ChangeProductDetailEvents {
+  int? monthsOfWarranty;
+  ProductMonthsOfWarrantyChanged(this.monthsOfWarranty);
 }
 
-class ChangeProductMinPrice extends ChangeProductDetailEvents {
+class ProductMinPriceChanged extends ChangeProductDetailEvents {
   double? minPrice;
-  ChangeProductMinPrice(this.minPrice);
+  ProductMinPriceChanged(this.minPrice);
 }
 
-class RemoveChildProduct extends ChangeProductDetailEvents {
+class ChildProductRemoved extends ChangeProductDetailEvents {
   int item;
-  RemoveChildProduct(this.item);
+  ChildProductRemoved(this.item);
 }
 
-class ChangeChildProductId extends ChangeProductDetailEvents {
+class ChildProductIdChanged extends ChangeProductDetailEvents {
   int item;
   String childProductId;
-  ChangeChildProductId(this.item, this.childProductId);
+  ChildProductIdChanged(this.item, this.childProductId);
 }
 
-class ChangeChildProductQuantity extends ChangeProductDetailEvents {
+class ChildProductQuantityChanged extends ChangeProductDetailEvents {
   int item;
   double quantity;
-  ChangeChildProductQuantity(this.item, this.quantity);
-}
-
-class ChangeChildrenProducts extends ChangeProductDetailEvents {
-  List<ChildProductModel> children;
-  ChangeChildrenProducts(this.children);
+  ChildProductQuantityChanged(this.item, this.quantity);
 }
 
 class SubmitData extends ChangeProductDetailEvents {

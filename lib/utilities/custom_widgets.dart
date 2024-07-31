@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:se_solution/utilities/responsive.dart';
 import 'classes/custom_widget_models.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
@@ -30,7 +31,8 @@ class CScaffold extends StatelessWidget {
               preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
               child: appBar!,
             ),
-      drawer: drawer,
+      drawer: !Responsive.isSmallWidth(context) ? drawer : null,
+      endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
       body: Theme(
         data: Theme.of(context).copyWith(
           canvasColor:

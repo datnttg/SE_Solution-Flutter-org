@@ -1,28 +1,48 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
+import '../models/product_filter_item_model.dart';
 
 abstract class ProductFilterEvents {}
 
-class ChangeProductFilterCode extends ProductFilterEvents {
+class InitProductFilterData extends ProductFilterEvents {
+  InitProductFilterData();
+}
+
+class ProductFilterCodeChanged extends ProductFilterEvents {
   String? productCode;
-  ChangeProductFilterCode(this.productCode);
+  ProductFilterCodeChanged(this.productCode);
 }
 
-class ChangeProductFilterName extends ProductFilterEvents {
+class ProductFilterNameChanged extends ProductFilterEvents {
   String? productName;
-  ChangeProductFilterName(this.productName);
+  ProductFilterNameChanged(this.productName);
 }
 
-class ChangeProductFilterCategory extends ProductFilterEvents {
+class ProductFilterCategoriesChanged extends ProductFilterEvents {
   List<CDropdownMenuEntry>? categoryCodes;
-  ChangeProductFilterCategory(this.categoryCodes);
+  ProductFilterCategoriesChanged(this.categoryCodes);
 }
 
-class ChangeProductFilterType extends ProductFilterEvents {
+class ProductFilterSelectedCategoriesChanged extends ProductFilterEvents {
+  List<CDropdownMenuEntry>? selectedCategoryCodes;
+  ProductFilterSelectedCategoriesChanged(this.selectedCategoryCodes);
+}
+
+class ProductFilterTypesChanged extends ProductFilterEvents {
   List<CDropdownMenuEntry>? typeCodes;
-  ChangeProductFilterType(this.typeCodes);
+  ProductFilterTypesChanged(this.typeCodes);
 }
 
-class ChangeFilterSelectedProduct extends ProductFilterEvents {
+class ProductFilterSelectedTypesChanged extends ProductFilterEvents {
+  List<CDropdownMenuEntry>? selectedTypeCodes;
+  ProductFilterSelectedTypesChanged(this.selectedTypeCodes);
+}
+
+class ProductFilterListChanged extends ProductFilterEvents {
+  List<ProductFilterItemModel>? products;
+  ProductFilterListChanged(this.products);
+}
+
+class SelectedFilterProductChanged extends ProductFilterEvents {
   String? productId;
-  ChangeFilterSelectedProduct({this.productId});
+  SelectedFilterProductChanged(this.productId);
 }

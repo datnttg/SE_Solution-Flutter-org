@@ -501,7 +501,6 @@ Future<Map> fetchData(Uri hostAddress,
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
-      "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
       'Authorization': 'Bearer ${sharedPrefs.getAccessToken()}',
       "Localization": sharedPrefs.getLocale().toString(),
     };
@@ -544,6 +543,7 @@ Future<Map> fetchData(Uri hostAddress,
     var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
     return responseBody;
   } catch (e) {
+    debugPrint("fetchData() error: $e");
     return {
       "success": false,
       "responseMessage": sharedPrefs.translate("Connection failed!")

@@ -13,7 +13,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    return KScaffold(
+    return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
         title: Text(sharedPrefs.translate("Dashboard")),

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
-import '../product_detail_screen/bloc/product_detail_bloc.dart';
 import 'bloc/product_filter_bloc.dart';
+import 'bloc/product_filter_events.dart';
 import 'bloc/product_filter_states.dart';
 import 'components/product_filter_form.dart';
 import 'components/product_list.dart';
 import 'models/product_filter_item_model.dart';
 
 class ProductFilterBody extends StatefulWidget {
-  const ProductFilterBody({super.key, required this.bloc, this.blocDetail});
-  final ProductFilterBloc bloc;
-  final ProductDetailBloc? blocDetail;
+  const ProductFilterBody({super.key});
 
   @override
   State<ProductFilterBody> createState() => _ProductFilterBodyState();
@@ -21,77 +20,47 @@ class ProductFilterBody extends StatefulWidget {
 class _ProductFilterBodyState extends State<ProductFilterBody>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  List<ProductFilterItemModel> all = [];
-  List<ProductFilterItemModel> normal = [];
-  List<ProductFilterItemModel> locked = [];
-  List<ProductFilterItemModel> cancelled = [];
 
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
+    context.read<ProductFilterBloc>().add(InitProductFilterData());
     super.initState();
   }
 
   @override
-  void dispose() {
-    widget.bloc.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // widget.bloc.stateController.stream.listen((data) {
-    //   setState(() {
-    //     all = data.products ?? [];
-    //     if (all.isNotEmpty) {
-    //       all.sort((a, b) => b.name == null
-    //           ? -1
-    //           : a.name == null
-    //               ? 1
-    //               : b.name!.compareTo(a.name!));
-    //     }
-    //     normal =
-    //         all.where((e) => ['Normal'].any((u) => u == e.statusCode)).toList();
-    //     locked =
-    //         all.where((e) => ['Locked'].any((u) => u == e.statusCode)).toList();
-    //     cancelled = all
-    //         .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
-    //         .toList();
-    //   });
-    // });
-    return StreamBuilder<ProductListState>(
-        stream: widget.bloc.stateController.stream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return LayoutBuilder(builder: (context, constrains) {
+      return Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            height: constrains.maxHeight,
+            width: constrains.maxWidth,
+            child: BlocSelector<ProductFilterBloc, ProductFilterState,
+                    List<ProductFilterItemModel>?>(
+                selector: (state) => state.products,
+                builder: (context, products) {
+                  var all = products ?? [];
+                  if (all.isNotEmpty) {
+                    all.sort((a, b) => b.name == null
+                        ? -1
+                        : a.name == null
+                            ? 1
+                            : b.name!.compareTo(a.name!));
+                  }
+                  var normal = all
+                      .where((e) => ['Normal'].any((u) => u == e.statusCode))
+                      .toList();
+                  var locked = all
+                      .where((e) => ['Locked'].any((u) => u == e.statusCode))
+                      .toList();
+                  var cancelled = all
+                      .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
+                      .toList();
 
-          all = snapshot.data!.products ?? [];
-          if (all.isNotEmpty) {
-            all.sort((a, b) => b.name == null
-                ? -1
-                : a.name == null
-                    ? 1
-                    : b.name!.compareTo(a.name!));
-          }
-          normal = all
-              .where((e) => ['Normal'].any((u) => u == e.statusCode))
-              .toList();
-          locked = all
-              .where((e) => ['Locked'].any((u) => u == e.statusCode))
-              .toList();
-          cancelled = all
-              .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
-              .toList();
-          return LayoutBuilder(builder: (context, constrains) {
-            return Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  height: constrains.maxHeight,
-                  width: constrains.maxWidth,
-                  child: NestedScrollView(
+                  return NestedScrollView(
                     headerSliverBuilder:
                         (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
@@ -103,7 +72,7 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
                                 right: defaultPadding * 2),
 
                             /// FILTER FORM
-                            child: ProductFilterForm(bloc: widget.bloc),
+                            child: const ProductFilterForm(),
                           ),
                         ),
                         const SliverToBoxAdapter(
@@ -152,48 +121,48 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
                         controller: _tabController,
                         children: [
                           /// PRODUCT LIST
-                          ProductList(bloc: widget.bloc, list: normal),
-                          ProductList(bloc: widget.bloc, list: locked),
-                          ProductList(bloc: widget.bloc, list: cancelled),
-                          ProductList(bloc: widget.bloc, list: all),
+                          ProductList(list: normal),
+                          ProductList(list: locked),
+                          ProductList(list: cancelled),
+                          ProductList(list: all),
                         ],
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
+          ),
 
-                /// ADD PRODUCT BUTTON
-                // Positioned(
-                //   bottom: 50,
-                //   right: 50,
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       color: kBgColorRow1,
-                //       border: Border.all(width: 1, color: kBgColorHeader),
-                //       borderRadius: BorderRadius.circular(800),
-                //     ),
-                //     child: IconButton(
-                //       icon: const Icon(Icons.add),
-                //       padding: const EdgeInsets.all(15),
-                //       onPressed: () async {
-                //         if (Responsive.isSmallWidth(context)) {
-                //           final isReload = await Navigator.pushNamed(
-                //               context, customRouteMapping.productAdd);
-                //           if (isReload == true) {
-                //             widget.bloc.loadData();
-                //           }
-                //         } else {
-                //           widget.bloc.eventController
-                //               .add(ChangeSelectedProduct(productId: ''));
-                //         }
-                //       },
-                //     ),
-                //   ),
-                // ),
-              ],
-            );
-          });
-        });
+          /// ADD PRODUCT BUTTON
+          // Positioned(
+          //   bottom: 50,
+          //   right: 50,
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       color: kBgColorRow1,
+          //       border: Border.all(width: 1, color: kBgColorHeader),
+          //       borderRadius: BorderRadius.circular(800),
+          //     ),
+          //     child: IconButton(
+          //       icon: const Icon(Icons.add),
+          //       padding: const EdgeInsets.all(15),
+          //       onPressed: () async {
+          //         if (Responsive.isSmallWidth(context)) {
+          //           final isReload = await Navigator.pushNamed(
+          //               context, customRouteMapping.productAdd);
+          //           if (isReload == true) {
+          //             widget.bloc.loadData();
+          //           }
+          //         } else {
+          //           widget.bloc.eventController
+          //               .add(ChangeSelectedProduct(productId: ''));
+          //         }
+          //       },
+          //     ),
+          //   ),
+          // ),
+        ],
+      );
+    });
   }
 }
 
