@@ -507,6 +507,7 @@ Future<Map> fetchData(Uri hostAddress,
     var body = jsonEncode(parameters);
     var encoding = Encoding.getByName('utf-8');
     http.Response response;
+    debugPrint("fetchData(): $hostAddress");
     switch (method) {
       case 'get':
         response = await http.get(hostAddress, headers: headers)

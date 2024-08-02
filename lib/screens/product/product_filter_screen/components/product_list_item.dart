@@ -43,10 +43,9 @@ class ProductListItem extends StatelessWidget {
             context
                 .read<ProductFilterBloc>()
                 .add(SelectedFilterProductChanged(dataItem.id));
-
             context
                 .read<ProductDetailBloc>()
-                .add(InitProductDetailData(productId: dataItem.id));
+                .add(ProductIdChanged(dataItem.id));
           }
         },
         child: Container(

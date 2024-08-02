@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_states.dart';
 
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/responsive.dart';
@@ -8,8 +7,12 @@ import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
 import '../product_detail_screen/bloc/product_detail_bloc.dart';
+import '../product_detail_screen/bloc/product_detail_states.dart';
+import '../product_detail_screen/components/product_detail_action_buttons.dart';
 import '../product_detail_screen/product_detail_body.dart';
 import 'bloc/product_filter_bloc.dart';
+import 'bloc/product_filter_events.dart';
+import 'bloc/product_filter_states.dart';
 import 'product_filter_body.dart';
 
 class ProductFilterScreen extends StatelessWidget {
@@ -31,39 +34,62 @@ class ProductFilterScreen extends StatelessWidget {
           title: Text(sharedPrefs.translate('Product'),
               style: const TextStyle(
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(defaultPadding),
-              child: CElevatedButton(
-                labelText: sharedPrefs.translate('Add'),
-                onPressed: () async {},
-              ),
-            )
+          actions: const [
+            AddProductFilterButton(),
+            UpdateProductButton(),
+            SaveProductButton(),
+            DiscardProductButton(),
           ],
         ),
         body: Row(
           children: [
-            const Expanded(
+            Expanded(
               /// FILTER BODY
-              child: ProductFilterBody(),
+              child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
+                  builder: (context, state) {
+                switch (state.loadingStatus) {
+                  case ProductFilterStatus.success:
+                    return const ProductFilterBody();
+                  default:
+                    context
+                        .read<ProductFilterBloc>()
+                        .add(InitProductFilterData());
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                }
+              }),
             ),
             if (!Responsive.isSmallWidth(context))
-              BlocBuilder<ProductFilterBloc, ProductFilterState>(
-                  builder: (context, state) {
-                return SizedBox(
-                  width: screenWidth - 450,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: defaultPadding * 2),
+              BlocSelector<ProductFilterBloc, ProductFilterState, String?>(
+                  selector: (state) => state.selectedId,
+                  builder: (context, selectedId) {
+                    return SizedBox(
+                      width: screenWidth - 450,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: defaultPadding * 2),
 
-                    /// DETAIL BODY
-                    child: state.selectedId == null
-                        ? const Center(
-                            child: SizedBox(
-                                child: Text('Please select a product')))
-                        : const ProductDetailBody(),
-                  ),
-                );
-              }),
+                        /// DETAIL BODY
+                        child: selectedId == null
+                            ? const Center(
+                                child: SizedBox(
+                                    child: Text('Please select a product')))
+                            : BlocBuilder<ProductDetailBloc,
+                                ProductDetailState>(
+                                builder: (context, state) {
+                                  switch (state.loadingStatus) {
+                                    case ProductDetailLoadingStatus.success:
+                                      return const ProductDetailBody();
+                                    default:
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                  }
+                                },
+                              ),
+                      ),
+                    );
+                  }),
           ],
         ),
       ),

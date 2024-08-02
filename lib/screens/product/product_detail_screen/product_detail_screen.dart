@@ -7,6 +7,8 @@ import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
 import 'bloc/product_detail_bloc.dart';
+import 'bloc/product_detail_events.dart';
+import 'bloc/product_detail_states.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'product_detail_body.dart';
 
@@ -20,14 +22,6 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  // @override
-  // void initState() {
-  //   context
-  //       .read<ProductDetailBloc>()
-  //       .add(InitProductDetailData(productId: widget.productId));
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -51,7 +45,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
             ],
           ),
-          body: const ProductDetailBody(),
+          body: Builder(builder: (context) {
+            if (widget.productId != null) {
+              context
+                  .read<ProductDetailBloc>()
+                  .add(ProductIdChanged(widget.productId));
+            }
+            return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+                builder: (context, state) {
+              switch (state.loadingStatus) {
+                case ProductDetailLoadingStatus.success:
+                  return const ProductDetailBody();
+                default:
+                  return const Center(child: CircularProgressIndicator());
+              }
+            });
+          }),
         ));
   }
 }

@@ -9,6 +9,7 @@ import 'product_detail_states.dart';
 class ProductDetailBloc
     extends Bloc<ChangeProductDetailEvents, ProductDetailState> {
   static final initialState = ProductDetailState(
+    loadingStatus: ProductDetailLoadingStatus.initial,
     screenMode: ScreenModeEnum.view,
     productDetail: ProductDetailModel(
       typeCode: 'SingleProduct',
@@ -24,8 +25,8 @@ class ProductDetailBloc
 
   ProductDetailBloc() : super(initialState) {
     on<ChangeScreenMode>(_onScreenModeChanged);
-    on<InitProductDetailData>(_initProductDetailData);
-    on<DataLoaded>(_onDataLoaded);
+    on<ProductIdChanged>(_onProductIdChanged);
+    on<ProductDetailDataLoaded>(_onDataLoaded);
     on<ProductCodeChanged>(_onProductCodeChanged);
     on<ProductNameChanged>(_onProductNameChanged);
     on<ProductUnitChanged>(_onProductUnitChanged);
@@ -37,6 +38,7 @@ class ProductDetailBloc
     on<ProductMonthsOfWarrantyChanged>(_onProductMonthsOfWarrantyChanged);
     on<ProductMinPriceChanged>(_onProductMinPriceChanged);
     on<ChildProductRemoved>(_onChildProductRemoved);
+    on<ChildProductAdded>(_onChildProductAdded);
     on<ChildProductIdChanged>(_onChildProductIdChanged);
     on<ChildProductQuantityChanged>(_onChildProductQuantityChanged);
   }
@@ -46,8 +48,15 @@ class ProductDetailBloc
     emit(state.copyWith(screenMode: event.screenMode));
   }
 
-  Future<void> _initProductDetailData(
-      InitProductDetailData event, Emitter<ProductDetailState> emit) async {
+  Future<void> _onProductIdChanged(
+      ProductIdChanged event, Emitter<ProductDetailState> emit) async {
+    emit(initialState);
+
+    ProductDetailModel? productDetail;
+    if (event.id != null) {
+      productDetail = await fetchProductDetail(event.id!);
+    }
+
     var listProduct = await fetchProductList();
     var listUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
     var listStatus =
@@ -56,21 +65,21 @@ class ProductDetailBloc
         await fetchProductCategory(categoryProperty: 'ProductCategory');
     var listType = await fetchProductCategory(categoryProperty: 'ProductType');
     var data = state.copyWith(
+      screenMode: event.id == '' ? ScreenModeEnum.edit : state.screenMode,
       lstProduct: listProduct,
       lstCategory: listCategory,
       lstStatus: listStatus,
       lstType: listType,
       lstUnit: listUnit,
+      productDetail: productDetail,
     );
-    if (event.productId != null) {
-      data.copyWith(productDetail: await fetchProductDetail(event.productId!));
-    }
-    // add(DataLoaded(state));
-    emit(data);
+    add(ProductDetailDataLoaded(data));
   }
 
-  void _onDataLoaded(DataLoaded event, Emitter<ProductDetailState> emit) {
-    emit(event.state);
+  void _onDataLoaded(
+      ProductDetailDataLoaded event, Emitter<ProductDetailState> emit) {
+    emit(event.state
+        .copyWith(loadingStatus: ProductDetailLoadingStatus.success));
   }
 
   Future<void> _onProductCodeChanged(
@@ -147,6 +156,14 @@ class ProductDetailBloc
             .copyWith(children: state.productDetail.children)));
   }
 
+  void _onChildProductAdded(
+      ChildProductAdded event, Emitter<ProductDetailState> emit) {
+    if (event.childProduct.childId != null) {
+      state.copyWith(productDetail: state.productDetail);
+    }
+    emit(state);
+  }
+
   Future<void> _onChildProductIdChanged(
       ChildProductIdChanged event, Emitter<ProductDetailState> emit) async {
     state.productDetail.children?[event.item].childId = event.childProductId;
@@ -157,9 +174,10 @@ class ProductDetailBloc
 
   Future<void> _onChildProductQuantityChanged(ChildProductQuantityChanged event,
       Emitter<ProductDetailState> emit) async {
-    state.productDetail.children?[event.item].quantityOfChild = event.quantity;
-    emit(state.copyWith(
-        productDetail: state.productDetail
-            .copyWith(children: state.productDetail.children)));
+    if (event.quantity >= 0) {
+      state.productDetail.children?[event.item].quantityOfChild =
+          event.quantity;
+    }
+    emit(state);
   }
 }

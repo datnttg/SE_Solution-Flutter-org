@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_bloc.dart';
-import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_events.dart';
-import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_states.dart';
 
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
+import 'bloc/product_detail_bloc.dart';
+import 'bloc/product_detail_states.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'components/product_detail_form.dart';
 import 'components/product_detail_children.dart';
 
-class ProductDetailBody extends StatefulWidget {
-  const ProductDetailBody({super.key, this.productId});
-
-  final String? productId;
-
-  @override
-  State<ProductDetailBody> createState() => _ProductDetailBodyState();
-}
-
-class _ProductDetailBodyState extends State<ProductDetailBody> {
-  @override
-  void initState() {
-    context
-        .read<ProductDetailBloc>()
-        .add(InitProductDetailData(productId: widget.productId));
-    super.initState();
-  }
+class ProductDetailBody extends StatelessWidget {
+  const ProductDetailBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +31,7 @@ class _ProductDetailBodyState extends State<ProductDetailBody> {
                   color: kBgColor,
 
                   /// PRODUCT DETAIL
-                  child: ProductDetailForm(),
+                  child: const ProductDetailForm(),
                 ),
                 const SizedBox(height: defaultPadding * 2),
 

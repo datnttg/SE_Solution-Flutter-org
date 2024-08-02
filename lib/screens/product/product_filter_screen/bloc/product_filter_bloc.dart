@@ -13,6 +13,7 @@ class ProductFilterBloc extends Bloc<ProductFilterEvents, ProductFilterState> {
 
   ProductFilterBloc() : super(initialState) {
     on<InitProductFilterData>(_loadData);
+    on<ProductFilterDataLoaded>(_onDataLoaded);
     on<ProductFilterCodeChanged>(_changeProductCode);
     on<ProductFilterNameChanged>(_changeProductName);
     on<ProductFilterSelectedCategoriesChanged>(
@@ -24,13 +25,21 @@ class ProductFilterBloc extends Bloc<ProductFilterEvents, ProductFilterState> {
   var params = ProductFilterParameters();
   Future<void> _loadData(
       InitProductFilterData? event, Emitter<ProductFilterState> emit) async {
-    var data = await fetchProductListModel(params);
-    if (data.isNotEmpty) {
-      emit(state.copyWith(products: data));
-    } else {
-      emit(state.copyWith(products: []));
-    }
+    var productCategories =
+        await fetchProductCategoryEntry(categoryProperty: 'ProductCategory');
+    var productTypes =
+        await fetchProductCategoryEntry(categoryProperty: 'ProductType');
+    var products = await fetchProductListModel(params);
+    emit(state.copyWith(
+      loadingStatus: ProductFilterStatus.success,
+      productCategories: productCategories,
+      productTypes: productTypes,
+      products: products,
+    ));
   }
+
+  void _onDataLoaded(
+      ProductFilterDataLoaded event, Emitter<ProductFilterState> emit) {}
 
   Future<void> _changeProductCode(
       ProductFilterCodeChanged event, Emitter<ProductFilterState> emit) async {
@@ -67,5 +76,9 @@ class ProductFilterBloc extends Bloc<ProductFilterEvents, ProductFilterState> {
   void _changeSelectedProduct(
       SelectedFilterProductChanged event, Emitter<ProductFilterState> emit) {
     emit(state.copyWith(selectedId: event.productId));
+  }
+
+  String? getSelectedId() {
+    return state.selectedId;
   }
 }

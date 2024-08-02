@@ -4,30 +4,43 @@ import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../../product_filter_screen/models/product_filter_item_model.dart';
 
-class ScreenModeState {
-  ScreenModeEnum? state;
-  ScreenModeState(this.state);
+// class ScreenModeState {
+//   ScreenModeEnum? state;
+//   ScreenModeState(this.state);
+// }
+
+enum ProductDetailLoadingStatus { initial, loading, success, failure }
+
+extension WeatherStatusX on ProductDetailLoadingStatus {
+  bool get isInitial => this == ProductDetailLoadingStatus.initial;
+  bool get isLoading => this == ProductDetailLoadingStatus.loading;
+  bool get isSuccess => this == ProductDetailLoadingStatus.success;
+  bool get isFailure => this == ProductDetailLoadingStatus.failure;
 }
 
 class ProductDetailState {
-  ProductDetailModel productDetail;
   ScreenModeEnum screenMode;
+  ProductDetailLoadingStatus loadingStatus;
+  ProductDetailModel productDetail;
   List<ProductFilterItemModel> lstProduct;
   List<CDropdownMenuEntry> lstType;
   List<CDropdownMenuEntry> lstUnit;
   List<CDropdownMenuEntry> lstStatus;
   List<CDropdownMenuEntry> lstCategory;
 
-  ProductDetailState(
-      {required this.productDetail,
-      required this.screenMode,
-      required this.lstProduct,
-      required this.lstUnit,
-      required this.lstStatus,
-      required this.lstCategory,
-      required this.lstType});
+  ProductDetailState({
+    required this.screenMode,
+    required this.loadingStatus,
+    required this.productDetail,
+    required this.lstProduct,
+    required this.lstUnit,
+    required this.lstStatus,
+    required this.lstCategory,
+    required this.lstType,
+  });
 
   ProductDetailState copyWith({
+    ProductDetailLoadingStatus? loadingStatus,
     ScreenModeEnum? screenMode,
     ProductDetailModel? productDetail,
     List<ProductFilterItemModel>? lstProduct,
@@ -37,6 +50,7 @@ class ProductDetailState {
     List<CDropdownMenuEntry>? lstType,
   }) {
     return ProductDetailState(
+      loadingStatus: loadingStatus ?? this.loadingStatus,
       screenMode: screenMode ?? this.screenMode,
       productDetail: productDetail ?? this.productDetail,
       lstProduct: lstProduct ?? this.lstProduct,

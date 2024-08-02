@@ -54,53 +54,34 @@ class ProductFilterForm extends StatelessWidget {
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
-              child: FutureBuilder(
-                  future: fetchProductCategoryEntry(
-                      categoryProperty: 'ProductCategory'),
-                  builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Category');
-                    Widget child = COnLoadingDropdownMenu(labelText: labelText);
-                    if (snapshot.hasData) {
-                      child = CDropdownMenu(
-                        labelText: labelText,
-                        multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
-                        dropdownMenuEntries: snapshot.data!,
-                        onSelected: (values) {
-                          context.read<ProductFilterBloc>().add(
-                              ProductFilterSelectedCategoriesChanged(values));
-                        },
-                      );
-                    }
-                    return child;
-                  }),
+              child: CDropdownMenu(
+                labelText: sharedPrefs.translate('Category'),
+                multiSelect: true,
+                hintText: '--${sharedPrefs.translate('All')}--',
+                dropdownMenuEntries: state.productCategories ?? [],
+                onSelected: (values) {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(ProductFilterSelectedCategoriesChanged(values));
+                },
+              ),
             ),
 
             /// ASSIGNED USER
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
-              child: FutureBuilder(
-                  future: fetchProductCategoryEntry(
-                      categoryProperty: 'ProductType'),
-                  builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Type');
-                    Widget child = COnLoadingDropdownMenu(labelText: labelText);
-                    if (snapshot.hasData) {
-                      child = CDropdownMenu(
-                        labelText: labelText,
-                        multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
-                        dropdownMenuEntries: snapshot.data!,
-                        onSelected: (values) {
-                          context
-                              .read<ProductFilterBloc>()
-                              .add(ProductFilterSelectedTypesChanged(values));
-                        },
-                      );
-                    }
-                    return child;
-                  }),
+              child: CDropdownMenu(
+                labelText: sharedPrefs.translate('Type'),
+                multiSelect: true,
+                hintText: '--${sharedPrefs.translate('All')}--',
+                dropdownMenuEntries: state.productTypes ?? [],
+                onSelected: (values) {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(ProductFilterSelectedTypesChanged(values));
+                },
+              ),
             ),
           ],
         ),

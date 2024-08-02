@@ -38,7 +38,7 @@ class CScaffold extends StatelessWidget {
           canvasColor:
               Colors.blue.shade200, // Set your desired background color
         ),
-        child: body ?? const SizedBox(),
+        child: SafeArea(child: body ?? const SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );
@@ -944,31 +944,37 @@ class CElevatedButton extends StatelessWidget {
       definedBorColor = Colors.black38;
     }
 
-    return ElevatedButton(
-      style: ButtonStyle(
-        // padding:
-        //     WidgetStateProperty.all(const EdgeInsets.only(left: 10, right: 10)),
-        backgroundColor: msBackgroundColor ??
-            WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.pressed)) {
-                return definedPressedBgColor;
-              } else if (states.contains(WidgetState.hovered)) {
-                return defineBgHoverColor;
-              }
-              return definedBgColor;
-            }),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-            side: BorderSide(color: definedBorColor!),
+    return SizedBox(
+      height: Responsive.isSmallWidth(context)
+          ? mediumTextSize * 2 + defaultPadding
+          : null,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          // padding:
+          //     WidgetStateProperty.all(const EdgeInsets.only(left: 10, right: 10)),
+          backgroundColor: msBackgroundColor ??
+              WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return definedPressedBgColor;
+                } else if (states.contains(WidgetState.hovered)) {
+                  return defineBgHoverColor;
+                }
+                return definedBgColor;
+              }),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: BorderSide(color: definedBorColor!),
+            ),
           ),
+          elevation: WidgetStateProperty.all(0),
         ),
-        elevation: WidgetStateProperty.all(0),
-      ),
-      onPressed: onPressed,
-      child: Text(
-        '$labelText',
-        style: TextStyle(color: definedTextColor, fontWeight: FontWeight.bold),
+        onPressed: onPressed,
+        child: Text(
+          '$labelText',
+          style:
+              TextStyle(color: definedTextColor, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
