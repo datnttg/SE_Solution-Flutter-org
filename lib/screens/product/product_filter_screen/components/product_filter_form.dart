@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_states.dart';
 
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../bloc/product_filter_bloc.dart';
 import '../bloc/product_filter_events.dart';
-import '../services/product_filter_services.dart';
+import '../bloc/product_filter_states.dart';
 
 class ProductFilterForm extends StatelessWidget {
   const ProductFilterForm({super.key});

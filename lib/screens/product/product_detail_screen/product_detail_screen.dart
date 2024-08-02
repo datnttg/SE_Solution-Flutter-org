@@ -12,16 +12,10 @@ import 'bloc/product_detail_states.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'product_detail_body.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen extends StatelessWidget {
   final String? productId;
-
   const ProductDetailScreen({super.key, this.productId});
 
-  @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
-}
-
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,22 +39,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
             ],
           ),
-          body: Builder(builder: (context) {
-            if (widget.productId != null) {
-              context
-                  .read<ProductDetailBloc>()
-                  .add(ProductIdChanged(widget.productId));
-            }
-            return BlocBuilder<ProductDetailBloc, ProductDetailState>(
-                builder: (context, state) {
-              switch (state.loadingStatus) {
-                case ProductDetailLoadingStatus.success:
-                  return const ProductDetailBody();
-                default:
-                  return const Center(child: CircularProgressIndicator());
+          body: Builder(
+            builder: (context) {
+              if (productId != null) {
+                context
+                    .read<ProductDetailBloc>()
+                    .add(ProductIdChanged(productId));
+              } else {
+                context.read<ProductDetailBloc>().add(ProductIdChanged(''));
               }
-            });
-          }),
+
+              return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+                builder: (context, state) {
+                  switch (state.loadingStatus) {
+                    case ProductDetailLoadingStatus.success:
+                      return const ProductDetailBody();
+                    default:
+                      return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              );
+            },
+          ),
         ));
   }
 }

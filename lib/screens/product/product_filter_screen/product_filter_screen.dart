@@ -42,58 +42,59 @@ class ProductFilterScreen extends StatelessWidget {
           ],
         ),
         body: BlocBuilder<ProductFilterBloc, ProductFilterState>(
-            builder: (context, state) {
-          switch (state.loadingStatus) {
-            case ProductFilterStatus.success:
-              return Row(
-                children: [
-                  const Expanded(
-                    /// FILTER BODY
-                    child: ProductFilterBody(),
-                  ),
-                  if (!Responsive.isSmallWidth(context))
-                    BlocSelector<ProductFilterBloc, ProductFilterState,
-                            String?>(
-                        selector: (state) => state.selectedId,
-                        builder: (context, selectedId) {
-                          return SizedBox(
-                            width: screenWidth - 450,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: defaultPadding * 2),
+          builder: (context, state) {
+            switch (state.loadingStatus) {
+              case ProductFilterStatus.success:
+                return Row(
+                  children: [
+                    const Expanded(
+                      /// FILTER BODY
+                      child: ProductFilterBody(),
+                    ),
+                    if (!Responsive.isSmallWidth(context))
+                      BlocSelector<ProductFilterBloc, ProductFilterState,
+                              String?>(
+                          selector: (state) => state.selectedId,
+                          builder: (context, selectedId) {
+                            return SizedBox(
+                              width: screenWidth - 450,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: defaultPadding * 2),
 
-                              /// DETAIL BODY
-                              child: selectedId == null
-                                  ? const Center(
-                                      child: SizedBox(
-                                          child:
-                                              Text('Please select a product')))
-                                  : BlocBuilder<ProductDetailBloc,
-                                      ProductDetailState>(
-                                      builder: (context, state) {
-                                        switch (state.loadingStatus) {
-                                          case ProductDetailLoadingStatus
-                                                .success:
-                                            return const ProductDetailBody();
-                                          default:
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                        }
-                                      },
-                                    ),
-                            ),
-                          );
-                        }),
-                ],
-              );
-            default:
-              context.read<ProductFilterBloc>().add(InitProductFilterData());
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-          }
-        }),
+                                /// DETAIL BODY
+                                child: selectedId == null
+                                    ? const Center(
+                                        child: SizedBox(
+                                            child: Text(
+                                                'Please select a product')))
+                                    : BlocBuilder<ProductDetailBloc,
+                                        ProductDetailState>(
+                                        builder: (context, state) {
+                                          switch (state.loadingStatus) {
+                                            case ProductDetailLoadingStatus
+                                                  .success:
+                                              return const ProductDetailBody();
+                                            default:
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                          }
+                                        },
+                                      ),
+                              ),
+                            );
+                          }),
+                  ],
+                );
+              default:
+                context.read<ProductFilterBloc>().add(InitProductFilterData());
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+            }
+          },
+        ),
       ),
     );
   }

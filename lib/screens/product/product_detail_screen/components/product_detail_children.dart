@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/screens/product/product_detail_screen/bloc/product_detail_states.dart';
-import 'package:se_solution/utilities/enums/ui_enums.dart';
 
+import '../../../../utilities/enums/ui_enums.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../bloc/product_detail_bloc.dart';
+import '../bloc/product_detail_states.dart';
 import '../models/child_product_model.dart';
 import 'product_detail_children_item.dart';
 

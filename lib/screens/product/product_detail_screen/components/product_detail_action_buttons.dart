@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se_solution/utilities/responsive.dart';
 
+import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../product_filter_screen/bloc/product_filter_bloc.dart';
+import '../../product_filter_screen/bloc/product_filter_events.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
@@ -24,7 +26,15 @@ class AddProductFilterButton extends StatelessWidget {
             child: CElevatedButton(
               labelText: sharedPrefs.translate('Add'),
               onPressed: () async {
-                context.read<ProductDetailBloc>().add(ProductIdChanged(""));
+                if (Responsive.isSmallWidth(context)) {
+                  Navigator.of(context)
+                      .pushNamed(customRouteMapping.productAdd);
+                } else {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(SelectedFilterProductChanged(''));
+                  context.read<ProductDetailBloc>().add(ProductIdChanged(''));
+                }
               },
             ));
       } else {
@@ -94,14 +104,26 @@ class DiscardProductButton extends StatelessWidget {
             child: CElevatedButton(
               labelText: sharedPrefs.translate('Discard'),
               onPressed: () {
+                context
+                    .read<ProductDetailBloc>()
+                    .add(ChangeScreenMode(ScreenModeEnum.view));
                 if (Responsive.isSmallWidth(context)) {
                   Navigator.pop(context);
                 } else {
                   var selectedId =
                       context.read<ProductFilterBloc>().getSelectedId();
-                  context
-                      .read<ProductDetailBloc>()
-                      .add(ProductIdChanged(selectedId));
+                  if (selectedId == '') {
+                    context
+                        .read<ProductFilterBloc>()
+                        .add(SelectedFilterProductChanged(null));
+                  } else {
+                    context
+                        .read<ProductDetailBloc>()
+                        .add(ProductIdChanged(selectedId));
+                  }
+                  // context
+                  //     .read<ProductDetailBloc>()
+                  //     .add(ProductIdChanged(selectedId));
                 }
               },
             ));

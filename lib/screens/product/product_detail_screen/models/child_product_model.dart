@@ -5,7 +5,7 @@ class ChildProductModel {
 
   ChildProductModel({
     this.childId,
-    this.quantityOfChild,
+    this.quantityOfChild = 0,
     this.note,
   });
 

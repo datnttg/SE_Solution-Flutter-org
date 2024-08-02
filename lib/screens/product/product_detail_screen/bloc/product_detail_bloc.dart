@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se_solution/utilities/enums/ui_enums.dart';
 
+import '../models/child_product_model.dart';
 import '../models/product_detail_model.dart';
 import '../services/fetch_data_service.dart';
 import 'product_detail_events.dart';
@@ -26,7 +27,6 @@ class ProductDetailBloc
   ProductDetailBloc() : super(initialState) {
     on<ChangeScreenMode>(_onScreenModeChanged);
     on<ProductIdChanged>(_onProductIdChanged);
-    on<ProductDetailDataLoaded>(_onDataLoaded);
     on<ProductCodeChanged>(_onProductCodeChanged);
     on<ProductNameChanged>(_onProductNameChanged);
     on<ProductUnitChanged>(_onProductUnitChanged);
@@ -53,7 +53,7 @@ class ProductDetailBloc
     emit(initialState);
 
     ProductDetailModel? productDetail;
-    if (event.id != null) {
+    if (event.id != null && event.id!.isNotEmpty) {
       productDetail = await fetchProductDetail(event.id!);
     }
 
@@ -72,14 +72,9 @@ class ProductDetailBloc
       lstType: listType,
       lstUnit: listUnit,
       productDetail: productDetail,
+      loadingStatus: ProductDetailLoadingStatus.success,
     );
-    add(ProductDetailDataLoaded(data));
-  }
-
-  void _onDataLoaded(
-      ProductDetailDataLoaded event, Emitter<ProductDetailState> emit) {
-    emit(event.state
-        .copyWith(loadingStatus: ProductDetailLoadingStatus.success));
+    emit(data);
   }
 
   Future<void> _onProductCodeChanged(
@@ -174,10 +169,11 @@ class ProductDetailBloc
 
   Future<void> _onChildProductQuantityChanged(ChildProductQuantityChanged event,
       Emitter<ProductDetailState> emit) async {
+    List<ChildProductModel>? children = state.productDetail.children;
     if (event.quantity >= 0) {
-      state.productDetail.children?[event.item].quantityOfChild =
-          event.quantity;
+      children?[event.item].quantityOfChild = event.quantity;
     }
-    emit(state);
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(children: children)));
   }
 }

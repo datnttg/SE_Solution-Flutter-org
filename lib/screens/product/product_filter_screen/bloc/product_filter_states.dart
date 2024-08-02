@@ -48,7 +48,7 @@ class ProductFilterState {
       selectedProductTypes:
           selectedProductTypes ?? this.selectedProductCategories,
       products: products ?? this.products,
-      selectedId: selectedId ?? this.selectedId,
+      selectedId: selectedId,
     );
   }
 }

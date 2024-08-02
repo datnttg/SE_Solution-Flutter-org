@@ -14,16 +14,6 @@ class ProductIdChanged extends ChangeProductDetailEvents {
   ProductIdChanged(this.id);
 }
 
-// class InitProductDetailData extends ChangeProductDetailEvents {
-//   String? productId;
-//   InitProductDetailData({this.productId});
-// }
-
-class ProductDetailDataLoaded extends ChangeProductDetailEvents {
-  ProductDetailState state;
-  ProductDetailDataLoaded(this.state);
-}
-
 class ProductCodeChanged extends ChangeProductDetailEvents {
   String? code;
   ProductCodeChanged(this.code);
