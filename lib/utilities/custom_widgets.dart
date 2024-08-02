@@ -1027,8 +1027,9 @@ class KElevatedButton extends StatelessWidget {
 
 /// CUSTOM TEXT FORM FIELD
 class CTextFormField extends StatelessWidget {
-  final TextEditingController? controller;
   final String? labelText, hintText, initialValue;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
   final bool? required,
       autoFocus,
       enabled,
@@ -1045,12 +1046,17 @@ class CTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final void Function()? onTap;
   final void Function(String)? onChanged;
+  final void Function()? onEditingComplete;
+  final void Function(PointerDownEvent)? onTapOutside;
+  final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
 
   const CTextFormField({
     super.key,
-    this.controller,
     this.labelText,
+    this.initialValue,
+    this.controller,
+    this.focusNode,
     this.labelTextAsHint = false,
     this.textAlign,
     this.keyboardType,
@@ -1058,7 +1064,6 @@ class CTextFormField extends StatelessWidget {
     this.hintText,
     this.suffix,
     this.suffixIconConstraints,
-    this.initialValue,
     this.enabled = true,
     this.required = false,
     this.autoFocus = false,
@@ -1070,6 +1075,9 @@ class CTextFormField extends StatelessWidget {
     this.validator,
     this.onTap,
     this.onChanged,
+    this.onEditingComplete,
+    this.onTapOutside,
+    this.onSaved,
   });
 
   @override
@@ -1097,6 +1105,9 @@ class CTextFormField extends StatelessWidget {
       initialValue: initialValue,
       onTap: onTap,
       onChanged: onChanged,
+      onEditingComplete: onEditingComplete,
+      onTapOutside: onTapOutside,
+      onSaved: onSaved,
       readOnly: readOnly ?? false,
       enabled: enabled,
       autofocus: autoFocus ?? false,

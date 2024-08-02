@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
@@ -78,10 +80,11 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                       icon: const Icon(Icons.remove),
                       onPressed: () {
                         if (quantity >= 1) {
-                          quantityController.text = "${quantity - 1}";
+                          var newQuantity = quantity - 1;
+                          quantityController.text = "$newQuantity";
                           context.read<ProductDetailBloc>().add(
                               ChildProductQuantityChanged(
-                                  widget.itemIndex, quantity - 1));
+                                  widget.itemIndex, newQuantity));
                         }
                       }),
                   Expanded(
@@ -96,32 +99,37 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                       //     : true,
                       controller: quantityController,
                       onChanged: (value) {
-                        // if (!value.isAlphabetOnly) {
-                        //   try {
-                        //     quantity = double.parse(value);
-                        //     if (quantity <= 0) {
-                        //       kShowAlert(
-                        //           body: Text(sharedPrefs.translate(
-                        //               'Quantity must be better than 0')));
-                        //     }
-                        //   } catch (ex) {
-                        //     return;
-                        //   }
-                        // } else {
-                        //   kShowAlert(
-                        //       body: Text(sharedPrefs
-                        //           .translate('Quantity must be a number')));
-                        // }
+                        if (!value.isAlphabetOnly) {
+                          try {
+                            var input = double.parse(value);
+                            if (input <= 0) {
+                              kShowAlert(
+                                  body: Text(sharedPrefs.translate(
+                                      'Quantity must be better than 0')));
+                            }
+                            context.read<ProductDetailBloc>().add(
+                                ChildProductQuantityChanged(widget.itemIndex,
+                                    double.parse(quantityController.text)));
+                          } catch (ex) {
+                            return;
+                          }
+                        } else {
+                          quantityController.text = quantity.toString();
+                          kShowAlert(
+                              body: Text(sharedPrefs
+                                  .translate('Quantity must be a number')));
+                        }
                       },
                     ),
                   ),
                   IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        quantityController.text = "${quantity + 1}";
+                        var newQuantity = quantity + 1;
+                        quantityController.text = "$newQuantity";
                         context.read<ProductDetailBloc>().add(
                             ChildProductQuantityChanged(
-                                widget.itemIndex, quantity + 1));
+                                widget.itemIndex, newQuantity));
                       }),
                 ],
               ),
