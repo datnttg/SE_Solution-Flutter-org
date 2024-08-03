@@ -120,8 +120,15 @@ class DiscardProductButton extends StatelessWidget {
                 context
                     .read<ProductDetailBloc>()
                     .add(ChangeScreenMode(ScreenModeEnum.view));
+                var productId = state.productDetail.id;
                 if (Responsive.isSmallWidth(context)) {
-                  Navigator.pop(context);
+                  if (productId == null) {
+                    Navigator.pop(context);
+                  } else {
+                    context
+                        .read<ProductDetailBloc>()
+                        .add(ProductIdChanged(productId));
+                  }
                 } else {
                   var selectedId =
                       context.read<ProductFilterBloc>().getSelectedId();
@@ -132,11 +139,8 @@ class DiscardProductButton extends StatelessWidget {
                   } else {
                     context
                         .read<ProductDetailBloc>()
-                        .add(ProductIdChanged(selectedId));
+                        .add(ProductIdChanged(productId));
                   }
-                  // context
-                  //     .read<ProductDetailBloc>()
-                  //     .add(ProductIdChanged(selectedId));
                 }
               },
             ));
