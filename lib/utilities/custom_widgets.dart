@@ -38,7 +38,8 @@ class CScaffold extends StatelessWidget {
           canvasColor:
               Colors.blue.shade200, // Set your desired background color
         ),
-        child: SafeArea(child: body ?? const SizedBox()),
+        child: body ?? const SizedBox(),
+        // child: SafeArea(child: body ?? const SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );

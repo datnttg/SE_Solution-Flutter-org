@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/custom_widgets.dart';
-import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import 'bloc/product_detail_bloc.dart';
 import 'bloc/product_detail_states.dart';
-import 'components/product_detail_action_buttons.dart';
 import 'components/product_detail_form.dart';
 import 'components/product_detail_children.dart';
 
@@ -68,21 +66,6 @@ class ProductDetailBody extends StatelessWidget {
             ),
           ),
         ),
-        !Responsive.isMobileAndPortrait(context)
-            ? const SizedBox()
-            : Container(
-                width: double.infinity,
-                color: cAppBarColor,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    /// BOTTOM BUTTONS
-                    SaveProductButton(),
-                    UpdateProductButton(),
-                    DiscardProductButton(),
-                  ],
-                ),
-              ),
       ],
     );
   }

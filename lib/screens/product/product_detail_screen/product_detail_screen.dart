@@ -19,48 +19,66 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => ProductDetailBloc(),
-        child: CScaffold(
-          drawer: const MainMenu(),
-          appBar: AppBar(
-            title: Text(sharedPrefs.translate('Product information'),
-                style: const TextStyle(
-                    fontSize: mediumTextSize * 1.2,
-                    fontWeight: FontWeight.bold)),
-            actions: [
-              Responsive.isPortrait(context)
-                  ? const SizedBox()
-                  : const Row(
-                      children: [
-                        SaveProductButton(),
-                        UpdateProductButton(),
-                        DiscardProductButton(),
-                      ],
-                    ),
-            ],
-          ),
-          body: Builder(
-            builder: (context) {
-              if (productId != null) {
-                context
-                    .read<ProductDetailBloc>()
-                    .add(ProductIdChanged(productId));
-              } else {
-                context.read<ProductDetailBloc>().add(ProductIdChanged(''));
-              }
+      create: (_) => ProductDetailBloc(),
+      child: CScaffold(
+        drawer: const MainMenu(),
+        appBar: AppBar(
+          title: Text(sharedPrefs.translate('Product information'),
+              style: const TextStyle(
+                  fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
+          actions: [
+            Responsive.isMobileAndPortrait(context)
+                ? const SizedBox()
+                : const Row(
+                    children: [
+                      SaveProductButton(),
+                      UpdateProductButton(),
+                      DiscardProductButton(),
+                    ],
+                  ),
+          ],
+        ),
+        body: Builder(
+          builder: (context) {
+            if (productId != null) {
+              context
+                  .read<ProductDetailBloc>()
+                  .add(ProductIdChanged(productId));
+            } else {
+              context.read<ProductDetailBloc>().add(ProductIdChanged(''));
+            }
 
-              return BlocBuilder<ProductDetailBloc, ProductDetailState>(
-                builder: (context, state) {
-                  switch (state.loadingStatus) {
-                    case ProductDetailLoadingStatus.success:
-                      return const ProductDetailBody();
-                    default:
-                      return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              );
-            },
-          ),
-        ));
+            return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+              builder: (context, state) {
+                switch (state.loadingStatus) {
+                  case ProductDetailLoadingStatus.success:
+                    return const ProductDetailBody();
+                  default:
+                    return const Center(child: CircularProgressIndicator());
+                }
+              },
+            );
+          },
+        ),
+        bottomNavigationBar: !Responsive.isMobileAndPortrait(context)
+            ? const SizedBox()
+            : Container(
+                width: double.infinity,
+                color: cBottomBarColor,
+                child: const Padding(
+                  padding: EdgeInsets.only(bottom: defaultPadding * 3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      /// BOTTOM BUTTONS
+                      SaveProductButton(),
+                      UpdateProductButton(),
+                      DiscardProductButton(),
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
   }
 }

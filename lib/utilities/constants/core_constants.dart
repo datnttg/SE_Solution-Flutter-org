@@ -8,10 +8,10 @@ class Constants {
   String appName = 'SE Solution';
   String hostAddress = kDebugMode == false
       ? 'https://api.sepower.vn'
-      // : 'https://test-api.sepower.vn';
-      : kIsWeb
-          ? 'https://test-api.sepower.vn'
-          : 'http://localhost:5155';
+      : 'https://test-api.sepower.vn';
+  // : kIsWeb
+  //     ? 'https://test-api.sepower.vn'
+  //     : 'http://localhost:5155';
 
   String defaultLocaleName = 'vi_VN';
   Locale defaultLocale = const Locale('vi', 'VN');

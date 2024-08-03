@@ -34,11 +34,11 @@ class ProductFilterScreen extends StatelessWidget {
           title: Text(sharedPrefs.translate('Product'),
               style: const TextStyle(
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
-          actions: const [
-            AddProductFilterButton(),
-            UpdateProductButton(),
-            SaveProductButton(),
-            DiscardProductButton(),
+          actions: [
+            const AddProductFilterButton(),
+            if (!Responsive.isSmallWidth(context)) const UpdateProductButton(),
+            if (!Responsive.isSmallWidth(context)) const SaveProductButton(),
+            if (!Responsive.isSmallWidth(context)) const DiscardProductButton(),
           ],
         ),
         body: BlocBuilder<ProductFilterBloc, ProductFilterState>(
