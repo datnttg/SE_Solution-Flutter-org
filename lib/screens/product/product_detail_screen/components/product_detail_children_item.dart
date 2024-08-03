@@ -15,7 +15,6 @@ import '../models/product_detail_model.dart';
 
 class ProductDetailChildrenItem extends StatelessWidget {
   final int itemIndex;
-
   const ProductDetailChildrenItem({super.key, required this.itemIndex});
 
   @override

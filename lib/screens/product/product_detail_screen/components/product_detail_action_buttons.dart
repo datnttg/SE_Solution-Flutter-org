@@ -64,11 +64,16 @@ class SaveProductButton extends StatelessWidget {
                         .where(
                             (e) => e.childId != null && e.childId!.isNotEmpty)
                         .toList()));
-                if (response != null && context.mounted) {
-                  context
-                      .read<ProductFilterBloc>()
-                      .add(InitProductFilterData());
-                }
+                try {
+                  if (response != null && context.mounted) {
+                    context
+                        .read<ProductDetailBloc>()
+                        .add(ProductIdChanged(state.productDetail.id));
+                    context
+                        .read<ProductFilterBloc>()
+                        .add(InitProductFilterData());
+                  }
+                } catch (ex) {}
               },
             ));
       } else {
@@ -142,6 +147,29 @@ class DiscardProductButton extends StatelessWidget {
                         .add(ProductIdChanged(productId));
                   }
                 }
+              },
+            ));
+      } else {
+        return const SizedBox();
+      }
+    });
+  }
+}
+
+class BackProductButton extends StatelessWidget {
+  const BackProductButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+        builder: (context, state) {
+      if (state.screenMode == ScreenModeEnum.view) {
+        return Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: CElevatedButton(
+              labelText: sharedPrefs.translate('Back'),
+              onPressed: () {
+                Navigator.pop(context);
               },
             ));
       } else {

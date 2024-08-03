@@ -54,6 +54,7 @@ class ProductDetailBody extends StatelessWidget {
                         /// LIST: CHILD
                         Container(
                           color: kBgColor,
+                          constraints: const BoxConstraints(maxHeight: 360),
                           child: const ProductDetailChildren(),
                         ),
                       ],
