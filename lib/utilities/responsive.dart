@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_io/io.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey widgetKey = GlobalKey();
@@ -11,29 +13,59 @@ class Responsive extends StatelessWidget {
   const Responsive(
       {super.key, required this.mobile, this.tablet, this.desktop});
 
-  /// small: <850, large: >= 1100, medium: else
-  static bool isSmallWidth(BuildContext context) =>
-      MediaQuery.of(context).size.width < 850;
+  /// small: <800, large: >= 1200, medium: else
+  static double smallWidthScope = 800;
+  static double mediumWidthScope = 1200;
 
-  // static bool isMediumWidth(BuildContext context) =>
-  //     MediaQuery.of(context).size.width >= 850 &&
-  //     MediaQuery.of(context).size.width < 1100;
-  //
-  // static bool isLargeWidth(BuildContext context) =>
-  //     MediaQuery.of(context).size.width >= 1100;
+  static bool isSmallWidth(BuildContext context) =>
+      MediaQuery.of(context).size.width < smallWidthScope;
+
+  static bool isMediumWidth(BuildContext context) =>
+      MediaQuery.of(context).size.width >= smallWidthScope &&
+      MediaQuery.of(context).size.width < mediumWidthScope;
+
+  static bool isLargeWidth(BuildContext context) =>
+      MediaQuery.of(context).size.width >= mediumWidthScope;
 
   static bool isPortrait(BuildContext context) =>
       MediaQuery.of(context).size.width < MediaQuery.of(context).size.height;
 
-  // static bool isLandscape(BuildContext context) =>
-  //     MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
+  static bool isLandscape(BuildContext context) =>
+      MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
+
+  static bool isPortraitAndSmallWidth(BuildContext context) =>
+      isSmallWidth(context) && isPortrait(context);
+
+  static bool isSmallWidthParent() =>
+      WidgetsBinding
+          .instance.platformDispatcher.views.first.physicalSize.width <
+      smallWidthScope;
+
+  static bool isMediumWidthParent(BuildContext context) {
+    var view = WidgetsBinding.instance.platformDispatcher.views.first;
+    return view.physicalSize.width >= smallWidthScope &&
+        view.physicalSize.width < mediumWidthScope;
+  }
+
+  static bool isLargeWidthParent(BuildContext context) =>
+      WidgetsBinding
+          .instance.platformDispatcher.views.first.physicalSize.width >=
+      mediumWidthScope;
+
+  static bool isMobile() => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+
+  static bool isMobileAndPortrait(BuildContext context) =>
+      isMobile() && isPortrait(context);
+
+  static bool isNotMobile() =>
+      kIsWeb || (!Platform.isAndroid && !Platform.isIOS);
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    if (size.width < 850) {
+    if (size.width < smallWidthScope) {
       return mobile;
-    } else if (size.width < 1100) {
+    } else if (size.width < mediumWidthScope) {
       return tablet ?? mobile;
     } else {
       return desktop ?? tablet ?? mobile;

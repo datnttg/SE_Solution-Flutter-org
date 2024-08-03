@@ -1,54 +1,84 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/product_filter_parameter_model.dart';
 import 'product_filter_events.dart';
 import '../services/product_filter_services.dart';
 import 'product_filter_states.dart';
 
-class ProductFilterBloc {
-  final eventController = StreamController<ProductFilterEvents>.broadcast();
-  final stateController = StreamController<ProductListState>.broadcast();
-  final selectionController = StreamController<SelectionState>.broadcast();
+class ProductFilterBloc extends Bloc<ProductFilterEvents, ProductFilterState> {
+  static final initialState = ProductFilterState(
+    products: [],
+  );
+
+  ProductFilterBloc() : super(initialState) {
+    on<InitProductFilterData>(_loadData);
+    on<ProductFilterDataLoaded>(_onDataLoaded);
+    on<ProductFilterCodeChanged>(_changeProductCode);
+    on<ProductFilterNameChanged>(_changeProductName);
+    on<ProductFilterSelectedCategoriesChanged>(
+        _changeProductSelectedCategories);
+    on<ProductFilterSelectedTypesChanged>(_changeProductSelectedTypes);
+    on<SelectedFilterProductChanged>(_changeSelectedProduct);
+  }
 
   var params = ProductFilterParameters();
-  String? selectedProductId;
-
-  ProductFilterBloc() {
-    eventController.stream.listen((event) {
-      if (event is ChangeProductCode) {
-        params.code = event.productCode;
-        loadData();
-      } else if (event is ChangeProductName) {
-        params.name = event.productName;
-        loadData();
-      } else if (event is ChangeProductType) {
-        params.typeCodes = event.typeCodes!.isNotEmpty
-            ? event.typeCodes!.map<String>((e) => e.value).toList()
-            : null;
-        loadData();
-      } else if (event is ChangeProductCategory) {
-        params.categoryCodes = event.categoryCodes!.isNotEmpty
-            ? event.categoryCodes!.map<String>((e) => e.value).toList()
-            : null;
-        loadData();
-      } else if (event is ChangeSelectedProduct) {
-        selectedProductId = event.productId;
-        selectionController.add(SelectionState(productId: selectedProductId));
-      }
-    });
+  Future<void> _loadData(
+      InitProductFilterData? event, Emitter<ProductFilterState> emit) async {
+    var productCategories =
+        await fetchProductCategoryEntry(categoryProperty: 'ProductCategory');
+    var productTypes =
+        await fetchProductCategoryEntry(categoryProperty: 'ProductType');
+    var products = await fetchProductListModel(params);
+    emit(state.copyWith(
+      loadingStatus: ProductFilterStatus.success,
+      productCategories: productCategories,
+      productTypes: productTypes,
+      products: products,
+    ));
   }
 
-  void loadData() async {
-    var data = await fetchProductListModel(params);
-    if (data.isNotEmpty) {
-      stateController.sink.add(ProductListState(products: data));
-    } else {
-      stateController.sink.add(ProductListState(products: null));
-    }
+  void _onDataLoaded(
+      ProductFilterDataLoaded event, Emitter<ProductFilterState> emit) {}
+
+  Future<void> _changeProductCode(
+      ProductFilterCodeChanged event, Emitter<ProductFilterState> emit) async {
+    params.code = event.productCode;
+    state.copyWith(productCode: event.productCode);
+    await _loadData(null, emit);
   }
 
-  void dispose() {
-    eventController.close();
-    stateController.close();
+  Future<void> _changeProductName(
+      ProductFilterNameChanged event, Emitter<ProductFilterState> emit) async {
+    params.name = event.productName;
+    state.copyWith(productName: event.productName);
+    await _loadData(null, emit);
+  }
+
+  Future<void> _changeProductSelectedCategories(
+      ProductFilterSelectedCategoriesChanged event,
+      Emitter<ProductFilterState> emit) async {
+    params.categoryCodes =
+        event.selectedCategoryCodes?.map<String>((e) => e.value).toList() ?? [];
+    state.copyWith(productCategories: event.selectedCategoryCodes);
+    await _loadData(null, emit);
+  }
+
+  Future<void> _changeProductSelectedTypes(
+      ProductFilterSelectedTypesChanged event,
+      Emitter<ProductFilterState> emit) async {
+    params.typeCodes =
+        event.selectedTypeCodes?.map<String>((e) => e.value).toList() ?? [];
+    state.copyWith(productTypes: event.selectedTypeCodes);
+    await _loadData(null, emit);
+  }
+
+  void _changeSelectedProduct(
+      SelectedFilterProductChanged event, Emitter<ProductFilterState> emit) {
+    emit(state.copyWith(selectedId: event.productId));
+  }
+
+  String? getSelectedId() {
+    return state.selectedId;
   }
 }

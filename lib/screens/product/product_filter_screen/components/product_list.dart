@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/screens/product/product_filter_screen/bloc/product_filter_bloc.dart';
 
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
@@ -7,15 +6,18 @@ import '../models/product_filter_item_model.dart';
 import 'product_list_item.dart';
 
 class ProductList extends StatelessWidget {
-  const ProductList({super.key, required this.list, required this.bloc});
-  final ProductFilterBloc bloc;
   final List<ProductFilterItemModel> list;
+
+  const ProductList({super.key, required this.list});
 
   @override
   Widget build(BuildContext context) {
     if (list.isEmpty) {
-      return Center(
-        child: SelectableText('(${sharedPrefs.translate('Empty list')})'),
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: SelectableText('(${sharedPrefs.translate('Empty list')})'),
+        ),
       );
     } else {
       return Container(
@@ -34,7 +36,7 @@ class ProductList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(defaultRadius)),
 
                   /// PRODUCT ITEM
-                  child: ProductListItem(bloc: bloc, dataItem: list[index]),
+                  child: ProductListItem(dataItem: list[index]),
                 ),
               );
             }),

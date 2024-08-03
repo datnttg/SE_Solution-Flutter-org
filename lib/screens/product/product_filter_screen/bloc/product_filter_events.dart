@@ -1,28 +1,54 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
+import '../models/product_filter_item_model.dart';
+import 'product_filter_states.dart';
 
 abstract class ProductFilterEvents {}
 
-class ChangeProductCode extends ProductFilterEvents {
+class InitProductFilterData extends ProductFilterEvents {
+  InitProductFilterData();
+}
+
+class ProductFilterDataLoaded extends ProductFilterEvents {
+  ProductFilterStatus loadingStatus;
+  ProductFilterDataLoaded(this.loadingStatus);
+}
+
+class ProductFilterCodeChanged extends ProductFilterEvents {
   String? productCode;
-  ChangeProductCode(this.productCode);
+  ProductFilterCodeChanged(this.productCode);
 }
 
-class ChangeProductName extends ProductFilterEvents {
+class ProductFilterNameChanged extends ProductFilterEvents {
   String? productName;
-  ChangeProductName(this.productName);
+  ProductFilterNameChanged(this.productName);
 }
 
-class ChangeProductCategory extends ProductFilterEvents {
+class ProductFilterCategoriesChanged extends ProductFilterEvents {
   List<CDropdownMenuEntry>? categoryCodes;
-  ChangeProductCategory(this.categoryCodes);
+  ProductFilterCategoriesChanged(this.categoryCodes);
 }
 
-class ChangeProductType extends ProductFilterEvents {
+class ProductFilterSelectedCategoriesChanged extends ProductFilterEvents {
+  List<CDropdownMenuEntry>? selectedCategoryCodes;
+  ProductFilterSelectedCategoriesChanged(this.selectedCategoryCodes);
+}
+
+class ProductFilterTypesChanged extends ProductFilterEvents {
   List<CDropdownMenuEntry>? typeCodes;
-  ChangeProductType(this.typeCodes);
+  ProductFilterTypesChanged(this.typeCodes);
 }
 
-class ChangeSelectedProduct extends ProductFilterEvents {
+class ProductFilterSelectedTypesChanged extends ProductFilterEvents {
+  List<CDropdownMenuEntry>? selectedTypeCodes;
+  ProductFilterSelectedTypesChanged(this.selectedTypeCodes);
+}
+
+class ProductFilterListChanged extends ProductFilterEvents {
+  List<ProductFilterItemModel>? products;
+  ProductFilterListChanged(this.products);
+}
+
+class SelectedFilterProductChanged extends ProductFilterEvents {
   String? productId;
-  ChangeSelectedProduct({this.productId});
+  SelectedFilterProductChanged(this.productId);
 }

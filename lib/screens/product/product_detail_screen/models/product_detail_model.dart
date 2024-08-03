@@ -80,4 +80,42 @@ class ProductDetailModel {
       'children': children?.map((x) => x.toMap()).toList(),
     };
   }
+
+  ProductDetailModel copyWith({
+    String? id,
+    String? code,
+    String? name,
+    String? description,
+    String? unitCode,
+    String? unitText,
+    String? statusCode,
+    String? statusText,
+    String? categoryCode,
+    String? categoryText,
+    String? typeCode,
+    String? typeText,
+    bool? serialRequired,
+    int? monthsOfWarranty,
+    double? minPrice,
+    List<ChildProductModel>? children,
+  }) {
+    return ProductDetailModel(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      unitCode: unitCode ?? this.unitCode,
+      unitText: unitText ?? this.unitText,
+      statusCode: statusCode ?? this.statusCode,
+      statusText: statusText ?? this.statusText,
+      categoryCode: categoryCode ?? this.categoryCode,
+      categoryText: categoryText ?? this.categoryText,
+      typeCode: typeCode ?? this.typeCode,
+      typeText: typeText ?? this.typeText,
+      serialRequired: serialRequired ?? this.serialRequired,
+      monthsOfWarranty: monthsOfWarranty ?? this.monthsOfWarranty,
+      minPrice: minPrice ?? this.minPrice,
+      children: children ?? this.children,
+    );
+  }
 }

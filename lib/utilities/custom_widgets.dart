@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:se_solution/utilities/responsive.dart';
 import 'classes/custom_widget_models.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
@@ -30,13 +31,15 @@ class CScaffold extends StatelessWidget {
               preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
               child: appBar!,
             ),
-      drawer: drawer,
+      drawer: !Responsive.isSmallWidth(context) ? drawer : null,
+      endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
       body: Theme(
         data: Theme.of(context).copyWith(
           canvasColor:
               Colors.blue.shade200, // Set your desired background color
         ),
         child: body ?? const SizedBox(),
+        // child: SafeArea(child: body ?? const SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );
@@ -183,7 +186,9 @@ class CDropdownMenu extends StatelessWidget {
       searchEnabled: readOnly == false
           ? (enableSearch ?? dropdownEntries.length > 5)
           : false,
-      hint: newHintText ?? sharedPrefs.translate('Select'),
+      hint: labelTextAsHint == true
+          ? labelText ?? ''
+          : newHintText ?? sharedPrefs.translate('Select'),
       searchLabel: sharedPrefs.translate('Search'),
       selectionType:
           multiSelect == true ? SelectionType.multi : SelectionType.single,
@@ -940,31 +945,37 @@ class CElevatedButton extends StatelessWidget {
       definedBorColor = Colors.black38;
     }
 
-    return ElevatedButton(
-      style: ButtonStyle(
-        // padding:
-        //     WidgetStateProperty.all(const EdgeInsets.only(left: 10, right: 10)),
-        backgroundColor: msBackgroundColor ??
-            WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.pressed)) {
-                return definedPressedBgColor;
-              } else if (states.contains(WidgetState.hovered)) {
-                return defineBgHoverColor;
-              }
-              return definedBgColor;
-            }),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-            side: BorderSide(color: definedBorColor!),
+    return SizedBox(
+      height: Responsive.isSmallWidth(context)
+          ? mediumTextSize * 2 + defaultPadding
+          : null,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          // padding:
+          //     WidgetStateProperty.all(const EdgeInsets.only(left: 10, right: 10)),
+          backgroundColor: msBackgroundColor ??
+              WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.pressed)) {
+                  return definedPressedBgColor;
+                } else if (states.contains(WidgetState.hovered)) {
+                  return defineBgHoverColor;
+                }
+                return definedBgColor;
+              }),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: BorderSide(color: definedBorColor!),
+            ),
           ),
+          elevation: WidgetStateProperty.all(0),
         ),
-        elevation: WidgetStateProperty.all(0),
-      ),
-      onPressed: onPressed,
-      child: Text(
-        '$labelText',
-        style: TextStyle(color: definedTextColor, fontWeight: FontWeight.bold),
+        onPressed: onPressed,
+        child: Text(
+          '$labelText',
+          style:
+              TextStyle(color: definedTextColor, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -1017,8 +1028,9 @@ class KElevatedButton extends StatelessWidget {
 
 /// CUSTOM TEXT FORM FIELD
 class CTextFormField extends StatelessWidget {
-  final TextEditingController? controller;
   final String? labelText, hintText, initialValue;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
   final bool? required,
       autoFocus,
       enabled,
@@ -1035,12 +1047,17 @@ class CTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final void Function()? onTap;
   final void Function(String)? onChanged;
+  final void Function()? onEditingComplete;
+  final void Function(PointerDownEvent)? onTapOutside;
+  final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
 
   const CTextFormField({
     super.key,
-    this.controller,
     this.labelText,
+    this.initialValue,
+    this.controller,
+    this.focusNode,
     this.labelTextAsHint = false,
     this.textAlign,
     this.keyboardType,
@@ -1048,7 +1065,6 @@ class CTextFormField extends StatelessWidget {
     this.hintText,
     this.suffix,
     this.suffixIconConstraints,
-    this.initialValue,
     this.enabled = true,
     this.required = false,
     this.autoFocus = false,
@@ -1060,6 +1076,9 @@ class CTextFormField extends StatelessWidget {
     this.validator,
     this.onTap,
     this.onChanged,
+    this.onEditingComplete,
+    this.onTapOutside,
+    this.onSaved,
   });
 
   @override
@@ -1081,16 +1100,15 @@ class CTextFormField extends StatelessWidget {
             : newHintText,
         hintStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
-        // suffix: Container(
-        //   width: 36,
-        //   alignment: Alignment.center,
-        // ),
         suffixStyle: TextStyle(
             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize),
       ),
       initialValue: initialValue,
       onTap: onTap,
       onChanged: onChanged,
+      onEditingComplete: onEditingComplete,
+      onTapOutside: onTapOutside,
+      onSaved: onSaved,
       readOnly: readOnly ?? false,
       enabled: enabled,
       autofocus: autoFocus ?? false,

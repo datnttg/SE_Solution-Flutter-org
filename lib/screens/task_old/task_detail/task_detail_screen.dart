@@ -98,13 +98,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   Future<Map> postData(Uri uri, Map? parameters) async {
     var response = await fetchDataUI(uri, parameters: parameters);
-    if (response['success'] == true) {
-      kShowToast(
-        title: sharedPrefs.translate('Result'),
-        content: response['responseMessage'],
-        style: 'success',
-      );
-    }
     return response;
   }
 

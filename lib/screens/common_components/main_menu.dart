@@ -19,10 +19,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     List<Node> buildMenuTree(
-      List<dynamic> functions,
-      String? parentCode,
-      int level,
-    ) {
+        List<dynamic> functions, String? parentCode, int level) {
       List<Node> result = [];
       var loop = functions
           .where((element) => element['parentCode'] == parentCode)
@@ -59,7 +56,7 @@ class _MainMenuState extends State<MainMenu> {
             Node node = Node(
               key: item['id'],
               label: item['label'],
-              data: item['link'],
+              data: NodeData(type: item['type'], link: item['link']),
               icon: Icons.folder,
               expanded: level < 2 ? true : false,
               children: children,
@@ -73,7 +70,6 @@ class _MainMenuState extends State<MainMenu> {
     }
 
     List<dynamic> functions = jsonDecode(sharedPrefs.getFunctions());
-
     List<Node> nodes = buildMenuTree(functions, null, 1);
 
     treeViewController = TreeViewController(
@@ -110,6 +106,18 @@ class _MainMenuState extends State<MainMenu> {
       Node? node = treeViewController.getNode(key);
       if (node != null) {
         List<Node> updated;
+        // NodeData nodeData = node.data;
+        // if (nodeData.type != 'Function') {
+        //   updated = treeViewController.updateNode(
+        //       key,
+        //       node.copyWith(
+        //         expanded: expanded,
+        //         icon: expanded ? Icons.folder_open : Icons.folder,
+        //       ));
+        // } else {
+        //   updated = treeViewController.updateNode(
+        //       key, node.copyWith(expanded: expanded));
+        // }
         setState(() {
           updated = treeViewController.updateNode(
               key, node.copyWith(expanded: expanded));
@@ -140,14 +148,15 @@ class _MainMenuState extends State<MainMenu> {
               controller: treeViewController,
               onExpansionChanged: (key, expanded) => expandNode(key, expanded),
               onNodeTap: (key) {
-                debugPrint('Selected: $key');
+                debugPrint('Selected function: $key');
                 setState(() {
                   selectedNode = key;
                   treeViewController =
                       treeViewController.copyWith(selectedKey: key);
 
-                  List<dynamic> funcs = jsonDecode(sharedPrefs.getFunctions());
-                  for (var function in funcs) {
+                  List<dynamic> functions =
+                      jsonDecode(sharedPrefs.getFunctions());
+                  for (var function in functions) {
                     if (function['id'] == key && function['link'] != '#') {
                       Navigator.pushNamed(context, function['link']);
                     }
@@ -173,4 +182,11 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   }
+}
+
+class NodeData {
+  String? type;
+  String? link;
+
+  NodeData({this.type, this.link});
 }

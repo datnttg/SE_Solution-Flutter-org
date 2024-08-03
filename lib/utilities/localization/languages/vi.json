@@ -71,6 +71,7 @@
   "Add new reference subject": "Thêm chủ thể mới",
   "This field is required!": "Trường này là bắt buộc",
   "is already existed!": "đã tồn tại!",
+  "Code": "Mã",
   "Name": "Tên",
   "Phone": "Điện thoại",
   "Country": "Quốc gia",
@@ -135,5 +136,9 @@
   "Unit": "Đơn vị",
   "Serial monitoring": "Quản lý theo sê-ri",
   "Please select a product": "Hãy chọn một sản phẩm",
-  "Product information": "Thông tin sản phẩm"
+  "Product information": "Thông tin sản phẩm",
+  "Select product": "Chọn sản phẩm",
+  "Logged in successfully": "Đăng nhập thành công",
+  "Login failed": "Đăng nhập thất bại",
+  "Detail": "Chi tiết"
 }

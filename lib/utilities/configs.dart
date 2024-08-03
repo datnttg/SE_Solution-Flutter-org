@@ -41,6 +41,94 @@ class CustomRouteMapping {
   String myProject = '/My/Project';
 }
 
+Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  List<String>? pathComponents = settings.name?.toLowerCase().split('/detail/');
+  var first = pathComponents?[0].toLowerCase();
+  if (pathComponents?.length == 1) {
+    if (first == customRouteMapping.demo.toLowerCase()) {
+      return MaterialPageRoute(
+          builder: (_) => const DemoHomePage(title: 'Demo'));
+    } else if (first == customRouteMapping.login.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const LoginScreen());
+    } else if (first == customRouteMapping.logout.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const LoginScreen());
+    } else if (first == customRouteMapping.task.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
+    } else if (first == customRouteMapping.taskAdd.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
+    } else if (first == customRouteMapping.product.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
+    } else if (first == customRouteMapping.productAdd.toLowerCase()) {
+      return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
+    } else if (first ==
+        customRouteMapping.powerStationMonitoring.toLowerCase()) {
+      return MaterialPageRoute(
+          builder: (_) => const PowerStationMonitorScreen());
+    } else if (first == customRouteMapping.myProject.toLowerCase()) {
+      return MaterialPageRoute(
+          builder: (_) => const OwnerProjectOverviewScreen());
+    }
+    return MaterialPageRoute(builder: (_) => const LoginScreen());
+
+    // switch (settings.name?.toLowerCase()) {
+    //   /// Demo
+    //   case '/demo':
+    //     return MaterialPageRoute(
+    //         builder: (_) => const DemoHomePage(title: 'Demo'));
+    //
+    //   /// Implement
+    //   case '/':
+    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
+    //   case '/login':
+    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
+    //   case '/logout':
+    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
+    //   case '/task':
+    //     return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
+    //   case '/task/create':
+    //     return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
+    //   case '/product':
+    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
+    //   case '/product/create':
+    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
+    //   case '/powerstation/monitoring':
+    //     return MaterialPageRoute(
+    //         builder: (_) => const PowerStationMonitorScreen());
+    //   case '/my/project':
+    //     return MaterialPageRoute(
+    //         builder: (_) => const OwnerProjectOverviewScreen());
+    //   default:
+    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
+    // }
+  }
+
+  /// DETAIL routing
+  else if (pathComponents?.length == 2) {
+    if (first == customRouteMapping.task.toLowerCase()) {
+      return MaterialPageRoute(
+          builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
+    } else if (first == customRouteMapping.product.toLowerCase()) {
+      return MaterialPageRoute(
+          builder: (context) =>
+              ProductDetailScreen(productId: pathComponents?[1]));
+    }
+    return MaterialPageRoute(builder: (_) => const LoginScreen());
+    //
+    // switch (pathComponents?[0]) {
+    //   case '/task':
+    //     return MaterialPageRoute(
+    //         builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
+    //   case '/product':
+    //     return MaterialPageRoute(
+    //         builder: (context) =>
+    //             ProductDetailScreen(productId: pathComponents?[1]));
+    //   default:
+    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
+    // }
+  }
+  return null;
+}
+
 // var customRoutes = <String, WidgetBuilder>{
 //   customRouteMapping.demo: (_) => const ActionBarDemoScreen(),
 //   customRouteMapping.demo2: (_) => const Demo2Screen(),
@@ -62,58 +150,6 @@ class CustomRouteMapping {
 //   //
 //   customRouteMapping.myProject: (_) => const OwnerProjectOverviewScreen(),
 // };
-
-Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-  List<String>? pathComponents = settings.name?.toLowerCase().split('/detail/');
-  if (pathComponents?.length == 1) {
-    switch (settings.name?.toLowerCase()) {
-      /// Demo
-      case '/demo':
-        return MaterialPageRoute(
-            builder: (_) => const DemoHomePage(title: 'Demo'));
-
-      /// Implement
-      case '/':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/login':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/logout':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/task':
-        return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
-      case '/task/create':
-        return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
-      case '/product':
-        return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
-      case '/product/create':
-        return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-      case '/powerStation/monitoring':
-        return MaterialPageRoute(
-            builder: (_) => const PowerStationMonitorScreen());
-      case '/my/project':
-        return MaterialPageRoute(
-            builder: (_) => const OwnerProjectOverviewScreen());
-      default:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-    }
-  }
-
-  /// DETAIL routing
-  else if (pathComponents?.length == 2) {
-    switch (pathComponents?[0]) {
-      case '/task':
-        return MaterialPageRoute(
-            builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
-      case '/product':
-        return MaterialPageRoute(
-            builder: (context) =>
-                ProductDetailScreen(productId: pathComponents?[1]));
-      default:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-    }
-  }
-  return null;
-}
 
 var nf0 = NumberFormat("#,##0", sharedPrefs.getLocale().toString());
 var nf1 = NumberFormat("#,##0.0", sharedPrefs.getLocale().toString());
