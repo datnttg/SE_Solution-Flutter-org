@@ -13,28 +13,22 @@ import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
 
-class ProductDetailChildrenItem extends StatefulWidget {
+class ProductDetailChildrenItem extends StatelessWidget {
   final int itemIndex;
 
   const ProductDetailChildrenItem({super.key, required this.itemIndex});
 
   @override
-  State<ProductDetailChildrenItem> createState() =>
-      _ProductDetailChildrenItemState();
-}
-
-class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
-  final quantityController = TextEditingController();
-
-  ProductFilterItemModel? child;
-
-  @override
   Widget build(BuildContext context) {
+    final quantityController = TextEditingController();
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
+        var childItem = state.productDetail.children?[itemIndex];
+        ProductFilterItemModel? child = state.lstProduct
+            .where((e) => e.id == childItem?.childId)
+            .firstOrNull;
         double quantity =
-            state.productDetail.children?[widget.itemIndex].quantityOfChild ??
-                0;
+            state.productDetail.children?[itemIndex].quantityOfChild ?? 0;
         quantityController.text = quantity.toString();
 
         List<CDropdownMenuEntry> dropdownMenuEntries = state.lstProduct
@@ -67,7 +61,11 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
             disabledMenuEntries: disabledMenuEntries,
             selectedMenuEntries: selectedMenuEntries,
             onSelected: (selected) {
-              //TO DO: implement
+              var selectedChildId = selected.firstOrNull?.value;
+              debugPrint("Selected childId: $selectedChildId");
+              context
+                  .read<ProductDetailBloc>()
+                  .add(ChildProductIdChanged(itemIndex, selectedChildId));
             });
 
         Widget productQuantityWidget = SizedBox(
@@ -84,7 +82,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                           quantityController.text = "$newQuantity";
                           context.read<ProductDetailBloc>().add(
                               ChildProductQuantityChanged(
-                                  widget.itemIndex, newQuantity));
+                                  itemIndex, newQuantity));
                         }
                       }),
                   Expanded(
@@ -108,7 +106,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                                       'Quantity must be better than 0')));
                             }
                             context.read<ProductDetailBloc>().add(
-                                ChildProductQuantityChanged(widget.itemIndex,
+                                ChildProductQuantityChanged(itemIndex,
                                     double.parse(quantityController.text)));
                           } catch (ex) {
                             return;
@@ -129,7 +127,7 @@ class _ProductDetailChildrenItemState extends State<ProductDetailChildrenItem> {
                         quantityController.text = "$newQuantity";
                         context.read<ProductDetailBloc>().add(
                             ChildProductQuantityChanged(
-                                widget.itemIndex, newQuantity));
+                                itemIndex, newQuantity));
                       }),
                 ],
               ),

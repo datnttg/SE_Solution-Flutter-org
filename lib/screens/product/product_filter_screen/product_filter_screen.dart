@@ -64,10 +64,10 @@ class ProductFilterScreen extends StatelessWidget {
 
                                 /// DETAIL BODY
                                 child: selectedId == null
-                                    ? const Center(
+                                    ? Center(
                                         child: SizedBox(
-                                            child: Text(
-                                                'Please select a product')))
+                                            child: Text(sharedPrefs.translate(
+                                                'Please select a product'))))
                                     : BlocBuilder<ProductDetailBloc,
                                         ProductDetailState>(
                                         builder: (context, state) {

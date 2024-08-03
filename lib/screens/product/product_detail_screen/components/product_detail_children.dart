@@ -22,6 +22,9 @@ class ProductDetailChildren extends StatelessWidget {
                     0) ==
                 0) {
           state.productDetail.children?.add(ChildProductModel());
+          // context
+          //     .read<ProductDetailBloc>()
+          //     .add(ChildProductAdded(ChildProductModel()));
         }
         return Container(
           color: kBgColor,
