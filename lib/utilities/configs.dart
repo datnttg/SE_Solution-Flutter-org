@@ -43,28 +43,28 @@ class CustomRouteMapping {
 
 Route<dynamic>? onGenerateRoute(RouteSettings settings) {
   List<String>? pathComponents = settings.name?.toLowerCase().split('/detail/');
-  var pathPrimary = pathComponents?[0].toLowerCase();
+  var first = pathComponents?[0].toLowerCase();
   if (pathComponents?.length == 1) {
-    if (pathPrimary == customRouteMapping.demo.toLowerCase()) {
+    if (first == customRouteMapping.demo.toLowerCase()) {
       return MaterialPageRoute(
           builder: (_) => const DemoHomePage(title: 'Demo'));
-    } else if (pathPrimary == customRouteMapping.login.toLowerCase()) {
+    } else if (first == customRouteMapping.login.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const LoginScreen());
-    } else if (pathPrimary == customRouteMapping.logout.toLowerCase()) {
+    } else if (first == customRouteMapping.logout.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const LoginScreen());
-    } else if (pathPrimary == customRouteMapping.task.toLowerCase()) {
+    } else if (first == customRouteMapping.task.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
-    } else if (pathPrimary == customRouteMapping.taskAdd.toLowerCase()) {
+    } else if (first == customRouteMapping.taskAdd.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
-    } else if (pathPrimary == customRouteMapping.product.toLowerCase()) {
+    } else if (first == customRouteMapping.product.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const ProductFilterScreen());
-    } else if (pathPrimary == customRouteMapping.productAdd.toLowerCase()) {
+    } else if (first == customRouteMapping.productAdd.toLowerCase()) {
       return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-    } else if (pathPrimary ==
+    } else if (first ==
         customRouteMapping.powerStationMonitoring.toLowerCase()) {
       return MaterialPageRoute(
           builder: (_) => const PowerStationMonitorScreen());
-    } else if (pathPrimary == customRouteMapping.myProject.toLowerCase()) {
+    } else if (first == customRouteMapping.myProject.toLowerCase()) {
       return MaterialPageRoute(
           builder: (_) => const OwnerProjectOverviewScreen());
     }
@@ -104,10 +104,10 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
 
   /// DETAIL routing
   else if (pathComponents?.length == 2) {
-    if (pathPrimary == customRouteMapping.task.toLowerCase()) {
+    if (first == customRouteMapping.task.toLowerCase()) {
       return MaterialPageRoute(
           builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
-    } else if (pathPrimary == customRouteMapping.product.toLowerCase()) {
+    } else if (first == customRouteMapping.product.toLowerCase()) {
       return MaterialPageRoute(
           builder: (context) =>
               ProductDetailScreen(productId: pathComponents?[1]));

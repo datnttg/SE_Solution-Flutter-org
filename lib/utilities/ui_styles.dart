@@ -9,6 +9,7 @@ const borderDefaultPadding = 20.0;
 const defaultRadius = 10.0;
 
 const cAppBarColor = Color(0xFFBFD8FB);
+const cBottomBarColor = cAppBarColor;
 const cButtonBgColor = Colors.white;
 const cButtonBgHoverColor = Colors.white70;
 const cButtonTextColor = Colors.black;

@@ -1,208 +1,182 @@
-import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se_solution/utilities/enums/ui_enums.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../../../../utilities/app_service.dart';
-import '../../../../utilities/enums/ui_enums.dart';
-import '../../../../utilities/shared_preferences.dart';
-import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../models/child_product_model.dart';
 import '../models/product_detail_model.dart';
 import '../services/fetch_data_service.dart';
 import 'product_detail_events.dart';
 import 'product_detail_states.dart';
 
-class ProductDetailBloc {
-  final eventController =
-      StreamController<ChangeProductDetailEvents>.broadcast();
-  final uiController = StreamController<ChangeProductDetailEvents>.broadcast();
-  final dataController = StreamController<ProductDetailModel>.broadcast();
-  final dropdownDataController =
-      StreamController<ProductDetailDataState>.broadcast();
+class ProductDetailBloc
+    extends Bloc<ChangeProductDetailEvents, ProductDetailState> {
+  static final initialState = ProductDetailState(
+    loadingStatus: ProductDetailLoadingStatus.initial,
+    screenMode: ScreenModeEnum.view,
+    productDetail: ProductDetailModel(
+      typeCode: 'SingleProduct',
+      statusCode: 'Normal',
+      children: [],
+    ),
+    lstProduct: [],
+    lstCategory: [],
+    lstStatus: [],
+    lstType: [],
+    lstUnit: [],
+  );
 
-  void dispose() {
-    eventController.close();
-    dataController.close();
-    dropdownDataController.close();
+  ProductDetailBloc() : super(initialState) {
+    on<ChangeScreenMode>(_onScreenModeChanged);
+    on<ProductIdChanged>(_onProductIdChanged);
+    on<ProductCodeChanged>(_onProductCodeChanged);
+    on<ProductNameChanged>(_onProductNameChanged);
+    on<ProductUnitChanged>(_onProductUnitChanged);
+    on<ProductDescriptionChanged>(_onProductDescriptionChanged);
+    on<ProductStatusChanged>(_onProductStatusChanged);
+    on<ProductCategoryChanged>(_onProductCategoryChanged);
+    on<ProductTypeChanged>(_onProductTypeChanged);
+    on<ProductSerialRequiredChanged>(_onProductSerialRequiredChanged);
+    on<ProductMonthsOfWarrantyChanged>(_onProductMonthsOfWarrantyChanged);
+    on<ProductMinPriceChanged>(_onProductMinPriceChanged);
+    on<ChildProductRemoved>(_onChildProductRemoved);
+    on<ChildProductAdded>(_onChildProductAdded);
+    on<ChildProductIdChanged>(_onChildProductIdChanged);
+    on<ChildProductQuantityChanged>(_onChildProductQuantityChanged);
   }
 
-  var screenMode = ScreenModeState(ScreenModeEnum.view);
-  final initData = ProductDetailModel(
-      typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
-  var data = ProductDetailModel(
-      typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
-  List<ProductFilterItemModel> lstProduct = [];
-  var dropdownData = ProductDetailDataState();
-
-  ProductDetailBloc() {
-    eventController.stream.listen((event) async {
-      try {
-        /// CHANGE SCREEN MODE
-        if (event is ChangeScreenMode) {
-          screenMode.state = event.screenMode;
-          uiController.add(ChangeScreenMode(event.screenMode));
-          dataController.add(data);
-          dropdownDataController.add(dropdownData);
-        }
-
-        /// LOAD DETAIL
-        else if (event is ReloadData) {
-          await loadData(productId: event.productId);
-          await loadDropdownData();
-          // } else if (event is LoadData) {
-          //   data = event.detail;
-          //   lstProduct = event.listProduct;
-          //   dataController.add(data);
-          // } else if (event is LoadDropdownData) {
-          //   dropdownData.listUnit = event.listUnit;
-          //   dropdownData.listStatus = event.listStatus;
-          //   dropdownData.listCategory = event.listCategory;
-          //   dropdownData.listType = event.listType;
-          //   dropdownDataController.add(dropdownData);
-        }
-
-        /// SUBMIT
-        else if (event is SubmitData) {
-          submitData();
-        }
-
-        /// CHANGE PRODUCT DETAIL
-        else if (event is ChangeProductCategory) {
-          data.categoryCode = event.category;
-        } else if (event is ChangeProductUnit) {
-          data.unitCode = event.unit;
-        } else if (event is ChangeProductType) {
-          if (event.type == 'SingleProduct') {
-            data.children = [];
-          }
-          data.typeCode = event.type;
-          uiController.add(ChangeScreenMode(screenMode.state));
-          dropdownDataController.add(dropdownData);
-        } else if (event is ChangeProductCode) {
-          data.code = event.code;
-        } else if (event is ChangeProductName) {
-          data.name = event.name;
-        } else if (event is ChangeProductUnit) {
-          data.unitCode = event.unit;
-        } else if (event is ChangeProductStatus) {
-          data.statusCode = event.status;
-        } else if (event is ChangeProductRequiredSerial) {
-          data.serialRequired = event.require;
-          eventController.add(ChangeScreenMode(screenMode.state));
-        } else if (event is ChangeProductDescription) {
-          data.description = event.description;
-        } else if (event is ChangeProductMonthsOfWarranty) {
-          if (!event.monthsOfWarranty!.isNum) {
-            throw Exception(sharedPrefs.translate('Warranty must be a number'));
-          }
-          var monthsOfWarranty = int.parse(event.monthsOfWarranty!);
-          data.monthsOfWarranty = monthsOfWarranty;
-        } else if (event is ChangeProductMinPrice) {
-          data.minPrice = event.minPrice;
-        }
-
-        /// CHANGE CHILDREN PRODUCTS
-        else if (event is ChangeChildrenProducts) {
-          data.children = event.children;
-        }
-
-        /// CHANGE CHILD PRODUCT DETAIL
-        else if (event is ChangeChildProductId) {
-          try {
-            data.children?[event.item].childId = event.childProductId;
-            dataController.add(data);
-          } catch (ex) {
-            data.children?.add(ChildProductModel(
-              childId: event.childProductId,
-              quantityOfChild: 0,
-            ));
-          }
-        } else if (event is ChangeChildProductQuantity) {
-          data.children?[event.item].quantityOfChild = event.quantity;
-        } else if (event is RemoveChildProduct) {
-          data.children?.removeAt(event.item);
-        }
-      } catch (ex) {
-        kShowAlert(
-            title: sharedPrefs.translate('Invalid format'),
-            body: Text(ex.toString()));
-      }
-    });
+  void _onScreenModeChanged(
+      ChangeScreenMode event, Emitter<ProductDetailState> emit) {
+    emit(state.copyWith(screenMode: event.screenMode));
   }
 
-  void resetData() {
-    data = initData;
-    dataController.add(data);
-  }
+  Future<void> _onProductIdChanged(
+      ProductIdChanged event, Emitter<ProductDetailState> emit) async {
+    emit(initialState);
 
-  Future<bool> loadData({String? productId}) async {
-    try {
-      resetData();
-      var listProduct = await fetchProductList();
-      var productDetailModel = ProductDetailModel(
-          typeCode: 'SingleProduct', statusCode: 'Normal', children: []);
-      if (productId?.isNotEmpty ?? false) {
-        var productDetail = await fetchProductDetail(productId!);
-        if (productDetail != null) {
-          productDetailModel = productDetail;
-        }
-        // eventController.add(LoadData(
-        //   detail: productDetailModel,
-        //   listProduct: listProduct,
-        // ));
-        data = productDetailModel;
-        lstProduct = listProduct;
-        dataController.add(data);
-      }
-      return true;
-    } catch (ex) {
-      return false;
+    ProductDetailModel? productDetail;
+    if (event.id != null && event.id!.isNotEmpty) {
+      productDetail = await fetchProductDetail(event.id!);
     }
+
+    var listProduct = await fetchProductList();
+    var listUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
+    var listStatus =
+        await fetchProductCategory(categoryProperty: 'ProductStatus');
+    var listCategory =
+        await fetchProductCategory(categoryProperty: 'ProductCategory');
+    var listType = await fetchProductCategory(categoryProperty: 'ProductType');
+    var data = state.copyWith(
+      screenMode: event.id == '' ? ScreenModeEnum.edit : state.screenMode,
+      lstProduct: listProduct,
+      lstCategory: listCategory,
+      lstStatus: listStatus,
+      lstType: listType,
+      lstUnit: listUnit,
+      productDetail: productDetail,
+      loadingStatus: ProductDetailLoadingStatus.success,
+    );
+    emit(data);
   }
 
-  Future<bool> loadDropdownData() async {
-    try {
-      var lstUnit = await fetchProductCategory(categoryProperty: 'ProductUnit');
-      var lstStatus =
-          await fetchProductCategory(categoryProperty: 'ProductStatus');
-      var lstCategory =
-          await fetchProductCategory(categoryProperty: 'ProductCategory');
-      var lstType = await fetchProductCategory(categoryProperty: 'ProductType');
-      dropdownData = ProductDetailDataState(
-        listUnit: lstUnit,
-        listStatus: lstStatus,
-        listCategory: lstCategory,
-        listType: lstType,
-      );
-      dropdownDataController.add(dropdownData);
-      return true;
-    } catch (ex) {
-      return false;
-    }
+  Future<void> _onProductCodeChanged(
+      ProductCodeChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(code: event.code)));
   }
 
-  Future<bool> init({String? productId}) async {
-    try {
-      if (productId?.isNotEmpty ?? false) {
-        eventController.add(ChangeScreenMode(ScreenModeEnum.view));
-      } else {
-        eventController.add(ChangeScreenMode(ScreenModeEnum.edit));
-      }
-      resetData();
-      await loadData(productId: productId);
-      await loadDropdownData();
-      return true;
-    } catch (ex) {
-      return false;
-    }
+  Future<void> _onProductNameChanged(
+      ProductNameChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(name: event.name)));
   }
 
-  void submitData() async {
-    var productId = await submitProductDetail(data);
-    if (productId != null) {
-      data.id = productId;
-      eventController.add(ChangeScreenMode(ScreenModeEnum.view));
+  Future<void> _onProductUnitChanged(
+      ProductUnitChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(unitCode: event.unit)));
+  }
+
+  Future<void> _onProductDescriptionChanged(
+      ProductDescriptionChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail:
+            state.productDetail.copyWith(description: event.description)));
+  }
+
+  Future<void> _onProductStatusChanged(
+      ProductStatusChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(statusCode: event.status)));
+  }
+
+  Future<void> _onProductCategoryChanged(
+      ProductCategoryChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail:
+            state.productDetail.copyWith(categoryCode: event.category)));
+  }
+
+  Future<void> _onProductTypeChanged(
+      ProductTypeChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(typeCode: event.type)));
+  }
+
+  Future<void> _onProductSerialRequiredChanged(
+      ProductSerialRequiredChanged event,
+      Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail
+            .copyWith(serialRequired: event.serialRequired)));
+  }
+
+  Future<void> _onProductMonthsOfWarrantyChanged(
+      ProductMonthsOfWarrantyChanged event,
+      Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail
+            .copyWith(monthsOfWarranty: event.monthsOfWarranty)));
+  }
+
+  Future<void> _onProductMinPriceChanged(
+      ProductMinPriceChanged event, Emitter<ProductDetailState> emit) async {
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(minPrice: event.minPrice)));
+  }
+
+  Future<void> _onChildProductRemoved(
+      ChildProductRemoved event, Emitter<ProductDetailState> emit) async {
+    state.productDetail.children!.removeAt(event.item);
+    emit(state.copyWith(
+        productDetail: state.productDetail
+            .copyWith(children: state.productDetail.children)));
+  }
+
+  void _onChildProductAdded(
+      ChildProductAdded event, Emitter<ProductDetailState> emit) {
+    if (event.childProduct.childId != null) {
+      List<ChildProductModel> children = state.productDetail.children ?? [];
+      children.add(event.childProduct);
+      state.copyWith(
+          productDetail: state.productDetail.copyWith(children: children));
     }
+    emit(state);
+  }
+
+  Future<void> _onChildProductIdChanged(
+      ChildProductIdChanged event, Emitter<ProductDetailState> emit) async {
+    state.productDetail.children?[event.item].childId = event.childProductId;
+    emit(state.copyWith(
+        productDetail: state.productDetail
+            .copyWith(children: state.productDetail.children)));
+  }
+
+  Future<void> _onChildProductQuantityChanged(ChildProductQuantityChanged event,
+      Emitter<ProductDetailState> emit) async {
+    List<ChildProductModel>? children = state.productDetail.children;
+    if (event.quantity >= 0) {
+      children?[event.item].quantityOfChild = event.quantity;
+    }
+    emit(state.copyWith(
+        productDetail: state.productDetail.copyWith(children: children)));
   }
 }

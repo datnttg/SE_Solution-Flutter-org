@@ -20,7 +20,7 @@ class FirebaseApi {
     }
 
     if (kIsWeb) {
-      /// TODO: Waiting below:
+      /// TODO: Waiting for fcmApiKey
       String? webPushCertificate = Constants().fcmApiKey;
       fCMToken = await firebaseMessaging.getToken(vapidKey: webPushCertificate);
       firebaseMessaging.onTokenRefresh.listen((fcmToken) {

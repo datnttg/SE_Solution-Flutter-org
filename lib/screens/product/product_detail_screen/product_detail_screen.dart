@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/responsive.dart';
@@ -7,97 +8,79 @@ import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
 import 'bloc/product_detail_bloc.dart';
 import 'bloc/product_detail_events.dart';
+import 'bloc/product_detail_states.dart';
 import 'components/product_detail_action_buttons.dart';
 import 'product_detail_body.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen extends StatelessWidget {
   final String? productId;
-  final ProductDetailBloc? bloc;
-
-  const ProductDetailScreen({super.key, this.productId, this.bloc});
-
-  @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
-}
-
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  late final ProductDetailBloc bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.bloc != null) {
-      bloc = widget.bloc!;
-    } else {
-      bloc = ProductDetailBloc();
-    }
-    bloc.init(productId: widget.productId);
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
+  const ProductDetailScreen({super.key, this.productId});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ChangeProductDetailEvents>(
-        stream: bloc.uiController.stream,
-        builder: (context, snapshot) {
-          return CScaffold(
-            drawer: const MainMenu(),
-            appBar: AppBar(
-              title: Text(sharedPrefs.translate('Product information'),
-                  style: const TextStyle(
-                      fontSize: mediumTextSize * 1.2,
-                      fontWeight: FontWeight.bold)),
-              actions: [
-                Responsive.isPortrait(context)
-                    ? const SizedBox()
-                    : Row(
-                        children: [
-                          SaveProductButton(bloc: bloc),
-                          UpdateProductButton(bloc: bloc),
-                          const DiscardProductButton(),
-                        ],
-                      ),
-              ],
-            ),
-            // body: StreamBuilder(
-            //   stream: bloc.dataController.stream,
-            //   builder: (context, snapshot) {
-            //     if (Responsive.isSmallWidth(context)) {
-            //       if (blocFilter.selectionState.productId?.isNotEmpty ?? false) {
-            //         return ProductDetailBody(
-            //           bloc: bloc,
-            //           productId: blocFilter.selectionState.productId,
-            //         );
-            //       } else {
-            //         return ProductFilterBody(bloc: blocFilter);
-            //       }
-            //     } else {
-            //       return Row(
-            //         children: [
-            //           Container(
-            //             constraints: const BoxConstraints(maxWidth: 450),
-            //             child: ProductFilterBody(bloc: blocFilter),
-            //           ),
-            //           const SizedBox(width: defaultPadding * 2),
-            //           Expanded(
-            //             child: ProductDetailBody(
-            //               bloc: bloc,
-            //               productId: blocFilter.selectionState.productId,
-            //             ),
-            //           ),
-            //         ],
-            //       );
-            //     }
-            //   },
-            // ),
+    return BlocProvider(
+      create: (_) => ProductDetailBloc(),
+      child: CScaffold(
+        drawer: const MainMenu(),
+        appBar: AppBar(
+          title: Text(sharedPrefs.translate('Product information'),
+              style: const TextStyle(
+                  fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
+          actions: [
+            Responsive.isMobileAndPortrait(context)
+                ? const SizedBox()
+                : const Row(
+                    children: [
+                      SaveProductButton(),
+                      UpdateProductButton(),
+                      DiscardProductButton(),
+                      BackProductButton(),
+                    ],
+                  ),
+          ],
+        ),
+        body: Builder(
+          builder: (context) {
+            if (productId != null) {
+              context
+                  .read<ProductDetailBloc>()
+                  .add(ProductIdChanged(productId));
+            } else {
+              context.read<ProductDetailBloc>().add(ProductIdChanged(''));
+            }
 
-            body: ProductDetailBody(bloc: bloc, productDetail: bloc.data),
-          );
-        });
+            return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+              builder: (context, state) {
+                switch (state.loadingStatus) {
+                  case ProductDetailLoadingStatus.success:
+                    return const ProductDetailBody();
+                  default:
+                    return const Center(child: CircularProgressIndicator());
+                }
+              },
+            );
+          },
+        ),
+        bottomNavigationBar: !Responsive.isMobileAndPortrait(context)
+            ? const SizedBox()
+            : Container(
+                width: double.infinity,
+                color: cBottomBarColor,
+                child: const Padding(
+                  padding: EdgeInsets.only(bottom: defaultPadding * 3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      /// BOTTOM BUTTONS
+                      SaveProductButton(),
+                      UpdateProductButton(),
+                      DiscardProductButton(),
+                      BackProductButton(),
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
   }
 }
