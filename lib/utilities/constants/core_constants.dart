@@ -7,7 +7,7 @@ final constants = Constants();
 class Constants {
   String appName = 'SE Solution';
   String hostAddress = kDebugMode == false
-      ? 'https://api.sepower.vn'
+      ? 'https://test-api.sepower.vn'
       : 'https://test-api.sepower.vn';
   // : kIsWeb
   //     ? 'https://test-api.sepower.vn'

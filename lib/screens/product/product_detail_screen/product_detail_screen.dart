@@ -41,17 +41,15 @@ class ProductDetailScreen extends StatelessWidget {
         ),
         body: Builder(
           builder: (context) {
-            if (productId != null) {
-              context
-                  .read<ProductDetailBloc>()
-                  .add(ProductIdChanged(productId));
-            } else {
-              context.read<ProductDetailBloc>().add(ProductIdChanged(''));
-            }
+            context
+                .read<ProductDetailBloc>()
+                .add(ProductIdChanged(productId ?? ''));
 
-            return BlocBuilder<ProductDetailBloc, ProductDetailState>(
-              builder: (context, state) {
-                switch (state.loadingStatus) {
+            return BlocSelector<ProductDetailBloc, ProductDetailState,
+                ProductDetailLoadingStatus>(
+              selector: (state) => state.loadingStatus,
+              builder: (context, loadingStatus) {
+                switch (loadingStatus) {
                   case ProductDetailLoadingStatus.success:
                     return const ProductDetailBody();
                   default:
