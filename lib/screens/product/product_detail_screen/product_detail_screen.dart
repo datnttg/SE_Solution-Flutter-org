@@ -41,10 +41,6 @@ class ProductDetailScreen extends StatelessWidget {
         ),
         body: Builder(
           builder: (context) {
-            context
-                .read<ProductDetailBloc>()
-                .add(ProductIdChanged(productId ?? ''));
-
             return BlocSelector<ProductDetailBloc, ProductDetailState,
                 ProductDetailLoadingStatus>(
               selector: (state) => state.loadingStatus,
@@ -53,12 +49,32 @@ class ProductDetailScreen extends StatelessWidget {
                   case ProductDetailLoadingStatus.success:
                     return const ProductDetailBody();
                   default:
+                    context
+                        .read<ProductDetailBloc>()
+                        .add(ProductIdChanged(productId ?? ''));
                     return const Center(child: CircularProgressIndicator());
                 }
               },
             );
           },
         ),
+        // body: Builder(builder: (context) {
+        //   context
+        //       .read<ProductDetailBloc>()
+        //       .add(ProductIdChanged(productId ?? ''));
+        //   return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+        //     buildWhen: (previous, current) =>
+        //         current.productDetail.id != previous.productDetail.id,
+        //     builder: (context, state) {
+        //       switch (state.loadingStatus) {
+        //         case ProductDetailLoadingStatus.success:
+        //           return const ProductDetailBody();
+        //         default:
+        //           return const Center(child: CircularProgressIndicator());
+        //       }
+        //     },
+        //   );
+        // }),
         bottomNavigationBar: !Responsive.isMobileAndPortrait(context)
             ? const SizedBox()
             : Container(
