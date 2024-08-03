@@ -8,10 +8,10 @@ import '../../../../utilities/enums/ui_enums.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
-import '../../product_filter_screen/models/product_filter_item_model.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
+import '../models/product_detail_model.dart';
 
 class ProductDetailChildrenItem extends StatelessWidget {
   final int itemIndex;
@@ -24,9 +24,10 @@ class ProductDetailChildrenItem extends StatelessWidget {
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
         var childItem = state.productDetail.children?[itemIndex];
-        ProductFilterItemModel? child = state.lstProduct
+        ProductDetailModel? child = state.lstProduct
             .where((e) => e.id == childItem?.childId)
             .firstOrNull;
+
         double quantity =
             state.productDetail.children?[itemIndex].quantityOfChild ?? 0;
         quantityController.text = quantity.toString();
@@ -35,17 +36,19 @@ class ProductDetailChildrenItem extends StatelessWidget {
             .map<CDropdownMenuEntry>(
                 (e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
             .toList();
-        List<CDropdownMenuEntry> selectedMenuEntries = state
-                .productDetail.children
-                ?.where((e) => e.childId != null)
-                .map<CDropdownMenuEntry>(
-                    (e) => CDropdownMenuEntry(value: e.childId))
-                .toList() ??
-            [];
+        List<CDropdownMenuEntry> selectedMenuEntries = state.lstProduct
+            .where((e) =>
+                e.id != null &&
+                e.id == state.productDetail.children?[itemIndex].childId)
+            .map<CDropdownMenuEntry>(
+                (e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
+            .toList();
         List<CDropdownMenuEntry> disabledMenuEntries = state.lstProduct
             .where((e) =>
                 e.statusCode != 'Normal' ||
-                selectedMenuEntries.any((i) => i.value == e.id))
+                e.typeCode != 'SingleProduct' ||
+                (state.productDetail.children ?? [])
+                    .any((i) => i.childId == e.id))
             .map<CDropdownMenuEntry>(
                 (e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
             .toList();
@@ -58,8 +61,8 @@ class ProductDetailChildrenItem extends StatelessWidget {
             menuHeight: 200,
             readOnly: state.screenMode == ScreenModeEnum.view,
             dropdownMenuEntries: dropdownMenuEntries,
-            disabledMenuEntries: disabledMenuEntries,
             selectedMenuEntries: selectedMenuEntries,
+            disabledMenuEntries: disabledMenuEntries,
             onSelected: (selected) {
               var selectedChildId = selected.firstOrNull?.value;
               debugPrint("Selected childId: $selectedChildId");
@@ -75,16 +78,19 @@ class ProductDetailChildrenItem extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        if (quantity >= 1) {
-                          var newQuantity = quantity - 1;
-                          quantityController.text = "$newQuantity";
-                          context.read<ProductDetailBloc>().add(
-                              ChildProductQuantityChanged(
-                                  itemIndex, newQuantity));
-                        }
-                      }),
+                    icon: const Icon(Icons.remove),
+                    onPressed: state.screenMode != ScreenModeEnum.edit
+                        ? null
+                        : () {
+                            if (quantity >= 1) {
+                              var newQuantity = quantity - 1;
+                              quantityController.text = "$newQuantity";
+                              context.read<ProductDetailBloc>().add(
+                                  ChildProductQuantityChanged(
+                                      itemIndex, newQuantity));
+                            }
+                          },
+                  ),
                   Expanded(
                     child: CTextFormField(
                       labelText: sharedPrefs.translate('Qty'),
@@ -92,9 +98,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
                       labelTextAsHint: true,
                       textAlign: TextAlign.end,
                       isDense: true,
-                      // readOnly: widget.bloc.screenMode.state == ScreenModeEnum.edit
-                      //     ? false
-                      //     : true,
+                      readOnly: state.screenMode == ScreenModeEnum.view,
                       controller: quantityController,
                       onChanged: (value) {
                         if (!value.isAlphabetOnly) {
@@ -122,13 +126,15 @@ class ProductDetailChildrenItem extends StatelessWidget {
                   ),
                   IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () {
-                        var newQuantity = quantity + 1;
-                        quantityController.text = "$newQuantity";
-                        context.read<ProductDetailBloc>().add(
-                            ChildProductQuantityChanged(
-                                itemIndex, newQuantity));
-                      }),
+                      onPressed: state.screenMode != ScreenModeEnum.edit
+                          ? null
+                          : () {
+                              var newQuantity = quantity + 1;
+                              quantityController.text = "$newQuantity";
+                              context.read<ProductDetailBloc>().add(
+                                  ChildProductQuantityChanged(
+                                      itemIndex, newQuantity));
+                            }),
                 ],
               ),
               Row(

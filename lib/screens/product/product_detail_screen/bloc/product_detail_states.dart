@@ -2,7 +2,6 @@ import 'package:se_solution/screens/product/product_detail_screen/models/product
 
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
-import '../../product_filter_screen/models/product_filter_item_model.dart';
 
 // class ScreenModeState {
 //   ScreenModeEnum? state;
@@ -22,7 +21,7 @@ class ProductDetailState {
   ScreenModeEnum screenMode;
   ProductDetailLoadingStatus loadingStatus;
   ProductDetailModel productDetail;
-  List<ProductFilterItemModel> lstProduct;
+  List<ProductDetailModel> lstProduct;
   List<CDropdownMenuEntry> lstType;
   List<CDropdownMenuEntry> lstUnit;
   List<CDropdownMenuEntry> lstStatus;
@@ -43,7 +42,7 @@ class ProductDetailState {
     ProductDetailLoadingStatus? loadingStatus,
     ScreenModeEnum? screenMode,
     ProductDetailModel? productDetail,
-    List<ProductFilterItemModel>? lstProduct,
+    List<ProductDetailModel>? lstProduct,
     List<CDropdownMenuEntry>? lstUnit,
     List<CDropdownMenuEntry>? lstStatus,
     List<CDropdownMenuEntry>? lstCategory,

@@ -1,11 +1,13 @@
 class ChildProductModel {
   String? childId;
   double? quantityOfChild;
+  String? unitCode;
   String? note;
 
   ChildProductModel({
     this.childId,
     this.quantityOfChild = 0,
+    this.unitCode,
     this.note,
   });
 
@@ -13,6 +15,7 @@ class ChildProductModel {
     return ChildProductModel(
       childId: json['childId'],
       quantityOfChild: json['quantityOfChild'],
+      unitCode: json['unitCode'],
       note: json['note'],
     );
   }

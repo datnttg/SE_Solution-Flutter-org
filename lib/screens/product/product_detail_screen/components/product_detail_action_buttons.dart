@@ -12,6 +12,7 @@ import '../../product_filter_screen/bloc/product_filter_events.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
+import '../services/fetch_data_service.dart';
 
 class AddProductFilterButton extends StatelessWidget {
   const AddProductFilterButton({super.key});
@@ -56,7 +57,19 @@ class SaveProductButton extends StatelessWidget {
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
               labelText: sharedPrefs.translate('Save'),
-              onPressed: () async {},
+              onPressed: () async {
+                var product = state.productDetail;
+                var response = await submitProductDetail(product.copyWith(
+                    children: (product.children ?? [])
+                        .where(
+                            (e) => e.childId != null && e.childId!.isNotEmpty)
+                        .toList()));
+                if (response != null && context.mounted) {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(InitProductFilterData());
+                }
+              },
             ));
       } else {
         return const SizedBox();

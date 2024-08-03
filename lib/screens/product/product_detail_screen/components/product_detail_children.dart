@@ -15,16 +15,12 @@ class ProductDetailChildren extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
+        var children = state.productDetail.children;
         if ((state.screenMode == ScreenModeEnum.edit) &&
-            (state.productDetail.children
-                        ?.where((e) => e.childId?.isEmpty ?? true)
-                        .length ??
-                    0) ==
-                0) {
+            (children?.where((e) => e.childId?.isEmpty ?? true).length ?? 0) ==
+                0 &&
+            !(children?.any((e) => e.quantityOfChild == 0) ?? true)) {
           state.productDetail.children?.add(ChildProductModel());
-          // context
-          //     .read<ProductDetailBloc>()
-          //     .add(ChildProductAdded(ChildProductModel()));
         }
         return Container(
           color: kBgColor,

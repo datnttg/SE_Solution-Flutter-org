@@ -1,6 +1,5 @@
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/child_product_model.dart';
-import 'product_detail_states.dart';
 
 abstract class ChangeProductDetailEvents {}
 

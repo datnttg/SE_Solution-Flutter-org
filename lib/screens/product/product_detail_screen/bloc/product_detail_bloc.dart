@@ -154,7 +154,10 @@ class ProductDetailBloc
   void _onChildProductAdded(
       ChildProductAdded event, Emitter<ProductDetailState> emit) {
     if (event.childProduct.childId != null) {
-      state.copyWith(productDetail: state.productDetail);
+      List<ChildProductModel> children = state.productDetail.children ?? [];
+      children.add(event.childProduct);
+      state.copyWith(
+          productDetail: state.productDetail.copyWith(children: children));
     }
     emit(state);
   }
