@@ -36,7 +36,7 @@ class ProductFilterScreen extends StatelessWidget {
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
           actions: [
             const AddProductFilterButton(),
-            if (!Responsive.isSmallWidth(context)) const UpdateProductButton(),
+            if (!Responsive.isSmallWidth(context)) const EditProductButton(),
             if (!Responsive.isSmallWidth(context)) const SaveProductButton(),
             if (!Responsive.isSmallWidth(context)) const DiscardProductButton(),
           ],

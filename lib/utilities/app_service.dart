@@ -320,8 +320,10 @@ kShowToast(
         ],
       ),
       maxWidth: 400,
-      isDismissible: false,
+      isDismissible: true,
       backgroundColor: kBgColor,
+      borderColor: cBoxBorderColor,
+      borderWidth: 1,
       icon: icon,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.only(bottom: 70));

@@ -20,80 +20,72 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ProductDetailBloc(),
-      child: CScaffold(
-        drawer: const MainMenu(),
-        appBar: AppBar(
-          title: Text(sharedPrefs.translate('Product information'),
-              style: const TextStyle(
-                  fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
-          actions: [
-            Responsive.isMobileAndPortrait(context)
-                ? const SizedBox()
-                : const Row(
-                    children: [
-                      SaveProductButton(),
-                      UpdateProductButton(),
-                      DiscardProductButton(),
-                      BackProductButton(),
-                    ],
-                  ),
-          ],
-        ),
-        body: Builder(
-          builder: (context) {
-            return BlocSelector<ProductDetailBloc, ProductDetailState,
-                ProductDetailLoadingStatus>(
-              selector: (state) => state.loadingStatus,
-              builder: (context, loadingStatus) {
-                switch (loadingStatus) {
-                  case ProductDetailLoadingStatus.success:
-                    return const ProductDetailBody();
-                  default:
-                    context
-                        .read<ProductDetailBloc>()
-                        .add(ProductIdChanged(productId ?? ''));
-                    return const Center(child: CircularProgressIndicator());
-                }
-              },
-            );
-          },
-        ),
-        // body: Builder(builder: (context) {
-        //   context
-        //       .read<ProductDetailBloc>()
-        //       .add(ProductIdChanged(productId ?? ''));
-        //   return BlocBuilder<ProductDetailBloc, ProductDetailState>(
-        //     buildWhen: (previous, current) =>
-        //         current.productDetail.id != previous.productDetail.id,
-        //     builder: (context, state) {
-        //       switch (state.loadingStatus) {
-        //         case ProductDetailLoadingStatus.success:
-        //           return const ProductDetailBody();
-        //         default:
-        //           return const Center(child: CircularProgressIndicator());
-        //       }
-        //     },
-        //   );
-        // }),
-        bottomNavigationBar: !Responsive.isMobileAndPortrait(context)
-            ? const SizedBox()
-            : Container(
-                width: double.infinity,
-                color: cBottomBarColor,
-                child: const Padding(
-                  padding: EdgeInsets.only(bottom: defaultPadding * 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      /// BOTTOM BUTTONS
-                      SaveProductButton(),
-                      UpdateProductButton(),
-                      DiscardProductButton(),
-                      BackProductButton(),
-                    ],
+      child: Container(
+        color: cAppBarColor,
+        child: SafeArea(
+          child: CScaffold(
+            drawer: const MainMenu(),
+            appBar: AppBar(
+              title: Text(sharedPrefs.translate('Product information'),
+                  style: const TextStyle(
+                      fontSize: mediumTextSize * 1.2,
+                      fontWeight: FontWeight.bold)),
+              actions: [
+                Responsive.isMobileAndPortrait(context)
+                    ? const SizedBox()
+                    : const Row(
+                        children: [
+                          SaveProductButton(),
+                          EditProductButton(),
+                          DiscardProductButton(),
+                          BackProductButton(),
+                        ],
+                      ),
+              ],
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      return BlocSelector<ProductDetailBloc, ProductDetailState,
+                          ProductDetailLoadingStatus>(
+                        selector: (state) => state.loadingStatus,
+                        builder: (context, loadingStatus) {
+                          switch (loadingStatus) {
+                            case ProductDetailLoadingStatus.success:
+                              return const ProductDetailBody();
+                            default:
+                              context
+                                  .read<ProductDetailBloc>()
+                                  .add(ProductIdChanged(productId ?? ''));
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                          }
+                        },
+                      );
+                    },
                   ),
                 ),
-              ),
+                !Responsive.isMobileAndPortrait(context)
+                    ? const SizedBox()
+                    : Container(
+                        color: cBottomBarColor,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            /// BOTTOM BUTTONS
+                            SaveProductButton(),
+                            EditProductButton(),
+                            DiscardProductButton(),
+                            BackProductButton(),
+                          ],
+                        ),
+                      )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
