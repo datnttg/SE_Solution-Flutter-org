@@ -16,6 +16,7 @@ const cButtonTextColor = Colors.black;
 const cButtonTextHoverColor = Color(0xFFBFD8FB);
 const cButtonBorderColor = Color(0xFF8FB4E7);
 const cButtonBorderHoverColor = Color(0xFF8FB4E7);
+const cBoxBorderColor = Colors.black12;
 
 enum ButtonType {
   normal,
