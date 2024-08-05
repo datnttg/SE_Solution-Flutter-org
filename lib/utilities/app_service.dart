@@ -269,11 +269,12 @@ Future<void> login(BuildContext context, Map payload) async {
   }
 }
 
-kShowToast(
-    {required String title,
-    required String content,
-    String? detail,
-    String? style}) {
+kShowToast({
+  required String title,
+  required String content,
+  String? detail,
+  String? style,
+}) {
   Icon? icon;
   double iconSize = 36;
   if (style == 'success') {
@@ -319,12 +320,12 @@ kShowToast(
               : const SizedBox()
         ],
       ),
+      icon: icon,
       maxWidth: 400,
       isDismissible: true,
       backgroundColor: kBgColor,
       borderColor: cBoxBorderColor,
       borderWidth: 1,
-      icon: icon,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.only(bottom: 70));
 }
