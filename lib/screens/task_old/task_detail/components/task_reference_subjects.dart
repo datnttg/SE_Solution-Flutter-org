@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution/utilities/app_service.dart';
-import 'package:se_solution/utilities/responsive.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../utilities/app_service.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../controllers/task_data_controllers.dart';

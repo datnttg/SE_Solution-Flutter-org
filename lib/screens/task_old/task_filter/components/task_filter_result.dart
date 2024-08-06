@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
-import 'package:se_solution/utilities/ui_styles.dart';
+import '../../../../utilities/shared_preferences.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../../controllers/task_data_controllers.dart';
 import 'task_list.dart';
 

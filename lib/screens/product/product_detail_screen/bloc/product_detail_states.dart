@@ -1,7 +1,6 @@
-import 'package:se_solution/screens/product/product_detail_screen/models/product_detail_model.dart';
-
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../models/product_detail_model.dart';
 
 // class ScreenModeState {
 //   ScreenModeEnum? state;

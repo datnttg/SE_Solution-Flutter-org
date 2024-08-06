@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/utilities/enums/ui_enums.dart';
 
+import '../../../../utilities/enums/ui_enums.dart';
 import '../models/child_product_model.dart';
 import '../models/product_detail_model.dart';
 import '../services/fetch_data_service.dart';

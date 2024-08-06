@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
 
 import '../../../../utilities/app_service.dart';
+import '../../../../utilities/shared_preferences.dart';
 import '../models/task_filter_parameter_model.dart';
 import '../services/task_fetch_data_service.dart';
 import 'task_filter_events.dart';

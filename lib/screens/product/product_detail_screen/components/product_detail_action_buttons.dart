@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/utilities/responsive.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../product_filter_screen/bloc/product_filter_bloc.dart';

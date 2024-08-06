@@ -6,12 +6,12 @@ final constants = Constants();
 
 class Constants {
   String appName = 'SE Solution';
-  String hostAddress = kDebugMode == false
+  String hostAddress = !kDebugMode
       ? 'https://test-api.sepower.vn'
-      : 'http://localhost:5155';
-  // : kIsWeb
-  //     ? 'https://test-api.sepower.vn'
-  //     : 'http://localhost:5155';
+      //: 'http://localhost:5155';
+      : kIsWeb
+          ? 'http://localhost:5155'
+          : 'https://test-api.sepower.vn';
 
   String defaultLocaleName = 'vi_VN';
   Locale defaultLocale = const Locale('vi', 'VN');

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_treeview/flutter_treeview.dart';
-import 'package:se_solution/utilities/configs.dart';
+import '../../utilities/configs.dart';
 import '../../utilities/shared_preferences.dart';
 import '../../utilities/ui_styles.dart';
 

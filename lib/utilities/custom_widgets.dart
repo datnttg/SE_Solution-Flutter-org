@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:se_solution/utilities/responsive.dart';
 import 'classes/custom_widget_models.dart';
+import 'responsive.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
 

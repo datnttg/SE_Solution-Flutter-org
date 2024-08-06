@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
-import 'package:se_solution/utilities/responsive.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
-import 'package:se_solution/utilities/ui_styles.dart';
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/constants/core_constants.dart';
+import '../../../../utilities/custom_widgets.dart';
+import '../../../../utilities/responsive.dart';
+import '../../../../utilities/shared_preferences.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../../controllers/task_data_controllers.dart';
 import '../../services/task_services.dart';
 

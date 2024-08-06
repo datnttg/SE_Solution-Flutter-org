@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution/utilities/app_service.dart';
+import '../../../../utilities/app_service.dart';
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';

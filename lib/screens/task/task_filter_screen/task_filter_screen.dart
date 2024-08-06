@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
 import '../../../utilities/configs.dart';
+import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
