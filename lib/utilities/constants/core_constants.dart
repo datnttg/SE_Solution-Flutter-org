@@ -8,9 +8,9 @@ class Constants {
   String appName = 'SE Solution';
   String hostAddress = !kDebugMode
       ? 'https://test-api.sepower.vn'
-      //: 'http://localhost:5155';
+      //: 'https://localhost:7299';
       : kIsWeb
-          ? 'http://localhost:5155'
+          ? 'https://localhost:7299'
           : 'https://test-api.sepower.vn';
 
   String defaultLocaleName = 'vi_VN';
