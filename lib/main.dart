@@ -1,15 +1,15 @@
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-// import 'package:universal_io/io.dart';
+import 'package:universal_io/io.dart';
 import 'screens/login/login_screen.dart';
 import 'utilities/app_service.dart';
 import 'utilities/configs.dart';
 import 'utilities/constants/core_constants.dart';
-// import 'utilities/firebase_options.dart';
-// import 'utilities/firebase_api.dart';
+import 'utilities/firebase_options.dart';
+import 'utilities/firebase_api.dart';
 import 'utilities/localization/app_localization.dart';
 import 'utilities/shared_preferences.dart';
 import 'utilities/ui_styles.dart';
@@ -19,11 +19,11 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sharedPref.sharePrefInit();
-  // if (Platform.isAndroid || Platform.isIOS) {
-  //   await Firebase.initializeApp(
-  //       options: DefaultFirebaseOptions.currentPlatform);
-  //   await FirebaseApi().initialFCM();
-  // }
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseApi().initialFCM();
+  }
   runApp(const MyApp());
 }
 

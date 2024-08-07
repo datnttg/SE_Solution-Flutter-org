@@ -5,7 +5,7 @@ import '../classes/app_models.dart';
 final constants = Constants();
 
 class Constants {
-  String appName = 'SE Solution';
+  String appName = 'SE Solution Ori';
   String hostAddress = !kDebugMode
       ? 'https://test-api.sepower.vn'
       //: 'https://localhost:7299';
