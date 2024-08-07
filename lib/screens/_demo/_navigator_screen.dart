@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:se_solution_ori/screens/_demo/multi_dropdown/multi_dropdown_screen.dart';
 
 import '_custom_demo/demo_screen.dart';
 import 'action_bar_demo_screen/action_bar_demo_screen.dart';
 import 'bloc_screen/bloc_screen.dart';
-import 'multi_dropdown_screen/multi_dropdown_screen.dart';
 import 'on_processing/on_processing_screen.dart';
 import 'responsive_tabs_screen/responsive_tabs_screen.dart';
 import 'tab_view_screen/tab_view_screen.dart';
@@ -53,20 +53,20 @@ class _DemoHomePageState extends State<DemoHomePage> {
                               )));
                 }),
             ElevatedButton(
-                child: const Text('MultiDropdown screen'),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MultiDropdownScreen()));
-                }),
-            ElevatedButton(
                 child: const Text('TabView screen'),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const TabViewScreen()));
+                }),
+            ElevatedButton(
+                child: const Text('Multi dropdown'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MultiDropdownScreen()));
                 }),
             ElevatedButton(
                 child: const Text('ActionBarDemoScreen'),

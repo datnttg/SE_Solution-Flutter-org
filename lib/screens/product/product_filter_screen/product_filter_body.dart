@@ -88,22 +88,22 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
                             tabs: [
                               Tab(
                                   child: Text(
-                                      '${sharedPrefs.translate("Normal")} (${normal.length})',
+                                      '${sharedPref.translate("Normal")} (${normal.length})',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold))),
                               Tab(
                                   child: Text(
-                                      '${sharedPrefs.translate("Locked")} (${locked.length})',
+                                      '${sharedPref.translate("Locked")} (${locked.length})',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold))),
                               Tab(
                                   child: Text(
-                                      '${sharedPrefs.translate("Cancelled")} (${cancelled.length})',
+                                      '${sharedPref.translate("Cancelled")} (${cancelled.length})',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold))),
                               Tab(
                                   child: Text(
-                                      '${sharedPrefs.translate("All")} (${all.length})',
+                                      '${sharedPref.translate("All")} (${all.length})',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold))),
                             ],

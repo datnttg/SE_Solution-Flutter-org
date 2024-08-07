@@ -83,7 +83,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       taskUIController.mode.value = ScreenModeEnum.view;
       taskUIController.btnSave.value = DisplayTypeEnum.hidden;
       if (taskDetail['taskAssignment']['userIdAssigned'] ==
-          sharedPrefs.getUserId()) {
+          sharedPref.getUserId()) {
         if (taskDetail['taskAssignment']['taskStatus'] == 'WaitToConfirm') {
           taskUIController.btnConfirm.value = DisplayTypeEnum.normal;
           taskUIController.btnReject.value = DisplayTypeEnum.normal;
@@ -106,7 +106,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return KScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate('Create task')),
+        title: Text(sharedPref.translate('Create task')),
         actions: [
           Obx(
             () => Row(
@@ -119,7 +119,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           : KElevatedButton(
                               backgroundColor: Colors.green,
                               child: Text(
-                                sharedPrefs.translate('Save'),
+                                sharedPref.translate('Save'),
                                 style: const TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
@@ -147,7 +147,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         child: KElevatedButton(
                           backgroundColor: Colors.green,
                           child: Text(
-                            sharedPrefs.translate('Accept'),
+                            sharedPref.translate('Accept'),
                             style: const TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -177,7 +177,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         child: KElevatedButton(
                           backgroundColor: Colors.red,
                           child: Text(
-                            sharedPrefs.translate('Reject'),
+                            sharedPref.translate('Reject'),
                             style: const TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -208,12 +208,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         child: KElevatedButton(
                           backgroundColor: Colors.green,
                           child: Text(
-                            sharedPrefs.translate('Update'),
+                            sharedPref.translate('Update'),
                             style: const TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
                             kShowDialog(const TaskUpdateForm(),
-                                title: sharedPrefs.translate('Update'));
+                                title: sharedPref.translate('Update'));
                           },
                         ),
                       ),
@@ -224,7 +224,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         child: KElevatedButton(
                           backgroundColor: Colors.grey[400],
                           child: Text(
-                            sharedPrefs.translate('Back'),
+                            sharedPref.translate('Back'),
                             style: const TextStyle(color: Colors.white),
                           ),
                           onPressed: () {

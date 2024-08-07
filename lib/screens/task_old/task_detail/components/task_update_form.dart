@@ -51,7 +51,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                           percentWidthOnParent:
                               Responsive.isSmallWidth(context) ? 100 : 30,
                           child: KDropdownMenu(
-                            labelText: sharedPrefs.translate('Status'),
+                            labelText: sharedPref.translate('Status'),
                             dropdownMenuEntries: taskStatusEntries,
                             initialSelection:
                                 taskInfoController.taskStatus.value,
@@ -63,7 +63,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                           percentWidthOnParent:
                               Responsive.isSmallWidth(context) ? 100 : 70,
                           child: KTextFormField(
-                            label: Text(sharedPrefs.translate('Description')),
+                            label: Text(sharedPref.translate('Description')),
                             onChanged: ((p0) {
                               taskInfoController.taskDescription.value = p0;
                             }),
@@ -78,7 +78,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                               children: [
                                 KElevatedButton(
                                   child: Text(
-                                    sharedPrefs.translate('Update'),
+                                    sharedPref.translate('Update'),
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   onPressed: () async {
@@ -119,15 +119,15 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                                           kShowToast(
                                               content:
                                                   response['responseMessage'],
-                                              title: sharedPrefs
+                                              title: sharedPref
                                                   .translate('Result'),
                                               style: 'success');
                                         }
                                         // else {
                                         //   kShowAlert(
-                                        //       Text(sharedPrefs.translate(
+                                        //       Text(sharedPref.translate(
                                         //           "Connection failed!")),
-                                        //       sharedPrefs.translate('Result'));
+                                        //       sharedPref.translate('Result'));
                                         // }
                                       }
                                     }

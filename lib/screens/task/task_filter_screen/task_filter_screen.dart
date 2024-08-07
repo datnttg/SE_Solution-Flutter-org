@@ -72,14 +72,14 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
     return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate('Task'),
+        title: Text(sharedPref.translate('Task'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Create'),
+              labelText: sharedPref.translate('Create'),
               onPressed: () async {
                 final isReload = await Navigator.pushNamed(
                     context, customRouteMapping.taskAdd);
@@ -123,27 +123,27 @@ class _TaskFilterScreenState extends State<TaskFilterScreen>
                   tabs: [
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Not completed")} (${notCompleted.length})',
+                            '${sharedPref.translate("Not completed")} (${notCompleted.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Wait to confirm")} (${waitToConfirm.length})',
+                            '${sharedPref.translate("Wait to confirm")} (${waitToConfirm.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Completed")} (${completed.length})',
+                            '${sharedPref.translate("Completed")} (${completed.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("Rejected")} (${rejected.length})',
+                            '${sharedPref.translate("Rejected")} (${rejected.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                     Tab(
                         child: Text(
-                            '${sharedPrefs.translate("All")} (${allTasks.length})',
+                            '${sharedPref.translate("All")} (${allTasks.length})',
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold))),
                   ],

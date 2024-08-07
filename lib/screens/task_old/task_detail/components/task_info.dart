@@ -72,7 +72,7 @@ class _TaskInfoState extends State<TaskInfo> {
         Row(
           children: [
             KText(
-              sharedPrefs.translate('Task information'),
+              sharedPref.translate('Task information'),
               style: const TextStyle(
                   fontWeight: FontWeight.bold, fontSize: largeTextSize),
             )
@@ -87,7 +87,7 @@ class _TaskInfoState extends State<TaskInfo> {
               // widthRatio: 2,
               percentWidthOnParent: 100,
               child: KTextFormField(
-                label: Text(sharedPrefs.translate('Title')),
+                label: Text(sharedPref.translate('Title')),
                 controller: titleController,
                 autoFocus: true,
                 required: true,
@@ -100,7 +100,7 @@ class _TaskInfoState extends State<TaskInfo> {
             ResponsiveItem(
               percentWidthOnParent: 100,
               child: KTextFormField(
-                label: Text(sharedPrefs.translate('Addition information')),
+                label: Text(sharedPref.translate('Addition information')),
                 controller: taskDescriptionController,
                 readOnly: taskUIController.mode.value != ScreenModeEnum.edit,
                 initialValue: widget.taskAssignment?['taskDescription'],
@@ -112,11 +112,11 @@ class _TaskInfoState extends State<TaskInfo> {
             ResponsiveItem(
               widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
               child: KDropdownMenu(
-                labelText: sharedPrefs.translate('Task type'),
+                labelText: sharedPref.translate('Task type'),
                 menuHeight: null,
                 required: true,
                 enabled: taskUIController.mode.value == ScreenModeEnum.edit,
-                hintText: sharedPrefs.translate('Choose one'),
+                hintText: sharedPref.translate('Choose one'),
                 dropdownMenuEntries: widget.taskTypeEntries,
                 initialSelection: taskInfoController.taskTypeId.value,
                 onSelected: (p0) {
@@ -128,11 +128,11 @@ class _TaskInfoState extends State<TaskInfo> {
             ResponsiveItem(
               widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
               child: KDropdownMenu(
-                labelText: sharedPrefs.translate('Assign to'),
+                labelText: sharedPref.translate('Assign to'),
                 required: true,
                 dropdownMenuEntries: widget.assignedUsersEntries,
                 enabled: taskUIController.mode.value == ScreenModeEnum.edit,
-                hintText: sharedPrefs.translate('Choose one'),
+                hintText: sharedPref.translate('Choose one'),
                 initialSelection: taskInfoController.userIdAssigned.value,
                 onSelected: (selected) {
                   taskInfoController.userIdAssigned.value = selected;
@@ -143,8 +143,8 @@ class _TaskInfoState extends State<TaskInfo> {
               widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
               child: KTextFormField(
                 required: true,
-                label: Text(sharedPrefs.translate('Deadline')),
-                hintText: sharedPrefs.translate('dd-mm-yyyy HH:mm'),
+                label: Text(sharedPref.translate('Deadline')),
+                hintText: sharedPref.translate('dd-mm-yyyy HH:mm'),
                 controller: deadlineController,
                 readOnly: taskUIController.mode.value == ScreenModeEnum.view,
                 suffix: InkWell(

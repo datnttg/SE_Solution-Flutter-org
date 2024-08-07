@@ -25,7 +25,7 @@ class AddProductFilterButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Add'),
+              labelText: sharedPref.translate('Add'),
               onPressed: () async {
                 if (Responsive.isSmallWidth(context)) {
                   Navigator.of(context)
@@ -56,7 +56,7 @@ class SaveProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Save'),
+              labelText: sharedPref.translate('Save'),
               onPressed: () async {
                 var product = state.productDetail;
                 var response = await submitProductDetail(product.copyWith(
@@ -95,7 +95,7 @@ class EditProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Edit'),
+              labelText: sharedPref.translate('Edit'),
               onPressed: () {
                 context
                     .read<ProductDetailBloc>()
@@ -120,7 +120,7 @@ class DiscardProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Discard'),
+              labelText: sharedPref.translate('Discard'),
               onPressed: () {
                 context
                     .read<ProductDetailBloc>()
@@ -167,7 +167,7 @@ class BackProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Back'),
+              labelText: sharedPref.translate('Back'),
               onPressed: () {
                 Navigator.pop(context);
               },

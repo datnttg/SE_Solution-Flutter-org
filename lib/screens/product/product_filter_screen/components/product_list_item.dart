@@ -80,7 +80,7 @@ class ProductListItem extends StatelessWidget {
                   // ResponsiveItem(
                   //   child: Row(
                   //     children: [
-                  //       CText('${sharedPrefs.translate('Status')}: ',
+                  //       CText('${sharedPref.translate('Status')}: ',
                   //           style: const TextStyle(fontSize: smallTextSize)),
                   //       CText(
                   //         '${dataItem.taskStatusText}',
@@ -105,7 +105,7 @@ class ProductListItem extends StatelessWidget {
                   ResponsiveItem(
                     child: Row(
                       children: [
-                        CText('${sharedPrefs.translate('Category')}: ',
+                        CText('${sharedPref.translate('Category')}: ',
                             style: const TextStyle(fontSize: smallTextSize)),
                         CText(
                           '${dataItem.categoryText}',
@@ -124,7 +124,7 @@ class ProductListItem extends StatelessWidget {
                   ResponsiveItem(
                     child: Row(
                       children: [
-                        CText('${sharedPrefs.translate('Type')}: ',
+                        CText('${sharedPref.translate('Type')}: ',
                             style: const TextStyle(fontSize: smallTextSize)),
                         CText(
                           '${dataItem.typeText}',
@@ -149,7 +149,7 @@ class ProductListItem extends StatelessWidget {
                           child: Row(
                             children: [
                               CText(
-                                  '${sharedPrefs.translate('Warranty (month)')}: ',
+                                  '${sharedPref.translate('Warranty (month)')}: ',
                                   style:
                                       const TextStyle(fontSize: smallTextSize)),
                               CText(
@@ -172,7 +172,7 @@ class ProductListItem extends StatelessWidget {
                       : ResponsiveItem(
                           child: Row(
                             children: [
-                              CText('${sharedPrefs.translate('Min price')}: ',
+                              CText('${sharedPref.translate('Min price')}: ',
                                   style:
                                       const TextStyle(fontSize: smallTextSize)),
                               CText(

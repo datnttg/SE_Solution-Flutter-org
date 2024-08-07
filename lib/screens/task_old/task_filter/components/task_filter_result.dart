@@ -34,10 +34,10 @@ class _TaskFilterResultState extends State<TaskFilterResult>
     var allTasks = taskFilterController.listTask;
     allTasks.sort((a, b) => b['createdTime'].compareTo(a['createdTime']));
     var assignedTasks = allTasks
-        .where((e) => e['createdUserId'] == sharedPrefs.getUserId())
+        .where((e) => e['createdUserId'] == sharedPref.getUserId())
         .toList();
     var beAssignedTasks = allTasks
-        .where((e) => e['userIdAssigned'] == sharedPrefs.getUserId())
+        .where((e) => e['userIdAssigned'] == sharedPref.getUserId())
         .toList();
 
     return Obx(() => Column(
@@ -47,15 +47,15 @@ class _TaskFilterResultState extends State<TaskFilterResult>
               tabs: [
                 Tab(
                     child: Text(
-                        '${sharedPrefs.translate("All")} (${allTasks.length})',
+                        '${sharedPref.translate("All")} (${allTasks.length})',
                         style: const TextStyle(fontWeight: FontWeight.bold))),
                 Tab(
                     child: Text(
-                        '${sharedPrefs.translate("Be assigned")} (${beAssignedTasks.length})',
+                        '${sharedPref.translate("Be assigned")} (${beAssignedTasks.length})',
                         style: const TextStyle(fontWeight: FontWeight.bold))),
                 Tab(
                     child: Text(
-                        '${sharedPrefs.translate("Assigned")} (${assignedTasks.length})',
+                        '${sharedPref.translate("Assigned")} (${assignedTasks.length})',
                         style: const TextStyle(fontWeight: FontWeight.bold))),
               ],
             ),

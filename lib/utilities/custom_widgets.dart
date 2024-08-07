@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'classes/custom_widget_models.dart';
 import 'responsive.dart';
 import 'shared_preferences.dart';
@@ -87,6 +87,7 @@ class CDropdownMenu extends StatelessWidget {
   final List<CDropdownMenuEntry>? disabledMenuEntries;
   final bool? multiSelect,
       wrap,
+      wrapSelection,
       enabled,
       readOnly,
       enableSearch,
@@ -99,6 +100,8 @@ class CDropdownMenu extends StatelessWidget {
   final String? hintText;
   final double? width, menuHeight;
   final Function(List<CDropdownMenuEntry<dynamic>>)? onSelected;
+  final String? Function(List<DropdownItem<CDropdownMenuEntry<dynamic>>>?)?
+      validator;
 
   const CDropdownMenu({
     super.key,
@@ -112,7 +115,8 @@ class CDropdownMenu extends StatelessWidget {
     this.hintText,
     this.boldText = true,
     this.multiSelect = false,
-    this.wrap,
+    this.wrap = false,
+    this.wrapSelection = false,
     this.enabled = true,
     this.readOnly = false,
     this.enableSearch,
@@ -121,30 +125,37 @@ class CDropdownMenu extends StatelessWidget {
     this.showClearIcon = false,
     this.width,
     this.menuHeight,
+    this.validator,
   });
 
-  List<ValueItem> convertToValueItem(List<CDropdownMenuEntry>? values) {
+  List<DropdownItem<CDropdownMenuEntry>> convertToDropdownItem(
+      List<CDropdownMenuEntry>? values) {
     if (values?.isEmpty ?? true) return [];
     return values!
-        .map<ValueItem>(
-            (e) => ValueItem(label: e.labelText ?? '', value: e.value))
+        .map<DropdownItem<CDropdownMenuEntry>>((e) => DropdownItem(
+              label: e.labelText ?? '',
+              value: e,
+              selected:
+                  selectedMenuEntries?.any((u) => u.value == e.value) ?? false,
+              disabled:
+                  disabledMenuEntries?.any((u) => u.value == e.value) ?? false,
+            ))
         .toList();
   }
 
-  void newOnSelected(List<ValueItem<dynamic>> entries) {
-    final List<CDropdownMenuEntry<dynamic>> valueItems = entries
-        .map((e) =>
-            CDropdownMenuEntry<dynamic>(value: e.value, labelText: e.label))
-        .toList();
-    onSelected?.call(valueItems);
-  }
+  // void newOnSelected(List<DropdownItem<dynamic>> entries) {
+  //   final List<CDropdownMenuEntry<dynamic>> valueItems = entries
+  //       .map((e) => CDropdownMenuEntry<dynamic>(
+  //             value: e.value,
+  //             labelText: e.label,
+  //           ))
+  //       .toList();
+  //   onSelected?.call(valueItems);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    var dropdownEntries = convertToValueItem(dropdownMenuEntries);
-    var selectedEntries = convertToValueItem(selectedMenuEntries);
-    var disabledEntries = convertToValueItem(disabledMenuEntries);
-
+    var dropdownEntries = convertToDropdownItem(dropdownMenuEntries);
     var requireSign = required == true
         ? const Text(
             '*',
@@ -153,9 +164,9 @@ class CDropdownMenu extends StatelessWidget {
         : const SizedBox();
     var newHintText = hintText;
     if (newHintText == null && multiSelect == false) {
-      newHintText = sharedPrefs.translate('Choose one');
+      newHintText = sharedPref.translate('Choose one');
     } else if (newHintText == null && multiSelect == true) {
-      newHintText = sharedPrefs.translate('Choose many');
+      newHintText = sharedPref.translate('Choose many');
     }
 
     var newMenuHeight =
@@ -164,51 +175,59 @@ class CDropdownMenu extends StatelessWidget {
       newMenuHeight = 0;
     }
 
-    var dropdownMenu = MultiSelectDropDown(
-      padding: EdgeInsets.zero,
-      dropdownMargin: 1,
-      animateSuffixIcon: newMenuHeight == 0 ? false : true,
-      clearIcon: showClearIcon == true
-          ? const Icon(Icons.close_outlined, size: 20)
-          : null,
-      options: dropdownEntries,
-      selectedOptions: selectedEntries,
-      disabledOptions: disabledEntries,
-      dropdownHeight: newMenuHeight,
-      chipConfig: ChipConfig(
+    var dropdownMenu = MultiDropdown<CDropdownMenuEntry>(
+      items: dropdownEntries,
+      fieldDecoration: FieldDecoration(
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        animateSuffixIcon: newMenuHeight == 0 ? false : true,
+        labelStyle: const TextStyle(fontSize: mediumTextSize),
+        hintText: labelTextAsHint == true
+            ? labelText ?? ''
+            : newHintText ?? sharedPref.translate('Select'),
+        hintStyle: TextStyle(
+            fontSize: mediumTextSize,
+            fontWeight: boldText == true ? FontWeight.bold : null,
+            color: Colors.black54),
+        showClearIcon: showClearIcon ?? false,
+      ),
+      dropdownDecoration: DropdownDecoration(
+        maxHeight: newMenuHeight,
+        marginTop: 1,
+      ),
+      searchDecoration: SearchFieldDecoration(
+        hintText: sharedPref.translate('Search'),
+        border: const OutlineInputBorder(
+            borderSide: BorderSide(color: cBoxBorderColor),
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+      ),
+      chipDecoration: ChipDecoration(
+          wrap: wrapSelection!,
           backgroundColor: Colors.white,
-          labelStyle: const TextStyle(color: Colors.black87),
-          deleteIconColor: Colors.black54,
+          labelStyle: TextStyle(
+              color: Colors.black87,
+              fontWeight: boldText == true ? FontWeight.bold : null),
           deleteIcon: newMenuHeight == 0
-              ? const Icon(Icons.close_outlined, size: 0)
+              ? const Icon(
+                  Icons.close_outlined,
+                  size: 0,
+                  color: Colors.black54,
+                )
               : null),
-      onOptionSelected: newOnSelected,
+      onSelectionChange: onSelected,
+      validator: validator,
       searchEnabled: readOnly == false
           ? (enableSearch ?? dropdownEntries.length > 5)
           : false,
-      hint: labelTextAsHint == true
-          ? labelText ?? ''
-          : newHintText ?? sharedPrefs.translate('Select'),
-      searchLabel: sharedPrefs.translate('Search'),
-      selectionType:
-          multiSelect == true ? SelectionType.multi : SelectionType.single,
-      inputDecoration: const BoxDecoration(),
-      optionTextStyle: const TextStyle(fontSize: mediumTextSize),
-      singleSelectItemStyle: TextStyle(
-          fontSize: mediumTextSize,
-          fontWeight: boldText == true ? FontWeight.bold : null),
-      hintStyle: TextStyle(
-          fontSize: mediumTextSize,
-          fontWeight: boldText == true ? FontWeight.bold : null,
-          color: Colors.black54),
+      singleSelect: !(multiSelect ?? false),
     );
 
     /// RETURN
     return Container(
-      height: fieldHeight,
+      // height: wrap == true ? null : fieldHeight,
       alignment: Alignment.centerLeft,
-      padding:
-          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
           ? const BoxDecoration(
               border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
@@ -252,6 +271,7 @@ class CDropdownMenu extends StatelessWidget {
                 labelTextAsHint == true
                     ? const SizedBox()
                     : const SizedBox(width: defaultPadding),
+                // const SizedBox(width: defaultPadding * 3),
                 Expanded(
                   child: dropdownMenu,
                 )
@@ -411,9 +431,9 @@ class KDropdownMenu extends StatelessWidget {
 //             Expanded(
 //               child: DropdownFormField<Map<String, dynamic>>(
 //                 controller: controller,
-//                 emptyText: sharedPrefs.translate('No matching found!'),
+//                 emptyText: sharedPref.translate('No matching found!'),
 //                 emptyActionText:
-//                     addNew == true ? sharedPrefs.translate('Create new') : '',
+//                     addNew == true ? sharedPref.translate('Create new') : '',
 //                 // onEmptyActionPressed: (String str) async {},
 //                 // dropdownItemSeparator: const Divider(
 //                 //   color: Colors.grey,
@@ -545,8 +565,8 @@ class KDropdownSearch extends StatelessWidget {
       }
       return DropdownFormField<Map<String, dynamic>>(
         controller: controller,
-        emptyText: sharedPrefs.translate('No matching found!'),
-        // emptyActionText: sharedPrefs.translate('Create new'),
+        emptyText: sharedPref.translate('No matching found!'),
+        // emptyActionText: sharedPref.translate('Create new'),
         // onEmptyActionPressed: (String str) async {},
         // dropdownItemSeparator: const Divider(
         //   color: Colors.grey,
@@ -613,7 +633,7 @@ class COnLoadingDropdownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return CTextFormField(
       labelText: labelText,
-      hintText: sharedPrefs.translate('Loading...'),
+      hintText: sharedPref.translate('Loading...'),
       readOnly: true,
       required: required,
       wrap: wrap,
@@ -653,7 +673,7 @@ class KOnLoadingDropdownMenu extends StatelessWidget {
 
     return KTextFormField(
         label: newLabel,
-        hintText: sharedPrefs.translate('Loading...'),
+        hintText: sharedPref.translate('Loading...'),
         readOnly: true,
         suffixIcon: const CircularProgressIndicator(),
         suffixIconConstraints: const BoxConstraints(
@@ -1262,7 +1282,7 @@ class KTextFormField extends StatelessWidget {
       // ?? (required == true
       //     ? (value) {
       //         if (value == null || value.isEmpty) {
-      //           return sharedPrefs.translate('This field is required!');
+      //           return sharedPref.translate('This field is required!');
       //         }
       //         return null;
       //       }
@@ -1468,7 +1488,7 @@ class KIcon extends StatelessWidget {
 //       this.lastDate,
 //       this.hintText,
 //       this.readOnly});
-
+//
 //   @override
 //   State<CustomDatePicker> createState() => _CustomDatePickerState();
 // }
@@ -1494,7 +1514,7 @@ class KIcon extends StatelessWidget {
 //             lastDate: widget.lastDate ?? DateTime(2100),
 //             initialDate: widget.initialDate,
 //           );
-
+//
 //           if (pickedDate != null && widget.controller != null) {
 //             String formattedDate = df1.format(pickedDate);
 //             setState(() {
@@ -1513,7 +1533,7 @@ class KIcon extends StatelessWidget {
 //   final DateTime? initialDate, firstDate, lastDate;
 //   final String? hintText;
 //   final bool? readOnly;
-
+//
 //   const CustomDateTimePicker(
 //       {super.key,
 //       this.controller,
@@ -1523,7 +1543,7 @@ class KIcon extends StatelessWidget {
 //       this.lastDate,
 //       this.hintText,
 //       this.readOnly});
-
+//
 //   @override
 //   State<CustomDateTimePicker> createState() => _CustomDateTimePickerState();
 // }
@@ -1531,19 +1551,19 @@ class KIcon extends StatelessWidget {
 // class _CustomDateTimePickerState extends State<CustomDateTimePicker>
 //     with SingleTickerProviderStateMixin {
 //   late AnimationController _controller;
-
+//
 //   @override
 //   void initState() {
 //     super.initState();
 //     _controller = AnimationController(vsync: this);
 //   }
-
+//
 //   @override
 //   void dispose() {
 //     _controller.dispose();
 //     super.dispose();
 //   }
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     if (widget.initialDate != null) {
@@ -1564,7 +1584,7 @@ class KIcon extends StatelessWidget {
 //             lastDate: widget.lastDate ?? DateTime(2100),
 //             initialDate: widget.initialDate,
 //           );
-
+//
 //           if (pickedDate != null && widget.controller != null) {
 //             String formattedDate = df2.format(
 //                 DateTime(pickedDate.year, pickedDate.month, pickedDate.day)
@@ -1583,20 +1603,20 @@ class KIcon extends StatelessWidget {
 // class CustomMultiselectDropDown extends StatefulWidget {
 //   final Function(List<String>) selectedList;
 //   final List<String> listOfStrings;
-
+//
 //   const CustomMultiselectDropDown(
 //       {super.key, required this.selectedList, required this.listOfStrings});
-
+//
 //   @override
 //   createState() {
 //     return _CustomMultiselectDropDownState();
 //   }
 // }
-
+//
 // class _CustomMultiselectDropDownState extends State<CustomMultiselectDropDown> {
 //   List<String> listOFSelectedItem = [];
 //   String selectedText = "";
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
@@ -1642,10 +1662,10 @@ class KIcon extends StatelessWidget {
 //   String item;
 //   bool itemSelected;
 //   final Function(String) selected;
-
+//
 //   _ViewItem(
 //       {required this.item, required this.itemSelected, required this.selected});
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     var size = MediaQuery.of(context).size;

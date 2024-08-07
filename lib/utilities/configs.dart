@@ -11,7 +11,7 @@ import '../screens/task_old/task_detail/task_detail_screen.dart';
 import 'shared_preferences.dart';
 
 class Config {
-  String appVersion = sharedPrefs.getVersion();
+  String appVersion = sharedPref.getVersion();
 }
 
 var customRouteMapping = CustomRouteMapping();
@@ -151,8 +151,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
 //   customRouteMapping.myProject: (_) => const OwnerProjectOverviewScreen(),
 // };
 
-var nf0 = NumberFormat("#,##0", sharedPrefs.getLocale().toString());
-var nf1 = NumberFormat("#,##0.0", sharedPrefs.getLocale().toString());
+var nf0 = NumberFormat("#,##0", sharedPref.getLocale().toString());
+var nf1 = NumberFormat("#,##0.0", sharedPref.getLocale().toString());
 var df0 = DateFormat('yyyy-MM-dd HH:mm:ss');
-var df1 = DateFormat(sharedPrefs.dateFormat);
+var df1 = DateFormat(sharedPref.dateFormat);
 var df2 = DateFormat('dd-MM-yyyy HH:mm');

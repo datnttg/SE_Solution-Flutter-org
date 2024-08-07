@@ -50,7 +50,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      KText('${sharedPrefs.translate('Type')}: ',
+                      KText('${sharedPref.translate('Type')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       KText(
                         '${dataItem['taskTypeTitle']}',
@@ -68,7 +68,7 @@ class TaskListItem extends StatelessWidget {
                   child: dataItem['deadline'] != null
                       ? Row(
                           children: [
-                            KText('${sharedPrefs.translate('Deadline')}: ',
+                            KText('${sharedPref.translate('Deadline')}: ',
                                 style:
                                     const TextStyle(fontSize: smallTextSize)),
                             KText(
@@ -95,7 +95,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      KText('${sharedPrefs.translate('Creator')}: ',
+                      KText('${sharedPref.translate('Creator')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       KText(
                         '${dataItem['createdName']}',
@@ -112,7 +112,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      KText('${sharedPrefs.translate('Executor')}: ',
+                      KText('${sharedPref.translate('Executor')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       KText(
                         '${dataItem['assignedName']}',
@@ -129,7 +129,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      KText('${sharedPrefs.translate('Status')}: ',
+                      KText('${sharedPref.translate('Status')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       KText(
                         '${dataItem['taskStatusText']}',

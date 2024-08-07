@@ -46,10 +46,10 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                       : "${e["subjectName"]} | ") +
                   (e["annexCode"] == null
                       ? ""
-                      : "${sharedPrefs.translate("Annex code")}: ${e["annexCode"]} | ") +
+                      : "${sharedPref.translate("Annex code")}: ${e["annexCode"]} | ") +
                   (e["contractCode"] == null
                       ? ""
-                      : "${sharedPrefs.translate("Contract code")}: ${e["contractCode"]}"),
+                      : "${sharedPref.translate("Contract code")}: ${e["contractCode"]}"),
               labelWidget: Column(
                 children: [
                   Row(
@@ -104,12 +104,12 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-                  title: KText(sharedPrefs.translate('Duplicate')),
+                  title: KText(sharedPref.translate('Duplicate')),
                   content: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       KText(
-                          '${sharedPrefs.translate('Contract annex')} ${sharedPrefs.translate('is already existed!')}'),
+                          '${sharedPref.translate('Contract annex')} ${sharedPref.translate('is already existed!')}'),
                     ],
                   ),
                   actions: [
@@ -138,8 +138,8 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                       child: KFutureDropdownMenu(
                         controller: annexController,
                         enableFilter: true,
-                        label: Text(sharedPrefs.translate('Contract annex')),
-                        hintText: sharedPrefs.translate('Choose one'),
+                        label: Text(sharedPref.translate('Contract annex')),
+                        hintText: sharedPref.translate('Choose one'),
                         dropdownMenuEntries: annexEntries,
                         initialSelection: "",
                         onSelected: (selected) {
@@ -149,18 +149,18 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                   ResponsiveItem(
                       child: KTextFormField(
                     controller: contactNameController,
-                    label: Text(sharedPrefs.translate('Contact name')),
+                    label: Text(sharedPref.translate('Contact name')),
                   )),
                   ResponsiveItem(
                       child: KTextFormField(
                     controller: phoneController,
-                    label: Text(sharedPrefs.translate('Phone')),
+                    label: Text(sharedPref.translate('Phone')),
                   )),
                   ResponsiveItem(
                       child: KFutureDropdownMenu(
                     controller: countryController,
-                    label: Text(sharedPrefs.translate('Country')),
-                    hintText: sharedPrefs.translate('Choose one'),
+                    label: Text(sharedPref.translate('Country')),
+                    hintText: sharedPref.translate('Choose one'),
                     dropdownMenuEntries: countries,
                     initialSelection: taskProjectAddingController.countryId,
                     onSelected: (selected) async {
@@ -174,8 +174,8 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                       child: Obx(
                     () => KDropdownMenu(
                       controller: provinceController,
-                      labelText: sharedPrefs.translate('Province'),
-                      hintText: sharedPrefs.translate('Choose one'),
+                      labelText: sharedPref.translate('Province'),
+                      hintText: sharedPref.translate('Choose one'),
                       dropdownMenuEntries:
                           taskProjectAddingController.provinces.isEmpty
                               ? []
@@ -191,8 +191,8 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                   ResponsiveItem(
                       child: KDropdownMenu(
                     controller: districtController,
-                    labelText: sharedPrefs.translate('District'),
-                    hintText: sharedPrefs.translate('Choose one'),
+                    labelText: sharedPref.translate('District'),
+                    hintText: sharedPref.translate('Choose one'),
                     dropdownMenuEntries:
                         taskProjectAddingController.districts.isEmpty
                             ? []
@@ -207,8 +207,8 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                   ResponsiveItem(
                       child: KDropdownMenu(
                     controller: wardController,
-                    labelText: sharedPrefs.translate('Ward'),
-                    hintText: sharedPrefs.translate('Choose one'),
+                    labelText: sharedPref.translate('Ward'),
+                    hintText: sharedPref.translate('Choose one'),
                     dropdownMenuEntries:
                         taskProjectAddingController.wards.isEmpty
                             ? []
@@ -221,13 +221,13 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                       widthRatio: 2,
                       child: KTextFormField(
                         controller: addressController,
-                        label: Text(sharedPrefs.translate('Address')),
+                        label: Text(sharedPref.translate('Address')),
                       )),
                   ResponsiveItem(
                       percentWidthOnParent: 100,
                       child: KTextFormField(
                         controller: noteController,
-                        label: Text(sharedPrefs.translate('Note')),
+                        label: Text(sharedPref.translate('Note')),
                         maxLines: null,
                       )),
                 ]),
@@ -277,7 +277,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                 },
                 backgroundColor: kPrimaryColor,
                 child: Text(
-                  sharedPrefs.translate('Add & Close'),
+                  sharedPref.translate('Add & Close'),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -319,7 +319,7 @@ class _TaskProjectAddingState extends State<TaskProjectAdding> {
                 },
                 backgroundColor: Colors.green,
                 child: Text(
-                  sharedPrefs.translate('Add & New'),
+                  sharedPref.translate('Add & New'),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

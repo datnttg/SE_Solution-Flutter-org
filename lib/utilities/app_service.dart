@@ -58,7 +58,7 @@ Future<bool> updateFirebaseToken(
   var deviceId = await getDeviceId();
   var deviceName = await getDeviceName();
   Map parameters = {
-    "userId": sharedPrefs.getUserId(),
+    "userId": sharedPref.getUserId(),
     "deviceId": deviceId,
     "deviceName": deviceName,
     "firebaseInstallationId": firebaseInstallationId,
@@ -71,7 +71,7 @@ Future<bool> updateFirebaseToken(
 Future<void> updateVersion(String downloadUrl) async {
   if (Platform.isAndroid || Platform.isIOS) {
     await Permission.storage.request();
-    kShowProcessingDialog(title: sharedPrefs.translate('Processing...'));
+    kShowProcessingDialog(title: sharedPref.translate('Processing...'));
     var path = '/storage/emulated/0/Download/se-solution.apk';
     var file = File(path);
     var res = await http.get(Uri.parse(downloadUrl));
@@ -108,7 +108,7 @@ Future<void> checkUpdate() async {
             PopScope(
               canPop: false, // Prevent dialog from closing
               child: AlertDialog(
-                title: Text(sharedPrefs.translate('Update available')),
+                title: Text(sharedPref.translate('Update available')),
                 content: SizedBox(
                   height: 100,
                   child: SingleChildScrollView(
@@ -116,12 +116,12 @@ Future<void> checkUpdate() async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            '${sharedPrefs.translate('A new version is available! You need to update to continue!')} '),
+                            '${sharedPref.translate('A new version is available! You need to update to continue!')} '),
                         const SizedBox(height: defaultPadding * 2),
                         Text(
-                            '- ${sharedPrefs.translate('New version')}: $targetVersion'),
+                            '- ${sharedPref.translate('New version')}: $targetVersion'),
                         Text(
-                            '- ${sharedPrefs.translate('Current version')}: $appVersion'),
+                            '- ${sharedPref.translate('Current version')}: $appVersion'),
                         const SizedBox(height: defaultPadding * 2),
                       ],
                     ),
@@ -130,7 +130,7 @@ Future<void> checkUpdate() async {
                 actions: [
                   TextButton(
                     child: Text(
-                        sharedPrefs.translate('Download update').toUpperCase()),
+                        sharedPref.translate('Download update').toUpperCase()),
                     onPressed: () async {
                       String downloadUrl = "";
                       if (Platform.isAndroid) {
@@ -220,14 +220,14 @@ Future<void> login(BuildContext context, Map payload) async {
     if (responseBody['success'] == true) {
       var accessToken = responseData['accessToken'];
       var refreshToken = responseData['refreshToken'];
-      sharedPrefs.setAccessToken(accessToken);
-      sharedPrefs.setRefreshToken(refreshToken);
-      sharedPrefs.setUserId(responseData['userId']);
-      sharedPrefs.setUsername(payload['username']);
-      sharedPrefs.setPassword(payload['password']);
+      sharedPref.setAccessToken(accessToken);
+      sharedPref.setRefreshToken(refreshToken);
+      sharedPref.setUserId(responseData['userId']);
+      sharedPref.setUsername(payload['username']);
+      sharedPref.setPassword(payload['password']);
       updateFirebaseToken(
-          firebaseToken: sharedPrefs.getFirebaseToken(),
-          firebaseInstallationId: sharedPrefs.getFirebaseInstallationId());
+          firebaseToken: sharedPref.getFirebaseToken(),
+          firebaseInstallationId: sharedPref.getFirebaseInstallationId());
       var getFunctions = await getAppFunctions();
       if (context.mounted && getFunctions) {
         Navigator.of(context).pushReplacement(
@@ -240,8 +240,8 @@ Future<void> login(BuildContext context, Map payload) async {
       }
       // } else {
       //   kShowToast(
-      //     title: sharedPrefs.translate('Fail'),
-      //     content: sharedPrefs.translate('Login failed'),
+      //     title: sharedPref.translate('Fail'),
+      //     content: sharedPref.translate('Login failed'),
       //     detail: responseData?.toString(),
       //     style: 'danger',
       //   );
@@ -252,7 +252,7 @@ Future<void> login(BuildContext context, Map payload) async {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text(sharedPrefs.translate("Connection failed!")),
+                Text(sharedPref.translate("Connection failed!")),
               ],
             ),
           ),
@@ -306,7 +306,7 @@ kShowToast({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${sharedPrefs.translate('Detail')}: ',
+                      '${sharedPref.translate('Detail')}: ',
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     Flexible(
@@ -334,7 +334,7 @@ kShowAlert({required Widget body, String? title}) {
   return Get.dialog(
     AlertDialog(
       title:
-          title == null ? null : KSelectableText(sharedPrefs.translate(title)),
+          title == null ? null : KSelectableText(sharedPref.translate(title)),
       content: SingleChildScrollView(
         child: body,
       ),
@@ -363,7 +363,7 @@ kShowDialog(Widget child, {String? title}) {
             child: title == null
                 ? Container()
                 : SelectableText(
-                    sharedPrefs.translate(title),
+                    sharedPref.translate(title),
                   )),
         KElevatedButton(
           msBackgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -376,7 +376,7 @@ kShowDialog(Widget child, {String? title}) {
             return kButtonBgColor1;
           }),
           child: Text(
-            sharedPrefs.translate('Close'),
+            sharedPref.translate('Close'),
             style: const TextStyle(color: Colors.white),
           ),
           onPressed: () {
@@ -414,7 +414,7 @@ Future<bool> getAppFunctions() async {
     var response = await fetchData(hostAddress);
     if (response['success'] == true) {
       var functions = jsonEncode(response['responseData']);
-      sharedPrefs.setFunctions(functions);
+      sharedPref.setFunctions(functions);
       return true;
     }
   } catch (e) {
@@ -428,8 +428,8 @@ Future<bool> refreshToken() async {
   try {
     var url = Uri.parse('${constants.hostAddress}/token/refresh');
     Map payload = {
-      'AccessToken': sharedPrefs.getAccessToken(),
-      'RefreshToken': sharedPrefs.getRefreshToken(),
+      'AccessToken': sharedPref.getAccessToken(),
+      'RefreshToken': sharedPref.getRefreshToken(),
     };
 // var response = await httpClient.post(url,
 //     headers: {
@@ -443,10 +443,10 @@ Future<bool> refreshToken() async {
     var responseBody = await fetchData(url, parameters: payload);
     if (responseBody['success'] == true) {
       var responseData = responseBody['responseData'];
-      sharedPrefs.setAccessToken(responseData['accessToken']);
+      sharedPref.setAccessToken(responseData['accessToken']);
       updateFirebaseToken(
-          firebaseToken: sharedPrefs.getFirebaseToken(),
-          firebaseInstallationId: sharedPrefs.getFirebaseInstallationId());
+          firebaseToken: sharedPref.getFirebaseToken(),
+          firebaseInstallationId: sharedPref.getFirebaseInstallationId());
       checkUpdate();
       return true;
     } else {
@@ -466,31 +466,31 @@ Future<Map> fetchDataUI(
   String? method,
   bool? showSuccessNotification = true,
 }) async {
-  kShowProcessingDialog(title: sharedPrefs.translate("Processing..."));
+  kShowProcessingDialog(title: sharedPref.translate("Processing..."));
   await Future.delayed(const Duration(milliseconds: 300));
   var response =
       await fetchData(hostAddress, parameters: parameters, method: method);
   Get.back();
   if (response['success'] == true && showSuccessNotification == true) {
     kShowToast(
-      title: sharedPrefs.translate('Success'),
+      title: sharedPref.translate('Success'),
       content: response['responseMessage'],
       style: 'success',
     );
   } else if (response['success'] == false &&
       response['responseMessage'] != '') {
     // kShowAlert(
-    //     title: sharedPrefs.translate('Fail'),
+    //     title: sharedPref.translate('Fail'),
     //     body: Text(response['responseMessage']));
     kShowToast(
-      title: sharedPrefs.translate('Fail'),
+      title: sharedPref.translate('Fail'),
       content: response['responseMessage'],
       style: 'danger',
     );
   } else if (response['success'] == false) {
     kShowToast(
-      title: sharedPrefs.translate('Fail'),
-      content: sharedPrefs.translate("Connection failed!"),
+      title: sharedPref.translate('Fail'),
+      content: sharedPref.translate("Connection failed!"),
       style: 'danger',
     );
   }
@@ -504,8 +504,8 @@ Future<Map> fetchData(Uri hostAddress,
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${sharedPrefs.getAccessToken()}',
-      "Localization": sharedPrefs.getLocale().toString(),
+      'Authorization': 'Bearer ${sharedPref.getAccessToken()}',
+      "Localization": sharedPref.getLocale().toString(),
     };
     var body = jsonEncode(parameters);
     var encoding = Encoding.getByName('utf-8');
@@ -550,7 +550,7 @@ Future<Map> fetchData(Uri hostAddress,
     debugPrint("fetchData() error: $e");
     return {
       "success": false,
-      "responseMessage": sharedPrefs.translate("Connection failed!")
+      "responseMessage": sharedPref.translate("Connection failed!")
     };
   }
 }

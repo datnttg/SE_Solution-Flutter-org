@@ -16,7 +16,7 @@ Stream<List<CDropdownMenuEntry>> fetchTaskCategory(
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['code'],
-            labelText: e[sharedPrefs.getLocale().languageCode],
+            labelText: e[sharedPref.getLocale().languageCode],
           ))
       .toList();
   yield listEntries;

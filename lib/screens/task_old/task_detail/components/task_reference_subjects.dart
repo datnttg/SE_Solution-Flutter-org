@@ -49,8 +49,8 @@ class TaskReferenceSubjectList extends StatelessWidget {
       if (subject.name == '' || subject.phone == '') {
         kShowAlert(
             body:
-                KText(sharedPrefs.translate('Please input required field(s)!')),
-            title: sharedPrefs.translate('Missing data'));
+                KText(sharedPref.translate('Please input required field(s)!')),
+            title: sharedPref.translate('Missing data'));
         return false;
       }
       if (taskDetailController.referenceSubjects
@@ -62,18 +62,18 @@ class TaskReferenceSubjectList extends StatelessWidget {
       } else {
         kShowAlert(
             body: KText(
-                '${subject.phone} ${sharedPrefs.translate('is already existed!')}'),
-            title: sharedPrefs.translate('Duplicate'));
+                '${subject.phone} ${sharedPref.translate('is already existed!')}'),
+            title: sharedPref.translate('Duplicate'));
         // showDialog(
         //     context: context,
         //     barrierDismissible: false,
         //     builder: (context) => AlertDialog(
-        //           title: KText(sharedPrefs.translate('Duplicate')),
+        //           title: KText(sharedPref.translate('Duplicate')),
         //           content: Row(
         //             mainAxisSize: MainAxisSize.min,
         //             children: [
         //               KText(
-        //                   '${subject.phone} ${sharedPrefs.translate('is already existed!')}'),
+        //                   '${subject.phone} ${sharedPref.translate('is already existed!')}'),
         //             ],
         //           ),
         //           actions: [
@@ -98,7 +98,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
             }
           },
           child: Text(
-            sharedPrefs.translate('Confirm'),
+            sharedPref.translate('Confirm'),
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -115,7 +115,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
       },
       {
         "id": "Other",
-        "title": "(${sharedPrefs.translate('Other')})",
+        "title": "(${sharedPref.translate('Other')})",
       },
     ]
         .map((e) => DropdownMenuEntry(value: e['id'], label: e['title']!))
@@ -128,7 +128,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
           children: [
             Expanded(
               child: KSelectableText(
-                sharedPrefs.translate('Reference subject(s)'),
+                sharedPref.translate('Reference subject(s)'),
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: largeTextSize),
               ),
@@ -147,7 +147,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                         children: [
                           ResponsiveItem(
                               child: KTextFormField(
-                            label: KText(sharedPrefs.translate('Name')),
+                            label: KText(sharedPref.translate('Name')),
                             controller: nameController,
                             required: true,
                             onChanged: (p0) {
@@ -157,7 +157,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                           )),
                           ResponsiveItem(
                               child: KTextFormField(
-                            label: KText(sharedPrefs.translate('Phone')),
+                            label: KText(sharedPref.translate('Phone')),
                             controller: phoneController,
                             required: true,
                             onChanged: (p0) {
@@ -168,7 +168,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                           ResponsiveItem(
                               widthRatio: 2,
                               child: KTextFormField(
-                                label: KText(sharedPrefs.translate('Address')),
+                                label: KText(sharedPref.translate('Address')),
                                 controller: addressController,
                                 onChanged: (p0) {
                                   taskReferenceSubjectAddingController
@@ -177,7 +177,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                               )),
                           ResponsiveItem(
                               child: KDropdownMenu(
-                            labelText: sharedPrefs.translate('Customer source'),
+                            labelText: sharedPref.translate('Customer source'),
                             controller: customerSourceController,
                             dropdownMenuEntries: customerSourceEntries,
                             onSelected: (selected) {
@@ -241,7 +241,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                                 : Row(
                                     children: [
                                       Text(
-                                          '${sharedPrefs.translate('Customer source')}: '),
+                                          '${sharedPref.translate('Customer source')}: '),
                                       KText(taskDetailController
                                               .referenceSubjects[index]
                                               .customerSource ??

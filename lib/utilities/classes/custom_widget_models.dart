@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
 class CDropdownMenuEntry<T> {
   T? value;
   String? labelText;
-  CDropdownMenuEntry({this.value, this.labelText});
+  Widget? labelWidget;
+  CDropdownMenuEntry({this.value, this.labelText, this.labelWidget});
 
   Map<String, dynamic> toMap() {
     return {

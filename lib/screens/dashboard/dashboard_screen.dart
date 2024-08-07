@@ -16,7 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate("Dashboard")),
+        title: Text(sharedPref.translate("Dashboard")),
       ),
     );
   }

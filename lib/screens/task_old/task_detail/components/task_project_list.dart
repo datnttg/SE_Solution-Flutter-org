@@ -24,7 +24,7 @@ class TaskProjectList extends StatelessWidget {
           children: [
             Expanded(
               child: KSelectableText(
-                sharedPrefs.translate('Reference project(s)'),
+                sharedPref.translate('Reference project(s)'),
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: largeTextSize),
               ),
@@ -33,10 +33,10 @@ class TaskProjectList extends StatelessWidget {
               backgroundColor: Colors.blue,
               onPressed: () {
                 kShowDialog(const TaskProjectAdding(),
-                    title: sharedPrefs.translate('Add new project'));
+                    title: sharedPref.translate('Add new project'));
               },
               child: Text(
-                sharedPrefs.translate('Add'),
+                sharedPref.translate('Add'),
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -69,8 +69,8 @@ class TaskProjectList extends StatelessWidget {
                                   Container(
                                     padding: const EdgeInsets.only(
                                         right: defaultPadding * 3),
-                                    child: KSelectableText(
-                                        (index + 1).toString()),
+                                    child:
+                                        KSelectableText((index + 1).toString()),
                                   ),
                                   Expanded(
                                     child: Column(

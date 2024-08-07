@@ -49,7 +49,7 @@ class _PowerStationMonitorScreenState extends State<PowerStationMonitorScreen> {
     return KScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate("Dashboard")),
+        title: Text(sharedPref.translate("Dashboard")),
       ),
       body: Responsive.isSmallWidth(context)
           ? SingleChildScrollView(

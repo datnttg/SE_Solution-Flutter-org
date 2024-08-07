@@ -54,8 +54,8 @@ class TaskFilterBloc {
       start = null;
       end = null;
       kShowAlert(
-          title: sharedPrefs.translate('Invalid format'),
-          body: Text(sharedPrefs.translate(
+          title: sharedPref.translate('Invalid format'),
+          body: Text(sharedPref.translate(
               'Assigned date must be formated like: dd/mm/yyyy - dd/mm/yyyy')));
       return false;
     }

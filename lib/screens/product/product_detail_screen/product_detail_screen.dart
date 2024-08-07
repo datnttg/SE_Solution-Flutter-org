@@ -26,7 +26,7 @@ class ProductDetailScreen extends StatelessWidget {
           child: CScaffold(
             drawer: const MainMenu(),
             appBar: AppBar(
-              title: Text(sharedPrefs.translate('Product information'),
+              title: Text(sharedPref.translate('Product information'),
                   style: const TextStyle(
                       fontSize: mediumTextSize * 1.2,
                       fontWeight: FontWeight.bold)),

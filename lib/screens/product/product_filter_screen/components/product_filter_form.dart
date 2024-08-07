@@ -24,9 +24,9 @@ class ProductFilterForm extends StatelessWidget {
             /// CODE
             ResponsiveItem(
                 child: CTextFormField(
-              labelText: sharedPrefs.translate('Product code'),
+              labelText: sharedPref.translate('Product code'),
               // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
+              hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
                 context
@@ -38,9 +38,9 @@ class ProductFilterForm extends StatelessWidget {
             /// NAME
             ResponsiveItem(
                 child: CTextFormField(
-              labelText: sharedPrefs.translate('Product name'),
+              labelText: sharedPref.translate('Product name'),
               // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
+              hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
                 context
@@ -54,9 +54,9 @@ class ProductFilterForm extends StatelessWidget {
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: CDropdownMenu(
-                labelText: sharedPrefs.translate('Category'),
+                labelText: sharedPref.translate('Category'),
                 multiSelect: true,
-                hintText: '--${sharedPrefs.translate('All')}--',
+                hintText: '--${sharedPref.translate('All')}--',
                 dropdownMenuEntries: state.productCategories ?? [],
                 onSelected: (values) {
                   context
@@ -71,9 +71,9 @@ class ProductFilterForm extends StatelessWidget {
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: CDropdownMenu(
-                labelText: sharedPrefs.translate('Type'),
+                labelText: sharedPref.translate('Type'),
                 multiSelect: true,
-                hintText: '--${sharedPrefs.translate('All')}--',
+                hintText: '--${sharedPref.translate('All')}--',
                 dropdownMenuEntries: state.productTypes ?? [],
                 onSelected: (values) {
                   context

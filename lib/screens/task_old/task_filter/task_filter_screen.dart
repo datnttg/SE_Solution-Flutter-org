@@ -41,22 +41,22 @@ class _TaskManagementScreenState extends State<TaskFilterScreen>
       var allTasks = taskFilterController.listTask.toList();
       allTasks.sort((a, b) => b['createdTime'].compareTo(a['createdTime']));
       var assignedTasks = allTasks
-          .where((e) => e['createdUserId'] == sharedPrefs.getUserId())
+          .where((e) => e['createdUserId'] == sharedPref.getUserId())
           .toList();
       var beAssignedTasks = allTasks
-          .where((e) => e['userIdAssigned'] == sharedPrefs.getUserId())
+          .where((e) => e['userIdAssigned'] == sharedPref.getUserId())
           .toList();
       var otherTasks = allTasks
           .where((e) =>
-              e['createdUserId'] != sharedPrefs.getUserId() &&
-              e['userIdAssigned'] != sharedPrefs.getUserId())
+              e['createdUserId'] != sharedPref.getUserId() &&
+              e['userIdAssigned'] != sharedPref.getUserId())
           .toList();
 
       return KScaffold(
         drawer: const MainMenu(),
         appBar: AppBar(
           title: Text(
-            sharedPrefs.translate('Task management'),
+            sharedPref.translate('Task management'),
             style: const TextStyle(
                 fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold),
           ),
@@ -64,7 +64,7 @@ class _TaskManagementScreenState extends State<TaskFilterScreen>
             Padding(
               padding: const EdgeInsets.all(defaultPadding),
               child: CElevatedButton(
-                labelText: sharedPrefs.translate('Create'),
+                labelText: sharedPref.translate('Create'),
                 // buttonType: ButtonType.warning,
                 onPressed: () async {
                   final isReload = await Navigator.pushNamed(
@@ -108,22 +108,22 @@ class _TaskManagementScreenState extends State<TaskFilterScreen>
                     tabs: [
                       Tab(
                           child: Text(
-                              '${sharedPrefs.translate("Be assigned")} (${beAssignedTasks.length})',
+                              '${sharedPref.translate("Be assigned")} (${beAssignedTasks.length})',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold))),
                       Tab(
                           child: Text(
-                              '${sharedPrefs.translate("Assigned")} (${assignedTasks.length})',
+                              '${sharedPref.translate("Assigned")} (${assignedTasks.length})',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold))),
                       Tab(
                           child: Text(
-                              '${sharedPrefs.translate("Others")} (${otherTasks.length})',
+                              '${sharedPref.translate("Others")} (${otherTasks.length})',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold))),
                       Tab(
                           child: Text(
-                              '${sharedPrefs.translate("All")} (${allTasks.length})',
+                              '${sharedPref.translate("All")} (${allTasks.length})',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold))),
                     ],

@@ -44,7 +44,7 @@ class ProductDetailBody extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(defaultPadding),
                           child: CText(
-                            sharedPrefs.translate('Elements'),
+                            sharedPref.translate('Elements'),
                             style: const TextStyle(
                                 fontSize: largeTextSize,
                                 fontWeight: FontWeight.bold),

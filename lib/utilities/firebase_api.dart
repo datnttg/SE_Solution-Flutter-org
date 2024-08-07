@@ -35,10 +35,10 @@ class FirebaseApi {
     }
 
     if (fCMId != '') {
-      sharedPrefs.setFirebaseInstallationId(fCMId);
+      sharedPref.setFirebaseInstallationId(fCMId);
     }
     if (fCMToken != null && fCMToken != '') {
-      sharedPrefs.setFirebaseToken(fCMToken);
+      sharedPref.setFirebaseToken(fCMToken);
     }
   }
 }

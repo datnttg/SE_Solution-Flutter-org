@@ -16,7 +16,7 @@ class ProductList extends StatelessWidget {
       return Container(
         color: Colors.white,
         child: Center(
-          child: SelectableText('(${sharedPrefs.translate('Empty list')})'),
+          child: SelectableText('(${sharedPref.translate('Empty list')})'),
         ),
       );
     } else {

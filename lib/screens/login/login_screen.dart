@@ -20,9 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   LoginUIController simpleUIController = Get.put(LoginUIController());
   TextEditingController usernameController =
-      TextEditingController(text: sharedPrefs.getUsername());
+      TextEditingController(text: sharedPref.getUsername());
   TextEditingController passwordController =
-      TextEditingController(text: sharedPrefs.getPassword());
+      TextEditingController(text: sharedPref.getPassword());
 
   @override
   void dispose() {
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildMainBody(Size size, LoginUIController simpleUIController) {
-    Locale? locale = sharedPrefs.getLocale();
+    Locale? locale = sharedPref.getLocale();
 
     return SingleChildScrollView(
       child: Column(
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              sharedPrefs.translate('Login'),
+              sharedPref.translate('Login'),
               // style: kLoginTitleStyle(size),
               style: TextStyle(
                 fontSize: size.height * 0.060,
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Text(
-              sharedPrefs.translate('Welcome back!'),
+              sharedPref.translate('Welcome back!'),
             ),
           ),
           SizedBox(
@@ -146,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: false,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person),
-                      hintText: sharedPrefs.translate('Username or Email'),
-                      label: Text(sharedPrefs.translate('Account')),
+                      hintText: sharedPref.translate('Username or Email'),
+                      label: Text(sharedPref.translate('Account')),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
@@ -157,11 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: (value) {
                       var min = 4, max = 13;
                       if (value == null || value.isEmpty) {
-                        return sharedPrefs.translate('Please enter username');
+                        return sharedPref.translate('Please enter username');
                       } else if (value.length < 4) {
-                        return '${sharedPrefs.translate('Minimum character is:')} $min';
+                        return '${sharedPref.translate('Minimum character is:')} $min';
                       } else if (value.length > 13) {
-                        return '${sharedPrefs.translate('Maximum character is:')} $max';
+                        return '${sharedPref.translate('Maximum character is:')} $max';
                       }
                       return null;
                     },
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText:
                           simpleUIController.isObscure.value ? true : false,
                       decoration: InputDecoration(
-                        label: Text(sharedPrefs.translate('Password')),
+                        label: Text(sharedPref.translate('Password')),
                         prefixIcon: const Icon(Icons.lock_open),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -199,9 +199,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: (value) {
                         var min = 6;
                         if (value == null || value.isEmpty) {
-                          return sharedPrefs.translate('Please enter password');
+                          return sharedPref.translate('Please enter password');
                         } else if (value.length < min) {
-                          return '${sharedPrefs.translate('Minimum character is:')} $min';
+                          return '${sharedPref.translate('Minimum character is:')} $min';
                         }
                         return null;
                       },
@@ -233,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }).toList(),
                     value: locale,
                     onChanged: (val) async {
-                      await sharedPrefs.setLocale(val);
+                      await sharedPref.setLocale(val);
                       setState(
                         () {
                           locale = val;
@@ -301,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Text(
-          sharedPrefs.translate('Login'),
+          sharedPref.translate('Login'),
           style: const TextStyle(color: kBgColor),
         ),
       ),

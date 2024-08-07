@@ -31,7 +31,7 @@ class ProductFilterScreen extends StatelessWidget {
       child: CScaffold(
         drawer: const MainMenu(),
         appBar: AppBar(
-          title: Text(sharedPrefs.translate('Product'),
+          title: Text(sharedPref.translate('Product'),
               style: const TextStyle(
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
           actions: [
@@ -66,7 +66,7 @@ class ProductFilterScreen extends StatelessWidget {
                                 child: selectedId == null
                                     ? Center(
                                         child: SizedBox(
-                                            child: Text(sharedPrefs.translate(
+                                            child: Text(sharedPref.translate(
                                                 'Please select a product'))))
                                     : BlocBuilder<ProductDetailBloc,
                                         ProductDetailState>(

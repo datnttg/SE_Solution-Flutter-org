@@ -18,12 +18,12 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await sharedPrefs.sharePrefsInit();
-  if (Platform.isAndroid || Platform.isIOS) {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-    await FirebaseApi().initialFCM();
-  }
+  await sharedPref.sharePrefInit();
+  // if (Platform.isAndroid || Platform.isIOS) {
+  //   await Firebase.initializeApp(
+  //       options: DefaultFirebaseOptions.currentPlatform);
+  //   await FirebaseApi().initialFCM();
+  // }
   runApp(const MyApp());
 }
 
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeDependencies() {
-    Locale appLocale = sharedPrefs.getLocale();
+    Locale appLocale = sharedPref.getLocale();
     setState(() {
       _locale = appLocale;
     });
