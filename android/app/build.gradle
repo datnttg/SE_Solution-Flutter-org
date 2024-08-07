@@ -31,8 +31,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "vn.sepower.se_solution_ori"
-    // compileSdkVersion flutter.compileSdkVersion
-    compileSdkVersion 34
+    compileSdkVersion flutter.compileSdkVersion
+    // compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
