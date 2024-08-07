@@ -73,6 +73,7 @@ class SaveProductButton extends StatelessWidget {
                         .read<ProductFilterBloc>()
                         .add(InitProductFilterData());
                   }
+                  // ignore: empty_catches
                 } catch (ex) {}
               },
             ));
