@@ -57,7 +57,7 @@ class TaskListItem extends StatelessWidget {
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -82,7 +82,7 @@ class TaskListItem extends StatelessWidget {
                                       ? Colors.grey
                                       : Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -101,7 +101,7 @@ class TaskListItem extends StatelessWidget {
                 //           fontSize: smallTextSize,
                 //           color: Colors.black,
                 //         ),
-                //         warpText: true,
+                //         wrapText: true,
                 //       )
                 //     ],
                 //   ),
@@ -120,7 +120,7 @@ class TaskListItem extends StatelessWidget {
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -150,7 +150,7 @@ class TaskListItem extends StatelessWidget {
                                             ? Colors.orange
                                             : Colors.black,
                               ),
-                              warpText: true,
+                              wrapText: true,
                             )
                           ],
                         )

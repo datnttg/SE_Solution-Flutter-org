@@ -24,24 +24,26 @@ class CScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar == null
-          ? null
-          : PreferredSize(
-              preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
-              child: appBar!,
-            ),
-      drawer: !Responsive.isSmallWidth(context) ? drawer : null,
-      endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor:
-              Colors.blue.shade200, // Set your desired background color
+    return CSwipeByDismissible(
+      child: Scaffold(
+        appBar: appBar == null
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
+                child: appBar!,
+              ),
+        drawer: !Responsive.isSmallWidth(context) ? drawer : null,
+        endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
+        body: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor:
+                Colors.blue.shade200, // Set your desired background color
+          ),
+          child: body ?? const SizedBox(),
+          // child: SafeArea(child: body ?? const SizedBox()),
         ),
-        child: body ?? const SizedBox(),
-        // child: SafeArea(child: body ?? const SizedBox()),
+        bottomNavigationBar: bottomNavigationBar,
       ),
-      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }
@@ -1318,22 +1320,25 @@ class CText extends StatelessWidget {
   const CText(
     this.data, {
     super.key,
-    this.warpText,
+    this.wrapText,
     this.style,
+    this.maxLines = 1,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     var dataWidget = Text(
       data,
       style: style,
+      maxLines: maxLines,
       overflow: TextOverflow.clip,
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1345,12 +1350,12 @@ class KText extends StatelessWidget {
   const KText(
     this.data, {
     super.key,
-    this.warpText,
+    this.wrapText,
     this.style,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
 
   @override
@@ -1360,7 +1365,7 @@ class KText extends StatelessWidget {
       style: style,
       overflow: TextOverflow.clip,
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1374,23 +1379,26 @@ class CSelectableText extends StatelessWidget {
     this.data, {
     super.key,
     this.style,
-    this.warpText = false,
+    this.wrapText = false,
+    this.maxLines = 1,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     var dataWidget = SelectableText(
       data,
+      maxLines: maxLines,
       style: style ??
           const TextStyle(
             overflow: TextOverflow.clip,
           ),
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1403,11 +1411,11 @@ class KSelectableText extends StatelessWidget {
     this.data, {
     super.key,
     this.style,
-    this.warpText = false,
+    this.wrapText = false,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
 
   @override
@@ -1419,7 +1427,7 @@ class KSelectableText extends StatelessWidget {
             overflow: TextOverflow.clip,
           ),
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1696,3 +1704,94 @@ class KIcon extends StatelessWidget {
 //     );
 //   }
 // }
+
+class CSwipeByDismissible extends StatelessWidget {
+  /// A wrapper widget that adds swipe functionality to its child.
+  ///
+  /// This widget uses [Dismissible] to provide left and right swipe actions.
+  /// It can be customized to enable or disable swipes in either direction,
+  /// and to specify custom actions for each swipe direction.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// SwipeWrapper(
+  ///   onLeftSwipe: () => print('Swiped left'),
+  ///   onRightSwipe: () => print('Swiped right'),
+  ///   child: YourWidget(),
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///  * [Dismissible], which this widget uses internally to handle swipes.
+
+  final Widget child;
+  final Function()? onLeftSwipe;
+  final Function()? onRightSwipe;
+  final bool enableLeftSwipe;
+  final bool enableRightSwipe;
+  final Color? backgroundColor;
+  final Widget? iconDisplay;
+  const CSwipeByDismissible({
+    super.key,
+    required this.child,
+    this.onLeftSwipe,
+    this.onRightSwipe,
+    this.enableLeftSwipe = false,
+    this.enableRightSwipe = true,
+    this.backgroundColor = Colors.white,
+    this.iconDisplay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    if (route?.isFirst ?? false) {
+      return child;
+    }
+
+    double defaultPadding = 20;
+    double defaultPadding2 = 0;
+    return Dismissible(
+        key: const Key('backUnique'),
+        direction: _getDismissDirection(),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart && enableLeftSwipe) {
+            onLeftSwipe?.call() ?? Navigator.of(context).maybePop();
+          } else if (direction == DismissDirection.startToEnd &&
+              enableRightSwipe) {
+            onRightSwipe?.call() ?? Navigator.of(context).maybePop();
+          }
+        },
+        background: Container(
+          color: backgroundColor,
+          alignment: onRightSwipe != null
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          padding: EdgeInsets.only(
+            right: onRightSwipe != null ? defaultPadding2 : defaultPadding,
+            left: onRightSwipe != null ? defaultPadding2 : defaultPadding,
+          ),
+          child: iconDisplay ??
+              Icon(
+                onRightSwipe != null
+                    ? Icons.exit_to_app
+                    : Icons.arrow_back_rounded,
+                color: Colors.black,
+              ),
+        ),
+        child: child);
+  }
+
+  DismissDirection _getDismissDirection() {
+    /*if (enableLeftSwipe && enableRightSwipe) {
+      return DismissDirection.horizontal;
+    } else */
+    if (enableLeftSwipe) {
+      return DismissDirection.endToStart;
+    } else if (enableRightSwipe) {
+      return DismissDirection.startToEnd;
+    }
+    return DismissDirection.none;
+  }
+}

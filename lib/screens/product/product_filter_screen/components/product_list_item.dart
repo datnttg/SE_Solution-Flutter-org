@@ -70,7 +70,7 @@ class ProductListItem extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
-                          warpText: true,
+                          wrapText: true,
                         )
                       ],
                     ),
@@ -114,7 +114,7 @@ class ProductListItem extends StatelessWidget {
                             fontSize: smallTextSize,
                             color: Colors.black,
                           ),
-                          warpText: true,
+                          wrapText: true,
                         )
                       ],
                     ),
@@ -133,7 +133,7 @@ class ProductListItem extends StatelessWidget {
                             fontSize: smallTextSize,
                             color: Colors.black,
                           ),
-                          warpText: true,
+                          wrapText: true,
                         )
                       ],
                     ),
@@ -160,7 +160,7 @@ class ProductListItem extends StatelessWidget {
                                   fontSize: smallTextSize,
                                   color: Colors.black,
                                 ),
-                                warpText: true,
+                                wrapText: true,
                               )
                             ],
                           ),
@@ -182,7 +182,7 @@ class ProductListItem extends StatelessWidget {
                                   fontSize: smallTextSize,
                                   color: Colors.black,
                                 ),
-                                warpText: true,
+                                wrapText: true,
                               )
                             ],
                           ),

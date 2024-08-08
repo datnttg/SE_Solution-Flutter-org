@@ -228,7 +228,7 @@ class TaskReferenceSubjectList extends StatelessWidget {
                                   taskDetailController
                                           .referenceSubjects[index].address ??
                                       "",
-                                  warpText: true,
+                                  wrapText: true,
                                   style:
                                       const TextStyle(fontSize: smallTextSize),
                                 );
