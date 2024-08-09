@@ -45,6 +45,43 @@ class AddProductFilterButton extends StatelessWidget {
   }
 }
 
+class AddProductFilterFloatingButton extends StatelessWidget {
+  const AddProductFilterFloatingButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+        builder: (context, state) {
+      if (state.screenMode == ScreenModeEnum.view) {
+        return Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: FloatingActionButton(
+              tooltip: sharedPref.translate('Add'),
+              backgroundColor: cButtonTextHoverColor,
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: cButtonBorderColor, width: 1.0),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              onPressed: () async {
+                if (Responsive.isSmallWidth(context)) {
+                  Navigator.of(context)
+                      .pushNamed(customRouteMapping.productAdd);
+                } else {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(SelectedFilterProductChanged(''));
+                  context.read<ProductDetailBloc>().add(ProductIdChanged(''));
+                }
+              },
+              child: const Icon(Icons.add, color: kBgColorHeader, size: 30),
+            ));
+      } else {
+        return const SizedBox();
+      }
+    });
+  }
+}
+
 class SaveProductButton extends StatelessWidget {
   const SaveProductButton({super.key});
 
