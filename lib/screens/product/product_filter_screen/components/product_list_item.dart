@@ -28,12 +28,12 @@ class ProductListItem extends StatelessWidget {
         onTap: () async {
           debugPrint('Selected productId: ${dataItem.id}');
           if (Responsive.isSmallWidth(context)) {
-            final isReload = await Navigator.pushNamed(
+            var isReload = await Navigator.pushNamed(
               context,
               '${customRouteMapping.productDetail}/${dataItem.id}',
             );
-            if (isReload == true) {
-              // bloc.loadData();
+            if (isReload == true && context.mounted) {
+              context.read<ProductFilterBloc>().add(InitProductFilterData());
             }
             // Navigator.pushNamedAndRemoveUntil(
             //     context,

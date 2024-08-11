@@ -424,22 +424,12 @@ Future<bool> getAppFunctions() async {
 }
 
 Future<bool> refreshToken() async {
-// var httpClient = http.Client();
   try {
     var url = Uri.parse('${constants.hostAddress}/token/refresh');
     Map payload = {
       'AccessToken': sharedPref.getAccessToken(),
       'RefreshToken': sharedPref.getRefreshToken(),
     };
-// var response = await httpClient.post(url,
-//     headers: {
-//       'Accept': '*/*',
-//       'Access-Control-Allow-Origin': '*',
-//       'Content-Type': 'application/json',
-//     },
-//     encoding: Encoding.getByName('utf-8'),
-//     body: jsonEncode(payload));
-// var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
     var responseBody = await fetchData(url, parameters: payload);
     if (responseBody['success'] == true) {
       var responseData = responseBody['responseData'];
@@ -455,86 +445,69 @@ Future<bool> refreshToken() async {
   } catch (e) {
     return false;
   }
-// finally {
-//   httpClient.close();
-// }
 }
 
-Future<Map> fetchDataUI(
-  Uri hostAddress, {
-  Map? parameters,
-  String? method,
-  bool? showSuccessNotification = true,
-}) async {
+Future<Map> streamDataUI(Uri hostAddress,
+    {Map<String, String>? parameters,
+    String? method,
+    String? contentType,
+    bool? showSuccessNotification = true}) async {
   kShowProcessingDialog(title: sharedPref.translate("Processing..."));
   await Future.delayed(const Duration(milliseconds: 300));
   var response =
-      await fetchData(hostAddress, parameters: parameters, method: method);
+      await streamData(hostAddress, parameters: parameters, method: method);
   Get.back();
-  if (response['success'] == true && showSuccessNotification == true) {
-    kShowToast(
-      title: sharedPref.translate('Success'),
-      content: response['responseMessage'],
-      style: 'success',
-    );
-  } else if (response['success'] == false &&
-      response['responseMessage'] != '') {
-    // kShowAlert(
-    //     title: sharedPref.translate('Fail'),
-    //     body: Text(response['responseMessage']));
-    kShowToast(
-      title: sharedPref.translate('Fail'),
-      content: response['responseMessage'],
-      style: 'danger',
-    );
-  } else if (response['success'] == false) {
-    kShowToast(
-      title: sharedPref.translate('Fail'),
-      content: sharedPref.translate("Connection failed!"),
-      style: 'danger',
-    );
+  if (response['success'] == true) {
+    if (showSuccessNotification == false) {
+      return response;
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Success'),
+        content: response['responseMessage'],
+        style: 'success',
+      );
+    }
+  } else {
+    if (response['responseMessage'] != '') {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['responseMessage'],
+        style: 'danger',
+      );
+    } else if (response['success'] == false) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: sharedPref.translate("Connection failed!"),
+        style: 'danger',
+      );
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['title'].toString(),
+        style: 'danger',
+      );
+    }
   }
   return response;
 }
 
-Future<Map> fetchData(Uri hostAddress,
-    {Map? parameters, String? method}) async {
+Future<Map> streamData(Uri hostAddress,
+    {Map<String, String>? parameters, String? method}) async {
+  debugPrint("fetchData(): $hostAddress");
   try {
-    var headers = {
-      'Accept': '*/*',
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${sharedPref.getAccessToken()}',
-      "Localization": sharedPref.getLocale().toString(),
-    };
-    var body = jsonEncode(parameters);
-    var encoding = Encoding.getByName('utf-8');
-    http.Response response;
-    debugPrint("fetchData(): $hostAddress");
-    switch (method) {
-      case 'get':
-        response = await http.get(hostAddress, headers: headers)
-// .timeout(const Duration(seconds: 10))
-            ;
-        break;
-      case 'post':
-        response = await http.post(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      case 'put':
-        response = await http.put(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      case 'delete':
-        response = await http.delete(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      default:
-        response = await http.post(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
+    var request = http.MultipartRequest(method ?? 'POST', hostAddress);
+    request = request
+      ..headers['Accept'] = '*/*'
+      ..headers['Access-Control-Allow-Origin'] = '*'
+      ..headers['Content-Type'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer ${sharedPref.getAccessToken()}'
+      ..headers['Localization'] = sharedPref.getLocale().toString();
+
+    if (parameters != null) {
+      request.fields.addAll(parameters);
     }
 
+    var response = await request.send();
     if (response.statusCode == 401) {
       var success = await refreshToken();
       if (success) {
@@ -544,7 +517,8 @@ Future<Map> fetchData(Uri hostAddress,
         return {};
       }
     }
-    var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
+    var responseBodyBytes = await response.stream.bytesToString();
+    var responseBody = jsonDecode(responseBodyBytes);
     return responseBody;
   } catch (e) {
     debugPrint("fetchData() error: $e");
@@ -571,6 +545,118 @@ void showProgressing(BuildContext context) {
       );
     },
   );
+}
+
+Future<Map> fetchDataUI(Uri hostAddress,
+    {Map? parameters,
+    String? method,
+    String? contentType,
+    bool? showSuccessNotification = true}) async {
+  kShowProcessingDialog(title: sharedPref.translate("Processing..."));
+  await Future.delayed(const Duration(milliseconds: 300));
+  var response =
+      await fetchData(hostAddress, parameters: parameters, method: method);
+  Get.back();
+  if (response['success'] == true) {
+    if (showSuccessNotification == false) {
+      return response;
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Success'),
+        content: response['responseMessage'],
+        style: 'success',
+      );
+    }
+  } else {
+    if (response['responseMessage'] != '') {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['responseMessage'],
+        style: 'danger',
+      );
+    } else if (response['success'] == false) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: sharedPref.translate("Connection failed!"),
+        style: 'danger',
+      );
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['title'].toString(),
+        style: 'danger',
+      );
+    }
+  }
+  return response;
+}
+
+Future<Map> fetchData(Uri hostAddress,
+    {Map? parameters, String? method}) async {
+  debugPrint("fetchData(): $hostAddress");
+  try {
+    var body = jsonEncode(parameters);
+//     var headers = {
+//       'Accept': '*/*',
+//       'Access-Control-Allow-Origin': '*',
+//       'Content-Type': contentType ?? 'application/json',
+//       'Authorization': 'Bearer ${sharedPref.getAccessToken()}',
+//       "Localization": sharedPref.getLocale().toString(),
+//     };
+//     var encoding = Encoding.getByName('utf-8');
+//     http.Response response;
+//     switch (method) {
+//       case 'get':
+//         response = await http.get(hostAddress, headers: headers)
+// // .timeout(const Duration(seconds: 10))
+//             ;
+//         break;
+//       case 'post':
+//         response = await http.post(hostAddress,
+//             headers: headers, body: body, encoding: encoding);
+//         break;
+//       case 'put':
+//         response = await http.put(hostAddress,
+//             headers: headers, body: body, encoding: encoding);
+//         break;
+//       case 'delete':
+//         response = await http.delete(hostAddress,
+//             headers: headers, body: body, encoding: encoding);
+//         break;
+//       default:
+//         response = await http.post(hostAddress,
+//             headers: headers, body: body, encoding: encoding);
+//         break;
+//     }
+    var request = http.Request(method ?? 'POST', hostAddress);
+    request = request
+      ..headers['Accept'] = '*/*'
+      ..headers['Access-Control-Allow-Origin'] = '*'
+      ..headers['Content-Type'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer ${sharedPref.getAccessToken()}'
+      ..headers['Localization'] = sharedPref.getLocale().toString()
+      ..body = body;
+
+    var response = await request.send();
+    if (response.statusCode == 401) {
+      var success = await refreshToken();
+      if (success) {
+        return fetchData(hostAddress, parameters: parameters);
+      } else {
+        navigatorKey.currentState?.pushNamed('/login');
+        return {};
+      }
+    }
+    var responseBodyBytes = await response.stream.bytesToString();
+    var responseBody = jsonDecode(responseBodyBytes);
+    return responseBody;
+  } catch (e) {
+    debugPrint("fetchData() error: $e");
+    return {
+      "success": false,
+      "responseMessage": sharedPref.translate("Connection failed!")
+    };
+  }
 }
 
 Locale mapLocale(String localeString) {

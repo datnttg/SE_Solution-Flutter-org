@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           // designSize: const Size(428.0, 926.0),
           builder: (context, child) {
         return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: true,
           title: constants.appName,
           theme: lightTheme,
           darkTheme: darkTheme,
