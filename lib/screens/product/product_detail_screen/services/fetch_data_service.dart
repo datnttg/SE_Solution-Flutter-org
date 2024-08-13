@@ -51,9 +51,30 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
   return listEntries;
 }
 
+// Future<String?> submitProductDetail(ProductDetailModel params) async {
+//   var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
+//       parameters: params.toMap());
+//   if (response['success'] == true) {
+//     return response['responseData'];
+//   } else {
+//     return null;
+//   }
+// }
+
+// Future<String?> submitProductDetail(ProductDetailModel params) async {
+//   var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
+//       parameters: params.toMap());
+//   if (response['success'] == true) {
+//     return response['responseData'];
+//   } else {
+//     return null;
+//   }
+// }
+
 Future<String?> submitProductDetail(ProductDetailModel params) async {
-  var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
-      parameters: params.toMap());
+  var response = await streamData(
+      Uri.parse('$hostAddress/Product/UpdateWithFiles'),
+      parameters: params.toMapString());
   if (response['success'] == true) {
     return response['responseData'];
   } else {

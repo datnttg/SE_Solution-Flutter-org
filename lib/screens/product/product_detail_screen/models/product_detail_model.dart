@@ -81,6 +81,28 @@ class ProductDetailModel {
     };
   }
 
+  Map<String, String> toMapString() {
+    return {
+      'id': id ?? '',
+      'code': code ?? '',
+      'name': name ?? '',
+      'description': description ?? '',
+      'unitCode': unitCode ?? '',
+      'unitText': unitText ?? '',
+      'statusCode': statusCode ?? '',
+      'statusText': statusText ?? '',
+      'categoryCode': categoryCode ?? '',
+      'categoryText': categoryText ?? '',
+      'typeCode': typeCode ?? '',
+      'typeText': typeText ?? '',
+      'serialRequired': serialRequired?.toString() ?? '',
+      'monthsOfWarranty': monthsOfWarranty?.toString() ?? '',
+      'minPrice': minPrice?.toString() ?? '',
+      // Convert children list to a JSON string if needed
+      'children': children?.map((x) => x.toMap()).toList().toString() ?? '',
+    };
+  }
+
   ProductDetailModel copyWith({
     String? id,
     String? code,
