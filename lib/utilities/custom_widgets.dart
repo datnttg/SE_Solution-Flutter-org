@@ -1795,3 +1795,52 @@ class CSwipeByDismissible extends StatelessWidget {
     return DismissDirection.none;
   }
 }
+
+class CGroup extends StatelessWidget {
+  const CGroup({
+    super.key,
+    this.titleText,
+    this.child,
+    this.padding,
+    this.constraints,
+  });
+
+  final String? titleText;
+  final Widget? child;
+  final EdgeInsetsGeometry? padding;
+  final BoxConstraints? constraints;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (titleText != null)
+          Padding(
+            padding: const EdgeInsets.only(
+              top: defaultPadding,
+              bottom: defaultPadding,
+              left: defaultPadding * 2,
+              right: defaultPadding,
+            ),
+            child: CText(
+              titleText!,
+              style: const TextStyle(
+                  fontSize: largeTextSize, fontWeight: FontWeight.bold),
+            ),
+          ),
+        Container(
+          color: kBgColor,
+          constraints: constraints,
+          padding: padding ??
+              const EdgeInsets.only(
+                left: defaultPadding * 2,
+                right: defaultPadding * 2,
+              ),
+          child: child,
+        ),
+        const SizedBox(height: defaultPadding * 2),
+      ],
+    );
+  }
+}

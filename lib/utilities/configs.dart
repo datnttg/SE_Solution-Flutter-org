@@ -69,37 +69,6 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
           builder: (_) => const OwnerProjectOverviewScreen());
     }
     return MaterialPageRoute(builder: (_) => const LoginScreen());
-
-    // switch (settings.name?.toLowerCase()) {
-    //   /// Demo
-    //   case '/demo':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const DemoHomePage(title: 'Demo'));
-    //
-    //   /// Implement
-    //   case '/':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/login':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/logout':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/task':
-    //     return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
-    //   case '/task/create':
-    //     return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
-    //   case '/product':
-    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-    //   case '/product/create':
-    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-    //   case '/powerstation/monitoring':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const PowerStationMonitorScreen());
-    //   case '/my/project':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const OwnerProjectOverviewScreen());
-    //   default:
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    // }
   }
 
   /// DETAIL routing
@@ -113,18 +82,6 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
               ProductDetailScreen(productId: pathComponents?[1]));
     }
     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //
-    // switch (pathComponents?[0]) {
-    //   case '/task':
-    //     return MaterialPageRoute(
-    //         builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
-    //   case '/product':
-    //     return MaterialPageRoute(
-    //         builder: (context) =>
-    //             ProductDetailScreen(productId: pathComponents?[1]));
-    //   default:
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    // }
   }
   return null;
 }

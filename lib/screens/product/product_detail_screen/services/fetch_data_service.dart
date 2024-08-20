@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:universal_io/io.dart';
+
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';
@@ -72,9 +74,21 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
 // }
 
 Future<String?> submitProductDetail(ProductDetailModel params) async {
+  /// Example:
+  // List<Map<String, dynamic>> fileGroups = [
+  //   {
+  //     "groupName": "documents",
+  //     "files": [
+  //       File('/Users/datnt/Downloads/test-file-upload.txt'),
+  //       File('/Users/datnt/Downloads/ttest-file-upload-copy.txt'),
+  //     ]
+  //   },
+  // ];
+
   var response = await streamData(
       Uri.parse('$hostAddress/Product/UpdateWithFiles'),
-      parameters: params.toMapString());
+      parameters: params.toJson(),
+      fileGroups: []);
   if (response['success'] == true) {
     return response['responseData'];
   } else {

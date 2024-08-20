@@ -6,9 +6,9 @@ final constants = Constants();
 
 class Constants {
   String appName = 'SE Solution Ori';
+  // String hostAddress = 'https://localhost:7299';
   String hostAddress = !kDebugMode
       ? 'https://test-api.sepower.vn'
-      //: 'https://localhost:7299';
       : kIsWeb
           ? 'https://localhost:7299'
           : 'https://test-api.sepower.vn';

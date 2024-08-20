@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'child_product_model.dart';
 
 class ProductDetailModel {
@@ -81,7 +83,7 @@ class ProductDetailModel {
     };
   }
 
-  Map<String, String> toMapString() {
+  Map<String, String> toJson() {
     return {
       'id': id ?? '',
       'code': code ?? '',
@@ -98,8 +100,10 @@ class ProductDetailModel {
       'serialRequired': serialRequired?.toString() ?? '',
       'monthsOfWarranty': monthsOfWarranty?.toString() ?? '',
       'minPrice': minPrice?.toString() ?? '',
-      // Convert children list to a JSON string if needed
-      'children': children?.map((x) => x.toMap()).toList().toString() ?? '',
+      'children': children != null
+          // ? jsonEncode(children!.map((e) => e.toMap()).toList())
+          ? children!.map((e) => e.toMap()).toList().toString()
+          : '',
     };
   }
 
