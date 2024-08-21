@@ -54,6 +54,9 @@ class ProductFilterScreen extends StatelessWidget {
               ),
               child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
                 builder: (context, state) {
+                  bool isSmallWidthAndActive =
+                      Responsive.isSmallWidth(context) &&
+                          state.selectedId != null;
                   switch (state.loadingStatus) {
                     case ProductFilterStatus.success:
                       return Row(
@@ -63,37 +66,41 @@ class ProductFilterScreen extends StatelessWidget {
                             child: ProductFilterBody(),
                           ),
                           if (!Responsive.isSmallWidth(context))
+                            const SizedBox(
+                              width: defaultPadding * 2,
+                            ),
+                          if (!Responsive.isSmallWidth(context) ||
+                              isSmallWidthAndActive)
                             BlocSelector<ProductFilterBloc, ProductFilterState,
                                     String?>(
                                 selector: (state) => state.selectedId,
                                 builder: (context, selectedId) {
                                   return SizedBox(
-                                    width: screenWidth - 450,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: defaultPadding * 2),
+                                    width: screenWidth -
+                                        (isSmallWidthAndActive == false
+                                            ? 450
+                                            : 0),
+                                    child: selectedId == null
+                                        ? Center(
+                                            child: SizedBox(
+                                                child: Text(sharedPref.translate(
+                                                    'Please select a product'))))
+                                        : BlocBuilder<ProductDetailBloc,
+                                            ProductDetailState>(
+                                            builder: (context, state) {
+                                              switch (state.loadingStatus) {
+                                                case ProductDetailLoadingStatus
+                                                      .success:
 
-                                      /// DETAIL BODY
-                                      child: selectedId == null
-                                          ? Center(
-                                              child: SizedBox(
-                                                  child: Text(sharedPref.translate(
-                                                      'Please select a product'))))
-                                          : BlocBuilder<ProductDetailBloc,
-                                              ProductDetailState>(
-                                              builder: (context, state) {
-                                                switch (state.loadingStatus) {
-                                                  case ProductDetailLoadingStatus
-                                                        .success:
-                                                    return const ProductDetailBody();
-                                                  default:
-                                                    return const Center(
-                                                        child:
-                                                            CircularProgressIndicator());
-                                                }
-                                              },
-                                            ),
-                                    ),
+                                                  /// DETAIL BODY
+                                                  return const ProductDetailBody();
+                                                default:
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                              }
+                                            },
+                                          ),
                                   );
                                 }),
                         ],
