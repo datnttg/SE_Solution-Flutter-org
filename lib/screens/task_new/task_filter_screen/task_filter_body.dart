@@ -23,7 +23,7 @@ class _TaskFilterBodyState extends State<TaskFilterBody>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
     context.read<TaskFilterBloc>().add(InitTaskFilterData());
     super.initState();
   }
@@ -41,7 +41,20 @@ class _TaskFilterBodyState extends State<TaskFilterBody>
                   : b.createdTime!.compareTo(a.createdTime!));
         }
         var beAssignedTasks = all
+            .where((e) =>
+                e.assignedUserId == sharedPref.getUserId() ||
+                (e.participants?.any(
+                        (i) => i.participantUserId == sharedPref.getUserId()) ??
+                    false))
+            .toList();
+        var inCharge = beAssignedTasks
             .where((e) => e.assignedUserId == sharedPref.getUserId())
+            .toList();
+        var joinIn = beAssignedTasks
+            .where((e) =>
+                e.participants?.any(
+                    (i) => i.participantUserId == sharedPref.getUserId()) ??
+                false)
             .toList();
         var assignedTasks = all
             .where((e) => e.createdUserId == sharedPref.getUserId())
@@ -85,6 +98,16 @@ class _TaskFilterBodyState extends State<TaskFilterBody>
                                     fontWeight: FontWeight.bold))),
                         Tab(
                             child: Text(
+                                '${sharedPref.translate("In charge")} (${inCharge.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
+                        Tab(
+                            child: Text(
+                                '${sharedPref.translate("Join in")} (${joinIn.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
+                        Tab(
+                            child: Text(
                                 '${sharedPref.translate("Assigned")} (${assignedTasks.length})',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold))),
@@ -108,13 +131,14 @@ class _TaskFilterBodyState extends State<TaskFilterBody>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  /// PRODUCT LIST
-                  // TaskList(list: beAssignedTasks),
-                  // TaskList(list: assignedTasks),
-                  // TaskList(list: otherTasks),
-                  // TaskList(list: all),
                   state.loadingStatus == ProcessingStatusEnum.success
                       ? TaskList(list: beAssignedTasks)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? TaskList(list: inCharge)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? TaskList(list: joinIn)
                       : const Center(child: CircularProgressIndicator()),
                   state.loadingStatus == ProcessingStatusEnum.success
                       ? TaskList(list: assignedTasks)

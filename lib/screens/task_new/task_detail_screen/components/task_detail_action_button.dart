@@ -63,8 +63,7 @@ class AddTaskFilterFloatingButton extends StatelessWidget {
               ),
               onPressed: () async {
                 if (Responsive.isSmallWidth(context)) {
-                  Navigator.of(context)
-                      .pushNamed(customRouteMapping.productAdd);
+                  Navigator.of(context).pushNamed(customRouteMapping.taskAdd);
                 } else {
                   context
                       .read<TaskFilterBloc>()

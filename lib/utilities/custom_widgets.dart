@@ -1195,7 +1195,7 @@ class CTextFormField extends StatelessWidget {
                   children: [
                     labelTextAsHint == true
                         ? const SizedBox()
-                        : Text(
+                        : CText(
                             '$labelText',
                             style: TextStyle(
                                 fontSize: Theme.of(context)
@@ -1211,7 +1211,7 @@ class CTextFormField extends StatelessWidget {
                     Container(
                       width: suffixIconConstraints?.maxWidth,
                       height: suffixIconConstraints?.maxHeight,
-                      padding: const EdgeInsets.all(defaultPadding / 2),
+                      padding: const EdgeInsets.only(left: defaultPadding),
                       child: suffix,
                     ),
                   ],

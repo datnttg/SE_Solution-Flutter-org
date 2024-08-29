@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se_solution_ori/utilities/shared_preferences.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
-import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../task_detail_screen/bloc/task_detail_bloc.dart';
 import '../../task_detail_screen/bloc/task_detail_events.dart';
@@ -56,23 +56,114 @@ class TaskListItem extends StatelessWidget {
             BoxDecoration(borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(
           children: [
+            /// TYPE
             ResponsiveRow(
               context: context,
               children: [
                 ResponsiveItem(
-                  percentWidthOnParent: 100,
                   child: CText(
-                    '${dataItem.taskTitle}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    '${dataItem.taskTypeTitle}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: smallTextSize,
+                      color: Colors.black,
+                    ),
+                    wrapText: true,
                   ),
                 ),
+
+                /// LAST PROGRESS
+                ResponsiveItem(
+                  child: CText(
+                    '${dataItem.lastProgressText}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: smallTextSize,
+                      color: Colors.black,
+                    ),
+                    wrapText: true,
+                  ),
+                ),
+
+                /// TITLE
+                if (dataItem.taskTitle != null)
+                  ResponsiveItem(
+                    percentWidthOnParent: 100,
+                    child: CText(
+                      '${dataItem.taskTitle}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                /// SUBJECT NAME
+                if ((dataItem.subjects?.length ?? 0) > 0 &&
+                    ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
+                        (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
+                  ResponsiveItem(
+                    percentWidthOnParent: 50,
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: defaultPadding),
+                          child: Icon(
+                            Icons.person,
+                            size: mediumTextSize,
+                          ),
+                        ),
+                        CText(
+                          '${dataItem.subjects?[0].name}',
+                          style: const TextStyle(fontSize: smallTextSize),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                /// SUBJECT PHONE
+                if ((dataItem.subjects?.length ?? 0) > 0 &&
+                    ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
+                        (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
+                  ResponsiveItem(
+                    percentWidthOnParent: 50,
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: defaultPadding),
+                          child: Icon(
+                            Icons.phone,
+                            size: mediumTextSize,
+                          ),
+                        ),
+                        CText(
+                          '${dataItem.subjects?[0].phone}',
+                          style: const TextStyle(fontSize: smallTextSize),
+                        )
+                      ],
+                    ),
+                  ),
+
+                /// DESCRIPTION
+                if (dataItem.taskDescription != null)
+                  ResponsiveItem(
+                    percentWidthOnParent: 100,
+                    child: CText(
+                      '${dataItem.taskDescription}',
+                      style: const TextStyle(fontSize: smallTextSize),
+                    ),
+                  ),
+
+                /// CREATOR
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPref.translate('Type')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.person_add_outlined,
+                          size: mediumTextSize,
+                        ),
+                      ),
                       CText(
-                        '${dataItem.taskTypeTitle}',
+                        '${dataItem.createdName}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
@@ -83,13 +174,19 @@ class TaskListItem extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                /// DEADLINE
                 ResponsiveItem(
                   child: dataItem.deadline != null
                       ? Row(
                           children: [
-                            CText('${sharedPref.translate('Deadline')}: ',
-                                style:
-                                    const TextStyle(fontSize: smallTextSize)),
+                            const Padding(
+                              padding: EdgeInsets.only(right: defaultPadding),
+                              child: Icon(
+                                Icons.av_timer,
+                                size: mediumTextSize,
+                              ),
+                            ),
                             CText(
                               df2.format(
                                   DateTime.parse(dataItem.deadline!).toLocal()),
@@ -112,28 +209,18 @@ class TaskListItem extends StatelessWidget {
                         )
                       : Container(),
                 ),
+
+                /// EXECUTOR
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPref.translate('Creator')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
-                      CText(
-                        '${dataItem.createdName}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: smallTextSize,
-                          color: Colors.black,
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.how_to_reg_outlined,
+                          size: mediumTextSize,
                         ),
-                        wrapText: true,
-                      )
-                    ],
-                  ),
-                ),
-                ResponsiveItem(
-                  child: Row(
-                    children: [
-                      CText('${sharedPref.translate('Executor')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
+                      ),
                       CText(
                         '${dataItem.assignedName}',
                         style: const TextStyle(
@@ -146,13 +233,31 @@ class TaskListItem extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                /// STATUS
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPref.translate('Status')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.person_outline,
+                          size: mediumTextSize,
+                        ),
+                      ),
                       CText(
-                        '${dataItem.taskStatusText}',
+                        dataItem.assignedUserId == sharedPref.getUserId()
+                            ? sharedPref.translate('Executor')
+                            : (dataItem.participants != null
+                                ? (dataItem.participants!.any((e) =>
+                                        e.participantUserId ==
+                                        sharedPref.getUserId())
+                                    ? sharedPref.translate('Participant')
+                                    : (dataItem.createdUserId ==
+                                            sharedPref.getUserId()
+                                        ? sharedPref.translate('Creator')
+                                        : ''))
+                                : ''),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,

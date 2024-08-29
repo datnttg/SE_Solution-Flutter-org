@@ -21,7 +21,9 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
       participants: [],
       assignedUsers: [],
     ),
+    mappingConditions: [],
     loadingStatus: ProcessingStatusEnum.processing,
+    originalDetail: TaskDetailModel(),
     taskDetail: TaskDetailModel(),
   );
 
@@ -56,6 +58,14 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     var categories =
         await fetchTaskCategoryEntries(categoryProperty: 'TaskCategory');
     var users = await fetchTaskUserEntries();
+    var mappingConditions = await fetchTaskConditionMappings({
+      "conditionEntity": "TskCategory",
+      "conditionProperty": "TaskType",
+      "conditionValue": "",
+      "mappingEntity": "",
+      "mappingProperty": "",
+      "statusCode": "",
+    });
     emit(state.copyWith(
       initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.processing,
@@ -66,7 +76,10 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
         assignedUsers: users,
         participants: users,
       ),
-      taskDetail: TaskDetailModel(),
+      mappingConditions: mappingConditions,
+      taskDetail: TaskDetailModel(
+        taskAssignment: TaskAssignment(),
+      ),
     ));
   }
 
@@ -79,6 +92,7 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
       taskDetail = await getTaskDetail(event.id!);
     }
     emit(state.copyWith(
+      originalDetail: taskDetail,
       taskDetail: taskDetail,
       initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.success,
@@ -88,10 +102,20 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
 
   void _onTaskTypeChanged(
       TaskTypeChanged event, Emitter<TaskDetailState> emit) {
+    var showSubject = state.mappingConditions.any((e) =>
+        e.conditionValue == state.taskDetail.taskAssignment?.taskType &&
+        e.mappingEntity == 'AppSubject');
+    var showTaskTitle = event.taskType != 'Basic';
     emit(state.copyWith(
         taskDetail: state.taskDetail.copyWith(
-            taskAssignment: state.taskDetail.taskAssignment
-                ?.copyWith(taskType: event.taskType))));
+      taskAssignment: state.taskDetail.taskAssignment?.copyWith(
+        taskType: event.taskType,
+        taskTitle: showTaskTitle == true
+            ? state.taskDetail.taskAssignment?.taskTitle
+            : null,
+      ),
+      subjects: showSubject == true ? state.taskDetail.subjects : [],
+    )));
   }
 
   void _onTaskTitleChanged(

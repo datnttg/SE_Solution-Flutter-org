@@ -28,7 +28,7 @@ class TaskDetailScreen extends StatelessWidget {
           child: CScaffold(
             drawer: const MainMenu(),
             appBar: AppBar(
-              title: Text(sharedPref.translate('Product information'),
+              title: Text(sharedPref.translate('Task information'),
                   style: const TextStyle(
                       fontSize: mediumTextSize * 1.2,
                       fontWeight: FontWeight.bold)),
@@ -52,9 +52,9 @@ class TaskDetailScreen extends StatelessWidget {
                     builder: (context) {
                       return BlocSelector<TaskDetailBloc, TaskDetailState,
                           ProcessingStatusEnum>(
-                        selector: (state) => state.initialStatus,
-                        builder: (context, initialStatus) {
-                          switch (initialStatus) {
+                        selector: (state) => state.loadingStatus,
+                        builder: (context, loadingStatus) {
+                          switch (loadingStatus) {
                             case ProcessingStatusEnum.success:
 
                               /// TASK DETAIL BODY

@@ -92,58 +92,78 @@ class TaskDetailModel {
 
 class TaskAssignment {
   String? id;
+  String? createdTime;
+  String? createdUserId;
+  String? createdName;
   String? taskType;
   String? taskTitle;
   String? taskDescription;
   String? statusCode;
-  String? taskStatusTitle;
+  String? taskStatusText;
+  String? lastProgressCode;
+  String? lastProgressText;
   String? categoryCode;
   String? taskCategoryTitle;
   String? assignedUserId;
-  String? userNameAssigned;
+  String? assignedName;
   String? deadline;
   String? beginningDateTime;
 
   TaskAssignment({
     this.id,
+    this.createdTime,
+    this.createdUserId,
+    this.createdName,
     this.taskType,
     this.taskTitle,
     this.taskDescription,
     this.statusCode,
-    this.taskStatusTitle,
+    this.taskStatusText,
+    this.lastProgressCode,
+    this.lastProgressText,
     this.categoryCode,
     this.taskCategoryTitle,
     this.assignedUserId,
-    this.userNameAssigned,
+    this.assignedName,
     this.deadline,
     this.beginningDateTime,
   });
 
   TaskAssignment copyWith({
     String? id,
+    String? createdTime,
+    String? createdUserId,
+    String? createdName,
     String? taskType,
     String? taskTitle,
     String? taskDescription,
     String? statusCode,
-    String? taskStatusTitle,
+    String? taskStatusText,
+    String? lastProgressCode,
+    String? lastProgressText,
     String? categoryCode,
     String? taskCategoryTitle,
     String? assignedUserId,
-    String? userNameAssigned,
+    String? assignedName,
     String? deadline,
     String? beginningDateTime,
   }) {
     return TaskAssignment(
       id: id ?? this.id,
+      createdTime: createdTime ?? this.createdTime,
+      createdUserId: createdUserId ?? this.createdUserId,
+      createdName: createdName ?? this.createdName,
       taskType: taskType ?? this.taskType,
       taskTitle: taskTitle ?? this.taskTitle,
       taskDescription: taskDescription ?? this.taskDescription,
       statusCode: statusCode ?? this.statusCode,
-      taskStatusTitle: taskStatusTitle ?? this.taskStatusTitle,
+      taskStatusText: taskStatusText ?? this.taskStatusText,
+      lastProgressCode: lastProgressCode ?? this.lastProgressCode,
+      lastProgressText: lastProgressText ?? this.lastProgressText,
       categoryCode: categoryCode ?? this.categoryCode,
       taskCategoryTitle: taskCategoryTitle ?? this.taskCategoryTitle,
       assignedUserId: assignedUserId ?? this.assignedUserId,
-      userNameAssigned: userNameAssigned ?? this.userNameAssigned,
+      assignedName: assignedName ?? this.assignedName,
       deadline: deadline ?? this.deadline,
       beginningDateTime: beginningDateTime ?? this.beginningDateTime,
     );
@@ -151,16 +171,21 @@ class TaskAssignment {
 
   factory TaskAssignment.fromJson(Map<String, dynamic> json) {
     return TaskAssignment(
-      id: json['id'] as String?,
-      taskType: json['taskType'] as String?,
-      taskTitle: json['taskTitle'] as String?,
-      taskDescription: json['taskDescription'] as String?,
-      statusCode: json['statusCode'] as String?,
-      taskStatusTitle: json['taskStatusTitle'] as String?,
-      categoryCode: json['categoryCode'] as String?,
-      taskCategoryTitle: json['taskCategoryTitle'] as String?,
-      assignedUserId: json['assignedUserId'] as String?,
-      userNameAssigned: json['userNameAssigned'] as String?,
+      id: json['id'],
+      createdTime: json['createdTime'],
+      createdUserId: json['createdUserId'],
+      createdName: json['createdName'],
+      taskType: json['taskType'],
+      taskTitle: json['taskTitle'],
+      taskDescription: json['taskDescription'],
+      statusCode: json['statusCode'],
+      taskStatusText: json['taskStatusText'],
+      lastProgressCode: json['lastProgressCode'],
+      lastProgressText: json['lastProgressText'],
+      categoryCode: json['categoryCode'],
+      taskCategoryTitle: json['taskCategoryTitle'],
+      assignedUserId: json['assignedUserId'],
+      assignedName: json['assignedName'],
       deadline: json['deadline'],
       beginningDateTime: json['beginningDateTime'],
     );
@@ -169,15 +194,20 @@ class TaskAssignment {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'createdTime': createdTime,
+      'createdUserId': createdUserId,
+      'createdName': createdName,
       'taskType': taskType,
       'taskTitle': taskTitle,
       'taskDescription': taskDescription,
       'statusCode': statusCode,
-      'taskStatusTitle': taskStatusTitle,
+      'taskStatusText': taskStatusText,
+      'lastProgressCode': lastProgressCode,
+      'lastProgressText': lastProgressText,
       'categoryCode': categoryCode,
       'taskCategoryTitle': taskCategoryTitle,
       'assignedUserId': assignedUserId,
-      'userNameAssigned': userNameAssigned,
+      'assignedName': assignedName,
       'deadline': deadline,
       'beginningDateTime': beginningDateTime,
     };

@@ -67,9 +67,9 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                     controller: dateRangeInputController,
                     labelText: sharedPref.translate('Assigned date'),
                     hintText: sharedPref.translate('dd/mm/yyyy - dd/mm/yyyy'),
-                    suffix: InkWell(
-                      child: const Icon(Icons.calendar_month),
-                      onTap: () async {
+                    suffix: IconButton(
+                      icon: const Icon(Icons.calendar_month),
+                      onPressed: () async {
                         DateTimeRange? pickedDateRange =
                             await showDateRangePicker(
                           context: context,
