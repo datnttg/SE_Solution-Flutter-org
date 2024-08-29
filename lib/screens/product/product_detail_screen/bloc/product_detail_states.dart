@@ -2,23 +2,16 @@ import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_detail_model.dart';
 
-// class ScreenModeState {
-//   ScreenModeEnum? state;
-//   ScreenModeState(this.state);
+// extension ProcessingStatusEnumX on ProcessingStatusEnum {
+//   bool get isInitial => this == ProductDetailLoadingStatus.initial;
+//   bool get isLoading => this == ProductDetailLoadingStatus.loading;
+//   bool get isSuccess => this == ProductDetailLoadingStatus.success;
+//   bool get isFailure => this == ProductDetailLoadingStatus.failure;
 // }
-
-enum ProductDetailLoadingStatus { initial, loading, success, failure }
-
-extension WeatherStatusX on ProductDetailLoadingStatus {
-  bool get isInitial => this == ProductDetailLoadingStatus.initial;
-  bool get isLoading => this == ProductDetailLoadingStatus.loading;
-  bool get isSuccess => this == ProductDetailLoadingStatus.success;
-  bool get isFailure => this == ProductDetailLoadingStatus.failure;
-}
 
 class ProductDetailState {
   ScreenModeEnum screenMode;
-  ProductDetailLoadingStatus loadingStatus;
+  ProcessingStatusEnum loadingStatus;
   ProductDetailModel productDetail;
   List<ProductDetailModel> lstProduct;
   List<CDropdownMenuEntry> lstType;
@@ -38,7 +31,7 @@ class ProductDetailState {
   });
 
   ProductDetailState copyWith({
-    ProductDetailLoadingStatus? loadingStatus,
+    ProcessingStatusEnum? loadingStatus,
     ScreenModeEnum? screenMode,
     ProductDetailModel? productDetail,
     List<ProductDetailModel>? lstProduct,
@@ -59,17 +52,3 @@ class ProductDetailState {
     );
   }
 }
-
-// class ProductDetailDataState {
-//   List<CDropdownMenuEntry>? listUnit;
-//   List<CDropdownMenuEntry>? listStatus;
-//   List<CDropdownMenuEntry>? listCategory;
-//   List<CDropdownMenuEntry>? listType;
-
-//   ProductDetailDataState({
-//     this.listUnit,
-//     this.listStatus,
-//     this.listCategory,
-//     this.listType,
-//   });
-// }

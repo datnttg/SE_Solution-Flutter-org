@@ -7,17 +7,17 @@ import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
-import '../product_detail_screen/bloc/product_detail_bloc.dart';
-import '../product_detail_screen/bloc/product_detail_states.dart';
-import '../product_detail_screen/components/product_detail_action_buttons.dart';
-import '../product_detail_screen/product_detail_body.dart';
-import 'bloc/product_filter_bloc.dart';
-import 'bloc/product_filter_events.dart';
-import 'bloc/product_filter_states.dart';
-import 'product_filter_body.dart';
+import '../task_detail_screen/bloc/task_detail_bloc.dart';
+import '../task_detail_screen/bloc/task_detail_states.dart';
+import '../task_detail_screen/components/task_detail_action_button.dart';
+import '../task_detail_screen/task_detail_body.dart';
+import 'bloc/task_filter_bloc.dart';
+import 'bloc/task_filter_events.dart';
+import 'bloc/task_filter_states.dart';
+import 'task_filter_body.dart';
 
-class ProductFilterScreen extends StatelessWidget {
-  const ProductFilterScreen({super.key});
+class TaskFilterScreen extends StatelessWidget {
+  const TaskFilterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,24 +26,24 @@ class ProductFilterScreen extends StatelessWidget {
     /// RETURN WIDGET
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ProductFilterBloc>(create: (_) => ProductFilterBloc()),
-        BlocProvider<ProductDetailBloc>(create: (_) => ProductDetailBloc())
+        BlocProvider<TaskFilterBloc>(create: (_) => TaskFilterBloc()),
+        BlocProvider<TaskDetailBloc>(create: (_) => TaskDetailBloc()),
       ],
       child: CScaffold(
         drawer: const MainMenu(),
         appBar: AppBar(
-          title: Text(sharedPref.translate('Product'),
+          title: Text(sharedPref.translate('Task'),
               style: const TextStyle(
                   fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
           actions: [
             if (!Responsive.isMobileAndPortrait(context))
-              const AddProductFilterButton(),
+              const AddTaskFilterButton(),
             if (!Responsive.isMobileAndPortrait(context))
-              const EditProductButton(),
+              const EditTaskButton(),
             if (!Responsive.isMobileAndPortrait(context))
-              const SaveProductButton(),
+              const SaveTaskButton(),
             if (!Responsive.isMobileAndPortrait(context))
-              const DiscardProductButton(),
+              const DiscardTaskButton(),
           ],
         ),
         body: Stack(
@@ -53,18 +53,18 @@ class ProductFilterScreen extends StatelessWidget {
                 maxHeight: double.infinity,
                 maxWidth: double.infinity,
               ),
-              child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
+              child: BlocBuilder<TaskFilterBloc, TaskFilterState>(
                 builder: (context, state) {
                   bool isSmallWidthAndActive =
                       Responsive.isSmallWidth(context) &&
                           state.selectedId != null;
-                  switch (state.loadingStatus) {
+                  switch (state.initialStatus) {
                     case ProcessingStatusEnum.success:
                       return Row(
                         children: [
                           const Expanded(
                             /// FILTER BODY
-                            child: ProductFilterBody(),
+                            child: TaskFilterBody(),
                           ),
                           if (!Responsive.isSmallWidth(context))
                             const SizedBox(
@@ -72,7 +72,7 @@ class ProductFilterScreen extends StatelessWidget {
                             ),
                           if (!Responsive.isSmallWidth(context) ||
                               isSmallWidthAndActive)
-                            BlocSelector<ProductFilterBloc, ProductFilterState,
+                            BlocSelector<TaskFilterBloc, TaskFilterState,
                                     String?>(
                                 selector: (state) => state.selectedId,
                                 builder: (context, selectedId) {
@@ -86,15 +86,15 @@ class ProductFilterScreen extends StatelessWidget {
                                             child: SizedBox(
                                                 child: Text(sharedPref.translate(
                                                     'Please select an item'))))
-                                        : BlocBuilder<ProductDetailBloc,
-                                            ProductDetailState>(
+                                        : BlocBuilder<TaskDetailBloc,
+                                            TaskDetailState>(
                                             builder: (context, state) {
                                               switch (state.loadingStatus) {
                                                 case ProcessingStatusEnum
                                                       .success:
 
                                                   /// DETAIL BODY
-                                                  return const ProductDetailBody();
+                                                  return const TaskDetailBody();
                                                 default:
                                                   return const Center(
                                                       child:
@@ -107,9 +107,7 @@ class ProductFilterScreen extends StatelessWidget {
                         ],
                       );
                     default:
-                      context
-                          .read<ProductFilterBloc>()
-                          .add(InitProductFilterData());
+                      context.read<TaskFilterBloc>().add(InitTaskFilterData());
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
@@ -123,7 +121,7 @@ class ProductFilterScreen extends StatelessWidget {
               const Positioned(
                 bottom: 50,
                 right: 50,
-                child: AddProductFilterFloatingButton(),
+                child: AddTaskFilterFloatingButton(),
               ),
           ],
         ),

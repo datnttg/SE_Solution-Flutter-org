@@ -101,7 +101,6 @@ class ProductDetailModel {
       'monthsOfWarranty': monthsOfWarranty?.toString() ?? '',
       'minPrice': minPrice?.toString() ?? '',
       'children': children != null
-          // ? jsonEncode(children!.map((e) => e.toMap()).toList())
           ? children!.map((e) => e.toMap()).toList().toString()
           : '',
     };

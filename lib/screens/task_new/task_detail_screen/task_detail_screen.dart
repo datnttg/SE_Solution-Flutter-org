@@ -7,20 +7,21 @@ import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
-import 'bloc/product_detail_bloc.dart';
-import 'bloc/product_detail_events.dart';
-import 'bloc/product_detail_states.dart';
-import 'components/product_detail_action_buttons.dart';
-import 'product_detail_body.dart';
+import 'bloc/task_detail_bloc.dart';
+import 'bloc/task_detail_events.dart';
+import 'bloc/task_detail_states.dart';
+import 'components/task_detail_action_button.dart';
+import 'task_detail_body.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  final String? productId;
-  const ProductDetailScreen({super.key, this.productId});
+class TaskDetailScreen extends StatelessWidget {
+  const TaskDetailScreen({super.key, this.taskId});
+
+  final String? taskId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProductDetailBloc(),
+      create: (_) => TaskDetailBloc(),
       child: Container(
         color: cAppBarColor,
         child: SafeArea(
@@ -36,10 +37,10 @@ class ProductDetailScreen extends StatelessWidget {
                     ? const SizedBox()
                     : const Row(
                         children: [
-                          SaveProductButton(),
-                          EditProductButton(),
-                          DiscardProductButton(),
-                          BackProductButton(),
+                          SaveTaskButton(),
+                          EditTaskButton(),
+                          DiscardTaskButton(),
+                          BackTaskButton(),
                         ],
                       ),
               ],
@@ -49,17 +50,19 @@ class ProductDetailScreen extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      return BlocSelector<ProductDetailBloc, ProductDetailState,
+                      return BlocSelector<TaskDetailBloc, TaskDetailState,
                           ProcessingStatusEnum>(
-                        selector: (state) => state.loadingStatus,
-                        builder: (context, loadingStatus) {
-                          switch (loadingStatus) {
+                        selector: (state) => state.initialStatus,
+                        builder: (context, initialStatus) {
+                          switch (initialStatus) {
                             case ProcessingStatusEnum.success:
-                              return const ProductDetailBody();
+
+                              /// TASK DETAIL BODY
+                              return const TaskDetailBody();
                             default:
                               context
-                                  .read<ProductDetailBloc>()
-                                  .add(ProductIdChanged(productId ?? ''));
+                                  .read<TaskDetailBloc>()
+                                  .add(TaskIdChanged(taskId ?? ''));
                               return const Center(
                                   child: CircularProgressIndicator());
                           }
@@ -76,10 +79,10 @@ class ProductDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             /// BOTTOM BUTTONS
-                            SaveProductButton(),
-                            EditProductButton(),
-                            DiscardProductButton(),
-                            BackProductButton(),
+                            SaveTaskButton(),
+                            EditTaskButton(),
+                            DiscardTaskButton(),
+                            BackTaskButton(),
                           ],
                         ),
                       )

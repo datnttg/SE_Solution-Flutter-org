@@ -6,8 +6,10 @@ import '../screens/owner_project_overview/owner_project_overview_screen.dart';
 import '../screens/power_station_monitor/power_station_monitor_screen.dart';
 import '../screens/product/product_detail_screen/product_detail_screen.dart';
 import '../screens/product/product_filter_screen/product_filter_screen.dart';
-import '../screens/task/task_filter_screen/task_filter_screen.dart';
-import '../screens/task_old/task_detail/task_detail_screen.dart';
+// import '../screens/task/task_filter_screen/task_filter_screen.dart';
+// import '../screens/task_old/task_detail/task_detail_screen.dart';
+import '../screens/task_new/task_detail_screen/task_detail_screen.dart';
+import '../screens/task_new/task_filter_screen/task_filter_screen.dart';
 import 'shared_preferences.dart';
 
 class Config {

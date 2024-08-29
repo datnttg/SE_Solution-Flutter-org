@@ -10,7 +10,7 @@ import 'product_detail_states.dart';
 class ProductDetailBloc
     extends Bloc<ChangeProductDetailEvents, ProductDetailState> {
   static final initialState = ProductDetailState(
-    loadingStatus: ProductDetailLoadingStatus.initial,
+    loadingStatus: ProcessingStatusEnum.processing,
     screenMode: ScreenModeEnum.view,
     productDetail: ProductDetailModel(
       typeCode: 'SingleProduct',
@@ -64,6 +64,7 @@ class ProductDetailBloc
     var listCategory =
         await fetchProductCategory(categoryProperty: 'ProductCategory');
     var listType = await fetchProductCategory(categoryProperty: 'ProductType');
+
     var data = state.copyWith(
       screenMode: event.id == '' ? ScreenModeEnum.edit : state.screenMode,
       lstProduct: listProduct,
@@ -72,7 +73,7 @@ class ProductDetailBloc
       lstType: listType,
       lstUnit: listUnit,
       productDetail: productDetail,
-      loadingStatus: ProductDetailLoadingStatus.success,
+      loadingStatus: ProcessingStatusEnum.success,
     );
     emit(data);
   }

@@ -145,16 +145,6 @@ class CDropdownMenu extends StatelessWidget {
         .toList();
   }
 
-  // void newOnSelected(List<DropdownItem<dynamic>> entries) {
-  //   final List<CDropdownMenuEntry<dynamic>> valueItems = entries
-  //       .map((e) => CDropdownMenuEntry<dynamic>(
-  //             value: e.value,
-  //             labelText: e.label,
-  //           ))
-  //       .toList();
-  //   onSelected?.call(valueItems);
-  // }
-
   @override
   Widget build(BuildContext context) {
     var dropdownEntries = convertToDropdownItem(dropdownMenuEntries);
@@ -171,8 +161,10 @@ class CDropdownMenu extends StatelessWidget {
       newHintText = sharedPref.translate('Choose many');
     }
 
-    var newMenuHeight =
-        menuHeight ?? min(dropdownMenuEntries.length * 50, 240).toDouble();
+    var dropdownMaxHeight = 360;
+    var displayItemCount = 7;
+    var newMenuHeight = menuHeight ??
+        min(dropdownMenuEntries.length * 50, dropdownMaxHeight).toDouble();
     if (readOnly == true) {
       newMenuHeight = 0;
     }
@@ -184,7 +176,10 @@ class CDropdownMenu extends StatelessWidget {
         disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
         errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
         animateSuffixIcon: newMenuHeight == 0 ? false : true,
-        labelStyle: const TextStyle(fontSize: mediumTextSize),
+        labelStyle: TextStyle(
+          fontSize: mediumTextSize,
+          fontWeight: boldText == true ? FontWeight.bold : null,
+        ),
         hintText: labelTextAsHint == true
             ? labelText ?? ''
             : newHintText ?? sharedPref.translate('Select'),
@@ -197,12 +192,15 @@ class CDropdownMenu extends StatelessWidget {
       dropdownDecoration: DropdownDecoration(
         maxHeight: newMenuHeight,
         marginTop: 1,
+        backgroundColor: const Color.fromARGB(255, 239, 241, 242),
       ),
+      dropdownItemDecoration: const DropdownItemDecoration(),
       searchDecoration: SearchFieldDecoration(
         hintText: sharedPref.translate('Search'),
-        border: const OutlineInputBorder(
-            borderSide: BorderSide(color: cBoxBorderColor),
-            borderRadius: BorderRadius.all(Radius.circular(12))),
+        border: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.outline),
+            borderRadius: const BorderRadius.all(Radius.circular(12))),
       ),
       chipDecoration: ChipDecoration(
           wrap: wrapSelection!,
@@ -220,7 +218,7 @@ class CDropdownMenu extends StatelessWidget {
       onSelectionChange: onSelected,
       validator: validator,
       searchEnabled: readOnly == false
-          ? (enableSearch ?? dropdownEntries.length > 5)
+          ? (enableSearch ?? dropdownEntries.length > displayItemCount)
           : false,
       singleSelect: !(multiSelect ?? false),
     );
@@ -1154,14 +1152,14 @@ class CTextFormField extends StatelessWidget {
     var height = isDense == true ? 40.0 : fieldHeight;
 
     return Container(
-      height: wrap == true ? height * maxLines! + 8 : height,
+      height: (wrap == true || (maxLines ?? 1) > 1) ? null : height,
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
           ? const BoxDecoration(
               border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
           : null,
-      child: wrap == true
+      child: wrap == true || (maxLines ?? 1) > 1
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1803,12 +1801,14 @@ class CGroup extends StatelessWidget {
     this.child,
     this.padding,
     this.constraints,
+    this.backgroundColor,
   });
 
   final String? titleText;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
   final BoxConstraints? constraints;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -1830,7 +1830,7 @@ class CGroup extends StatelessWidget {
             ),
           ),
         Container(
-          color: kBgColor,
+          color: backgroundColor ?? kBgColor,
           constraints: constraints,
           padding: padding ??
               const EdgeInsets.only(

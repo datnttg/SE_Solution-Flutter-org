@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:universal_io/io.dart';
-
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';

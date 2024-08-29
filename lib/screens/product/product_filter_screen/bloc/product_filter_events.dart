@@ -1,6 +1,6 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
+import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_filter_item_model.dart';
-import 'product_filter_states.dart';
 
 abstract class ProductFilterEvents {}
 
@@ -9,7 +9,7 @@ class InitProductFilterData extends ProductFilterEvents {
 }
 
 class ProductFilterDataLoaded extends ProductFilterEvents {
-  ProductFilterStatus loadingStatus;
+  ProcessingStatusEnum loadingStatus;
   ProductFilterDataLoaded(this.loadingStatus);
 }
 

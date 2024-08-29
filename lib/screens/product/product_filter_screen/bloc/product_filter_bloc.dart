@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_filter_parameter_model.dart';
 import 'product_filter_events.dart';
 import '../services/product_filter_services.dart';
@@ -31,7 +32,7 @@ class ProductFilterBloc extends Bloc<ProductFilterEvents, ProductFilterState> {
         await fetchProductCategoryEntry(categoryProperty: 'ProductType');
     var products = await fetchProductListModel(params);
     emit(state.copyWith(
-      loadingStatus: ProductFilterStatus.success,
+      loadingStatus: ProcessingStatusEnum.success,
       productCategories: productCategories,
       productTypes: productTypes,
       products: products,

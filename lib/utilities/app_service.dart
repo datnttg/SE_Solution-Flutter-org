@@ -589,26 +589,18 @@ void showProgressing(BuildContext context) {
   );
 }
 
-Future<Map> fetchDataUI(Uri url,
-    {Map? parameters,
-    String? method,
-    String? contentType,
-    bool? showSuccessNotification = true}) async {
+Future<Map> fetchDataUI(
+  Uri url, {
+  Map? parameters,
+  String? method,
+  String? contentType,
+  bool? showSuccessNotification = true,
+}) async {
   kShowProcessingDialog(title: sharedPref.translate("Processing..."));
   await Future.delayed(const Duration(milliseconds: 300));
   var response = await fetchData(url, parameters: parameters, method: method);
   Get.back();
-  if (response['success'] == true) {
-    if (showSuccessNotification == false) {
-      return response;
-    } else {
-      kShowToast(
-        title: sharedPref.translate('Success'),
-        content: response['responseMessage'],
-        style: 'success',
-      );
-    }
-  } else {
+  if (response['success'] != true) {
     if (response['responseMessage'] != '') {
       kShowToast(
         title: sharedPref.translate('Fail'),
@@ -628,11 +620,26 @@ Future<Map> fetchDataUI(Uri url,
         style: 'danger',
       );
     }
+  } else {
+    if (showSuccessNotification == false) {
+      return response;
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Success'),
+        content: response['responseMessage'],
+        style: 'success',
+      );
+    }
   }
   return response;
 }
 
-Future<Map> fetchData(Uri url, {Map? parameters, String? method}) async {
+Future<Map> fetchData(
+  Uri url, {
+  Map? parameters,
+  String? method,
+  bool? showFailureNotification = false,
+}) async {
   debugPrint("fetchData(): $url");
   try {
     var body = jsonEncode(parameters);
@@ -687,12 +694,25 @@ Future<Map> fetchData(Uri url, {Map? parameters, String? method}) async {
         return {};
       }
     }
-    // var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
     var responseBodyBytes = await response.stream.bytesToString();
     var responseBody = jsonDecode(responseBodyBytes);
+    if (showFailureNotification == true && responseBody['success'] == false) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: responseBody['responseMessage'],
+        style: 'danger',
+      );
+    }
     return responseBody;
   } catch (e) {
     debugPrint("fetchData() error: $e");
+    if (showFailureNotification == true) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: e.toString(),
+        style: 'danger',
+      );
+    }
     return {
       "success": false,
       "responseMessage": sharedPref.translate("Connection failed!")

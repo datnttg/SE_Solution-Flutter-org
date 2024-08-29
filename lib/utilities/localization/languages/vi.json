@@ -136,10 +136,11 @@
   "Quantity must be better than 0": "Số lượng phải lớn hơn 0",
   "Unit": "Đơn vị",
   "Serial monitoring": "Quản lý theo sê-ri",
-  "Please select a product": "Hãy chọn một sản phẩm",
+  "Please select an item": "Hãy chọn một mục",
   "Product information": "Thông tin sản phẩm",
   "Select product": "Chọn sản phẩm",
   "Logged in successfully": "Đăng nhập thành công",
   "Login failed": "Đăng nhập thất bại",
-  "Detail": "Chi tiết"
+  "Detail": "Chi tiết",
+  "Last progress": "Tiến độ"
 }

@@ -1,10 +1,9 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
+import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_filter_item_model.dart';
 
-enum ProductFilterStatus { initial, success, error }
-
 class ProductFilterState {
-  ProductFilterStatus? loadingStatus;
+  ProcessingStatusEnum? loadingStatus;
   String? productCode;
   String? productName;
   List<CDropdownMenuEntry>? productCategories;
@@ -15,7 +14,7 @@ class ProductFilterState {
   String? selectedId;
 
   ProductFilterState({
-    this.loadingStatus = ProductFilterStatus.initial,
+    this.loadingStatus = ProcessingStatusEnum.processing,
     this.productCode,
     this.productName,
     this.productCategories,
@@ -27,7 +26,7 @@ class ProductFilterState {
   });
 
   ProductFilterState copyWith({
-    ProductFilterStatus? loadingStatus,
+    ProcessingStatusEnum? loadingStatus,
     String? productCode,
     String? productName,
     List<CDropdownMenuEntry>? productCategories,
