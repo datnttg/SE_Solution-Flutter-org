@@ -11,6 +11,7 @@ import 'package:open_app_file/open_app_file.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import 'configs.dart';
 import 'constants/core_constants.dart';
@@ -113,7 +114,7 @@ Future<void> checkUpdate() async {
               child: AlertDialog(
                 title: Text(sharedPref.translate('Update available')),
                 content: SizedBox(
-                  height: 100,
+                  height: 155,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +127,29 @@ Future<void> checkUpdate() async {
                         Text(
                             '- ${sharedPref.translate('Current version')}: $appVersion'),
                         const SizedBox(height: defaultPadding * 2),
+                        CText("${sharedPref.translate('Manual download')}:"),
+                        InkWell(
+                          onTap: () async {
+                            const url =
+                                'https://storage.dnsgroup.vn/qltt/release/applications/se-solution-release-v7a.apk';
+                            if (await canLaunchUrlString(url)) {
+                              await launchUrlString(url);
+                            }
+                          },
+                          child: CText(sharedPref.translate('- 32bit'),
+                              style: const TextStyle(color: Colors.blue)),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            const url =
+                                'https://storage.dnsgroup.vn/qltt/release/applications/se-solution-release-v8a.apk';
+                            if (await canLaunchUrlString(url)) {
+                              await launchUrlString(url);
+                            }
+                          },
+                          child: CText(sharedPref.translate('- 64bit'),
+                              style: const TextStyle(color: Colors.blue)),
+                        ),
                       ],
                     ),
                   ),
@@ -147,7 +171,7 @@ Future<void> checkUpdate() async {
                 ],
               ),
             ),
-            barrierDismissible: false);
+            barrierDismissible: true);
       }
     }
   } catch (ex) {
@@ -643,38 +667,6 @@ Future<Map> fetchData(
   debugPrint("fetchData(): $url");
   try {
     var body = jsonEncode(parameters);
-    // var headers = {
-    //   'Accept': '*/*',
-    //   'Access-Control-Allow-Origin': '*',
-    //   'Content-Type': 'application/json',
-    //   'Authorization': 'Bearer ${sharedPref.getAccessToken()}',
-    //   "Localization": sharedPref.getLocale().toString(),
-    // };
-    // var encoding = Encoding.getByName('utf-8');
-    // http.Response response;
-    // switch (method) {
-    //   case 'get':
-    //     response = await http.get(url, headers: headers)
-    //         // .timeout(const Duration(seconds: 10))
-    //         ;
-    //     break;
-    //   case 'post':
-    //     response = await http.post(url,
-    //         headers: headers, body: body, encoding: encoding);
-    //     break;
-    //   case 'put':
-    //     response = await http.put(url,
-    //         headers: headers, body: body, encoding: encoding);
-    //     break;
-    //   case 'delete':
-    //     response = await http.delete(url,
-    //         headers: headers, body: body, encoding: encoding);
-    //     break;
-    //   default:
-    //     response = await http.post(url,
-    //         headers: headers, body: body, encoding: encoding);
-    //     break;
-    // }
     var request = http.Request(method ?? 'POST', url);
     request = request
       ..headers['Accept'] = '*/*'

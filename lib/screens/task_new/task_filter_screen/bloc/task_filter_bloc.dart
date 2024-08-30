@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/task_filter_dropdowns_model.dart';
-import '../models/task_filter_item_model.dart';
 import '../models/task_filter_parameters_model.dart';
 import 'task_filter_events.dart';
 import 'task_filter_services.dart';

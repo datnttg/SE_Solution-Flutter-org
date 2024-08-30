@@ -75,6 +75,18 @@ class TaskDetailModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'taskAssignment': taskAssignment?.toMap(),
+      'moreDetail': moreDetail?.map((i) => i.toMap()).toList(),
+      'participants': participants?.map((i) => i.toMap()).toList(),
+      'checklist': checklist?.map((i) => i.toMap()).toList(),
+      'subjects': subjects?.map((i) => i.toMap()).toList(),
+      'contracts': contracts?.map((i) => i.toMap()).toList(),
+      'constructions': constructions?.map((i) => i.toMap()).toList(),
+    };
+  }
+
   Map<String, String> toJson() {
     return {
       'taskAssignment': taskAssignment?.toMap().toString() ?? '',

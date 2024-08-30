@@ -87,5 +87,9 @@ class TaskConstructionsChanged extends ChangeTaskDetailEvents {
 
 class TaskSaving extends ChangeTaskDetailEvents {
   TaskDetailModel data;
-  TaskSaving({required this.data});
+  TaskSaving(this.data);
+}
+
+class TaskDiscardChanges extends ChangeTaskDetailEvents {
+  TaskDiscardChanges();
 }

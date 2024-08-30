@@ -46,6 +46,7 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     on<TaskContractsChanged>(_onTaskContractsChanged);
     on<TaskConstructionsChanged>(_onTaskConstructionsChanged);
     on<TaskSaving>(_onTaskSaving);
+    on<TaskDiscardChanges>(_onTaskDiscardChanges);
   }
 
   Future<void> _onTaskDataInitializing(
@@ -96,7 +97,7 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
       taskDetail: taskDetail,
       initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.success,
-      screenMode: event.id == '' ? ScreenModeEnum.edit : state.screenMode,
+      screenMode: event.id == '' ? ScreenModeEnum.edit : ScreenModeEnum.view,
     ));
   }
 
@@ -114,7 +115,7 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
             ? state.taskDetail.taskAssignment?.taskTitle
             : null,
       ),
-      subjects: showSubject == true ? state.taskDetail.subjects : [],
+      subjects: showSubject == true ? state.taskDetail.subjects : [Subject()],
     )));
   }
 
@@ -219,14 +220,26 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
 
   Future<void> _onTaskSaving(
       TaskSaving event, Emitter<TaskDetailState> emit) async {
-    emit(state.copyWith(loadingStatus: ProcessingStatusEnum.processing));
+    // emit(state.copyWith(loadingStatus: ProcessingStatusEnum.processing));
     var hostAddress = Uri.parse("${constants.hostAddress}/Task/Update");
-    var response =
-        await streamData(hostAddress, parameters: state.taskDetail.toJson());
+    var response = await fetchData(
+      hostAddress,
+      parameters: state.taskDetail.toMap(),
+      showFailureNotification: true,
+    );
     if (response['success'] == true) {
-      emit(state.copyWith(loadingStatus: ProcessingStatusEnum.success));
-    } else {
-      emit(state.copyWith(loadingStatus: ProcessingStatusEnum.failure));
+      add(TaskIdChanged(state.taskDetail.taskAssignment?.id));
     }
+  }
+
+  void _onTaskDiscardChanges(
+      TaskDiscardChanges event, Emitter<TaskDetailState> emit) {
+    emit(state.copyWith(loadingStatus: ProcessingStatusEnum.processing));
+    var originalDetail = state.originalDetail;
+    emit(state.copyWith(
+      taskDetail: originalDetail,
+      loadingStatus: ProcessingStatusEnum.success,
+      screenMode: ScreenModeEnum.view,
+    ));
   }
 }

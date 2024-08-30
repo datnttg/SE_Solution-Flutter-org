@@ -93,20 +93,15 @@ class SaveTaskButton extends StatelessWidget {
             child: CElevatedButton(
               labelText: sharedPref.translate('Save'),
               onPressed: () async {
-                // var product = state.taskDetail;
-                // var response = await submitProductDetail(product.copyWith(
-                //     children: (product.children ?? [])
-                //         .where(
-                //             (e) => e.childId != null && e.childId!.isNotEmpty)
-                //         .toList()));
-                try {
-                  // if (response != null && context.mounted) {
-                  //   context.read<TaskDetailBloc>().add(
-                  //       TaskIdChanged(state.taskDetail.taskAssignment?.id));
-                  //   context.read<TaskFilterBloc>().add(InitTaskFilterData());
-                  // }
-                  // ignore: empty_catches
-                } catch (ex) {}
+                context
+                    .read<TaskDetailBloc>()
+                    .add(TaskSaving(state.taskDetail));
+                if (context.mounted) {
+                  context
+                      .read<TaskDetailBloc>()
+                      .add(TaskIdChanged(state.taskDetail.taskAssignment?.id));
+                  context.read<TaskFilterBloc>().add(TaskFilterListLoading());
+                }
               },
             ));
       } else {
@@ -176,6 +171,7 @@ class DiscardTaskButton extends StatelessWidget {
                     context.read<TaskDetailBloc>().add(TaskIdChanged(taskId));
                   }
                 }
+                // context.read<TaskDetailBloc>().add(TaskDiscardChanges());
               },
             ));
       } else {

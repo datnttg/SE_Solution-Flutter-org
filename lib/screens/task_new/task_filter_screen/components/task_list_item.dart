@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:se_solution_ori/utilities/shared_preferences.dart';
 
 import '../../../../utilities/configs.dart';
@@ -65,7 +66,7 @@ class TaskListItem extends StatelessWidget {
                     '${dataItem.taskTypeTitle}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: smallTextSize,
+                      // fontSize: smallTextSize,
                       color: Colors.black,
                     ),
                     wrapText: true,
@@ -76,17 +77,19 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: CText(
                     '${dataItem.lastProgressText}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: smallTextSize,
-                      color: Colors.black,
+                      // fontSize: smallTextSize,
+                      color: dataItem.lastProgressCode == 'WaitToConfirm'
+                          ? Colors.orange
+                          : Colors.black,
                     ),
                     wrapText: true,
                   ),
                 ),
 
                 /// TITLE
-                if (dataItem.taskTitle != null)
+                if (dataItem.taskTitle?.isNotEmpty ?? false)
                   ResponsiveItem(
                     percentWidthOnParent: 100,
                     child: CText(
@@ -112,7 +115,7 @@ class TaskListItem extends StatelessWidget {
                         ),
                         CText(
                           '${dataItem.subjects?[0].name}',
-                          style: const TextStyle(fontSize: smallTextSize),
+                          // style: const TextStyle(fontSize: smallTextSize),
                         ),
                       ],
                     ),
@@ -135,19 +138,19 @@ class TaskListItem extends StatelessWidget {
                         ),
                         CText(
                           '${dataItem.subjects?[0].phone}',
-                          style: const TextStyle(fontSize: smallTextSize),
+                          // style: const TextStyle(fontSize: smallTextSize),
                         )
                       ],
                     ),
                   ),
 
                 /// DESCRIPTION
-                if (dataItem.taskDescription != null)
+                if (dataItem.taskDescription?.isNotEmpty ?? false)
                   ResponsiveItem(
                     percentWidthOnParent: 100,
                     child: CText(
                       '${dataItem.taskDescription}',
-                      style: const TextStyle(fontSize: smallTextSize),
+                      // style: const TextStyle(fontSize: smallTextSize),
                     ),
                   ),
 
@@ -163,7 +166,7 @@ class TaskListItem extends StatelessWidget {
                         ),
                       ),
                       CText(
-                        '${dataItem.createdName}',
+                        '${dataItem.createdName}'.capitalize ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
@@ -193,9 +196,11 @@ class TaskListItem extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: smallTextSize,
-                                color: (dataItem.lastProgressCode ==
-                                            'Completed' ||
-                                        dataItem.lastProgressCode == 'Rejected')
+                                color: ([
+                                  'Completed',
+                                  'Rejected',
+                                  'WaitToConfirm'
+                                ].any((e) => e == dataItem.lastProgressCode))
                                     ? Colors.black
                                     : percentPass >= 1
                                         ? Colors.red
@@ -222,7 +227,7 @@ class TaskListItem extends StatelessWidget {
                         ),
                       ),
                       CText(
-                        '${dataItem.assignedName}',
+                        '${dataItem.assignedName}'.capitalize ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
