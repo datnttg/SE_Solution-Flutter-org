@@ -103,7 +103,6 @@ class TaskListItem extends StatelessWidget {
                     ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
                         (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
                   ResponsiveItem(
-                    percentWidthOnParent: 50,
                     child: Row(
                       children: [
                         const Padding(
@@ -126,7 +125,6 @@ class TaskListItem extends StatelessWidget {
                     ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
                         (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
                   ResponsiveItem(
-                    percentWidthOnParent: 50,
                     child: Row(
                       children: [
                         const Padding(

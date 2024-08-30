@@ -330,7 +330,6 @@ class TaskDetailBody extends StatelessWidget {
                             labelText: sharedPref.translate('Participants'),
                             multiSelect: true,
                             // wrap: true,
-                            required: state.screenMode == ScreenModeEnum.edit,
                             readOnly: readOnly,
                             dropdownMenuEntries:
                                 state.dropdownData.participants ?? [],

@@ -31,7 +31,7 @@ Future<List<CDropdownMenuEntry>> fetchTaskUserEntries(
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['id'],
-            labelText: '${'${e['displayName']}'.capitalize} (${e['username']})',
+            labelText: '${'${e['displayName']}'.capitalize}',
           ))
       .toList();
   return listEntries;
