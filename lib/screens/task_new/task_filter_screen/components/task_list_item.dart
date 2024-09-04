@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:se_solution_ori/utilities/shared_preferences.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
+import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../task_detail_screen/bloc/task_detail_bloc.dart';
 import '../../task_detail_screen/bloc/task_detail_events.dart';
@@ -60,16 +60,15 @@ class TaskListItem extends StatelessWidget {
             /// TYPE
             ResponsiveRow(
               context: context,
+              // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
               children: [
                 ResponsiveItem(
                   child: CText(
                     '${dataItem.taskTypeTitle}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      // fontSize: smallTextSize,
                       color: Colors.black,
                     ),
-                    wrapText: true,
                   ),
                 ),
 
@@ -79,12 +78,10 @@ class TaskListItem extends StatelessWidget {
                     '${dataItem.lastProgressText}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      // fontSize: smallTextSize,
                       color: dataItem.lastProgressCode == 'WaitToConfirm'
                           ? Colors.orange
                           : Colors.black,
                     ),
-                    wrapText: true,
                   ),
                 ),
 
@@ -112,10 +109,7 @@ class TaskListItem extends StatelessWidget {
                             size: mediumTextSize,
                           ),
                         ),
-                        CText(
-                          '${dataItem.subjects?[0].name}',
-                          // style: const TextStyle(fontSize: smallTextSize),
-                        ),
+                        CText('${dataItem.subjects?[0].name}'),
                       ],
                     ),
                   ),
@@ -134,10 +128,7 @@ class TaskListItem extends StatelessWidget {
                             size: mediumTextSize,
                           ),
                         ),
-                        CText(
-                          '${dataItem.subjects?[0].phone}',
-                          // style: const TextStyle(fontSize: smallTextSize),
-                        )
+                        CText('${dataItem.subjects?[0].phone}')
                       ],
                     ),
                   ),
@@ -146,10 +137,7 @@ class TaskListItem extends StatelessWidget {
                 if (dataItem.taskDescription?.isNotEmpty ?? false)
                   ResponsiveItem(
                     percentWidthOnParent: 100,
-                    child: CText(
-                      '${dataItem.taskDescription}',
-                      // style: const TextStyle(fontSize: smallTextSize),
-                    ),
+                    child: CText('${dataItem.taskDescription}'),
                   ),
 
                 /// CREATOR
@@ -166,11 +154,9 @@ class TaskListItem extends StatelessWidget {
                       CText(
                         '${dataItem.createdName}'.capitalize ?? '',
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        wrapText: true,
                       )
                     ],
                   ),
@@ -192,7 +178,6 @@ class TaskListItem extends StatelessWidget {
                               df2.format(
                                   DateTime.parse(dataItem.deadline!).toLocal()),
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
                                 fontSize: smallTextSize,
                                 color: ([
                                   'Completed',
@@ -206,7 +191,6 @@ class TaskListItem extends StatelessWidget {
                                             ? Colors.orange
                                             : Colors.black,
                               ),
-                              wrapText: true,
                             )
                           ],
                         )
@@ -227,17 +211,15 @@ class TaskListItem extends StatelessWidget {
                       CText(
                         '${dataItem.assignedName}'.capitalize ?? '',
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        wrapText: true,
                       )
                     ],
                   ),
                 ),
 
-                /// STATUS
+                /// ROLE
                 ResponsiveItem(
                   child: Row(
                     children: [
@@ -262,7 +244,6 @@ class TaskListItem extends StatelessWidget {
                                         : ''))
                                 : ''),
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
                           color: dataItem.taskStatusCode == "Completed"
                               ? Colors.green
@@ -272,21 +253,10 @@ class TaskListItem extends StatelessWidget {
                                       ? Colors.grey
                                       : Colors.black,
                         ),
-                        wrapText: true,
                       )
                     ],
                   ),
                 ),
-                // ResponsiveItem(
-                //   percentWidthOfParent: 100,
-                //   child: Row(
-                //     children: [
-                //       Flexible(
-                //           child:
-                //               CText('${dataItem['taskDescription'] ?? '-'}'))
-                //     ],
-                //   ),
-                // ),
               ],
             )
           ],
