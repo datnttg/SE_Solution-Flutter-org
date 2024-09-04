@@ -225,7 +225,7 @@ class CDropdownMenu extends StatelessWidget {
 
     /// RETURN
     return Container(
-      // height: wrap == true ? null : fieldHeight,
+      constraints: BoxConstraints(minHeight: fieldHeight),
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true

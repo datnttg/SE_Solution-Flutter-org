@@ -2,6 +2,7 @@ import '../../../../utilities/enums/ui_enums.dart';
 import '../models/task_condition_model.dart';
 import '../models/task_detail_dropdowns_model.dart';
 import '../models/task_detail_model.dart';
+import '../models/task_update_model.dart';
 
 class TaskDetailState {
   ScreenModeEnum screenMode;
@@ -9,8 +10,8 @@ class TaskDetailState {
   TaskDetailDropdownsModel dropdownData;
   List<TaskConditionModel> mappingConditions;
   ProcessingStatusEnum loadingStatus;
-  TaskDetailModel originalDetail;
   TaskDetailModel taskDetail;
+  TaskUpdateModel taskUpdate;
 
   TaskDetailState({
     required this.screenMode,
@@ -18,8 +19,8 @@ class TaskDetailState {
     required this.dropdownData,
     required this.mappingConditions,
     required this.loadingStatus,
-    required this.originalDetail,
     required this.taskDetail,
+    required this.taskUpdate,
   });
 
   TaskDetailState copyWith({
@@ -28,8 +29,8 @@ class TaskDetailState {
     TaskDetailDropdownsModel? dropdownData,
     List<TaskConditionModel>? mappingConditions,
     ProcessingStatusEnum? loadingStatus,
-    TaskDetailModel? originalDetail,
     TaskDetailModel? taskDetail,
+    TaskUpdateModel? taskUpdate,
   }) {
     return TaskDetailState(
       screenMode: screenMode ?? this.screenMode,
@@ -38,7 +39,7 @@ class TaskDetailState {
       mappingConditions: mappingConditions ?? this.mappingConditions,
       loadingStatus: loadingStatus ?? this.loadingStatus,
       taskDetail: taskDetail ?? this.taskDetail,
-      originalDetail: originalDetail ?? this.originalDetail,
+      taskUpdate: taskUpdate ?? this.taskUpdate,
     );
   }
 }

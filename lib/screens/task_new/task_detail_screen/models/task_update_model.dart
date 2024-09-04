@@ -1,14 +1,14 @@
-class TaskDetailModel {
-  TaskAssignmentDetailModel? taskAssignment;
-  List<TaskMoreDetailDetailModel>? moreDetail;
-  List<TaskParticipantDetailModel>? participants;
-  List<TaskChecklistDetailModel>? checklist;
-  // List<TaskSubjectDetailModel>? contactPoints;
-  List<TaskSubjectDetailModel>? subjects;
-  List<TaskContractDetailModel>? contracts;
-  List<TaskConstructionDetailModel>? constructions;
+class TaskUpdateModel {
+  TaskAssignmentUpdateModel? taskAssignment;
+  List<TaskMoreDetailUpdateModel>? moreDetail;
+  List<TaskParticipantUpdateModel>? participants;
+  List<TaskChecklistUpdateModel>? checklist;
+  // List<TaskSubjectUpdateModel>? contactPoints;
+  List<TaskSubjectUpdateModel>? subjects;
+  List<TaskContractUpdateModel>? contracts;
+  List<TaskConstructionUpdateModel>? constructions;
 
-  TaskDetailModel({
+  TaskUpdateModel({
     this.taskAssignment,
     this.moreDetail,
     this.participants,
@@ -19,16 +19,16 @@ class TaskDetailModel {
     this.constructions,
   });
 
-  TaskDetailModel copyWith({
-    TaskAssignmentDetailModel? taskAssignment,
-    List<TaskMoreDetailDetailModel>? moreDetail,
-    List<TaskParticipantDetailModel>? participants,
-    List<TaskChecklistDetailModel>? checklist,
-    List<TaskSubjectDetailModel>? subjects,
-    List<TaskContractDetailModel>? contracts,
-    List<TaskConstructionDetailModel>? constructions,
+  TaskUpdateModel copyWith({
+    TaskAssignmentUpdateModel? taskAssignment,
+    List<TaskMoreDetailUpdateModel>? moreDetail,
+    List<TaskParticipantUpdateModel>? participants,
+    List<TaskChecklistUpdateModel>? checklist,
+    List<TaskSubjectUpdateModel>? subjects,
+    List<TaskContractUpdateModel>? contracts,
+    List<TaskConstructionUpdateModel>? constructions,
   }) {
-    return TaskDetailModel(
+    return TaskUpdateModel(
       taskAssignment: taskAssignment ?? this.taskAssignment,
       moreDetail: moreDetail ?? this.moreDetail,
       participants: participants ?? this.participants,
@@ -39,39 +39,39 @@ class TaskDetailModel {
     );
   }
 
-  factory TaskDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskDetailModel(
+  factory TaskUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskUpdateModel(
       taskAssignment: json['taskAssignment'] != null
-          ? TaskAssignmentDetailModel.fromJson(json['taskAssignment'])
+          ? TaskAssignmentUpdateModel.fromJson(json['taskAssignment'])
           : null,
       moreDetail: json['moreDetail'] != null
           ? (json['moreDetail'] as List)
-              .map((i) => TaskMoreDetailDetailModel.fromJson(i))
+              .map((i) => TaskMoreDetailUpdateModel.fromJson(i))
               .toList()
           : null,
       participants: json['participants'] != null
           ? (json['participants'] as List)
-              .map((i) => TaskParticipantDetailModel.fromJson(i))
+              .map((i) => TaskParticipantUpdateModel.fromJson(i))
               .toList()
           : null,
       checklist: json['checklist'] != null
           ? (json['checklist'] as List)
-              .map((i) => TaskChecklistDetailModel.fromJson(i))
+              .map((i) => TaskChecklistUpdateModel.fromJson(i))
               .toList()
           : null,
       subjects: json['subjects'] != null
           ? (json['subjects'] as List)
-              .map((i) => TaskSubjectDetailModel.fromJson(i))
+              .map((i) => TaskSubjectUpdateModel.fromJson(i))
               .toList()
           : null,
       contracts: json['contracts'] != null
           ? (json['contracts'] as List)
-              .map((i) => TaskContractDetailModel.fromJson(i))
+              .map((i) => TaskContractUpdateModel.fromJson(i))
               .toList()
           : null,
       constructions: json['constructions'] != null
           ? (json['constructions'] as List)
-              .map((i) => TaskConstructionDetailModel.fromJson(i))
+              .map((i) => TaskConstructionUpdateModel.fromJson(i))
               .toList()
           : null,
     );
@@ -104,102 +104,67 @@ class TaskDetailModel {
   }
 }
 
-class TaskAssignmentDetailModel {
+class TaskAssignmentUpdateModel {
   String? id;
-  String? createdTime;
-  String? createdUserId;
-  String? createdName;
   String? taskType;
   String? taskTitle;
   String? taskDescription;
   String? statusCode;
-  String? taskStatusText;
   String? lastProgressCode;
-  String? lastProgressText;
   String? categoryCode;
-  String? taskCategoryTitle;
   String? assignedUserId;
-  String? assignedName;
   String? deadline;
   String? beginningDateTime;
 
-  TaskAssignmentDetailModel({
+  TaskAssignmentUpdateModel({
     this.id,
-    this.createdTime,
-    this.createdUserId,
-    this.createdName,
     this.taskType,
     this.taskTitle,
     this.taskDescription,
     this.statusCode,
-    this.taskStatusText,
     this.lastProgressCode,
-    this.lastProgressText,
     this.categoryCode,
-    this.taskCategoryTitle,
     this.assignedUserId,
-    this.assignedName,
     this.deadline,
     this.beginningDateTime,
   });
 
-  TaskAssignmentDetailModel copyWith({
+  TaskAssignmentUpdateModel copyWith({
     String? id,
-    String? createdTime,
-    String? createdUserId,
-    String? createdName,
     String? taskType,
     String? taskTitle,
     String? taskDescription,
     String? statusCode,
-    String? taskStatusText,
     String? lastProgressCode,
-    String? lastProgressText,
     String? categoryCode,
-    String? taskCategoryTitle,
     String? assignedUserId,
-    String? assignedName,
     String? deadline,
     String? beginningDateTime,
   }) {
-    return TaskAssignmentDetailModel(
+    return TaskAssignmentUpdateModel(
       id: id ?? this.id,
-      createdTime: createdTime ?? this.createdTime,
-      createdUserId: createdUserId ?? this.createdUserId,
-      createdName: createdName ?? this.createdName,
       taskType: taskType ?? this.taskType,
       taskTitle: taskTitle ?? this.taskTitle,
       taskDescription: taskDescription ?? this.taskDescription,
       statusCode: statusCode ?? this.statusCode,
-      taskStatusText: taskStatusText ?? this.taskStatusText,
       lastProgressCode: lastProgressCode ?? this.lastProgressCode,
-      lastProgressText: lastProgressText ?? this.lastProgressText,
       categoryCode: categoryCode ?? this.categoryCode,
-      taskCategoryTitle: taskCategoryTitle ?? this.taskCategoryTitle,
       assignedUserId: assignedUserId ?? this.assignedUserId,
-      assignedName: assignedName ?? this.assignedName,
       deadline: deadline ?? this.deadline,
       beginningDateTime: beginningDateTime ?? this.beginningDateTime,
     );
   }
 
-  factory TaskAssignmentDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskAssignmentDetailModel(
+  factory TaskAssignmentUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskAssignmentUpdateModel(
       id: json['id'],
-      createdTime: json['createdTime'],
-      createdUserId: json['createdUserId'],
-      createdName: json['createdName'],
       taskType: json['taskType'],
       taskTitle: json['taskTitle'],
       taskDescription: json['taskDescription'],
       statusCode: json['statusCode'],
-      taskStatusText: json['taskStatusText'],
       lastProgressCode: json['lastProgressCode'],
-      lastProgressText: json['lastProgressText'],
       categoryCode: json['categoryCode'],
-      taskCategoryTitle: json['taskCategoryTitle'],
       assignedUserId: json['assignedUserId'],
-      assignedName: json['assignedName'],
       deadline: json['deadline'],
       beginningDateTime: json['beginningDateTime'],
     );
@@ -208,34 +173,27 @@ class TaskAssignmentDetailModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'createdTime': createdTime,
-      'createdUserId': createdUserId,
-      'createdName': createdName,
       'taskType': taskType,
       'taskTitle': taskTitle,
       'taskDescription': taskDescription,
       'statusCode': statusCode,
-      'taskStatusText': taskStatusText,
       'lastProgressCode': lastProgressCode,
-      'lastProgressText': lastProgressText,
       'categoryCode': categoryCode,
-      'taskCategoryTitle': taskCategoryTitle,
       'assignedUserId': assignedUserId,
-      'assignedName': assignedName,
       'deadline': deadline,
       'beginningDateTime': beginningDateTime,
     };
   }
 }
 
-class TaskMoreDetailDetailModel {
+class TaskMoreDetailUpdateModel {
   String? id;
   String? taskId;
   String? taskDetailProperty;
   String? propertyDataType;
   String? taskDetailValue;
 
-  TaskMoreDetailDetailModel({
+  TaskMoreDetailUpdateModel({
     this.id,
     this.taskId,
     this.taskDetailProperty,
@@ -243,8 +201,8 @@ class TaskMoreDetailDetailModel {
     this.taskDetailValue,
   });
 
-  factory TaskMoreDetailDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskMoreDetailDetailModel(
+  factory TaskMoreDetailUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskMoreDetailUpdateModel(
       id: json['id'] as String?,
       taskId: json['taskId'] as String?,
       taskDetailProperty: json['taskDetailProperty'] as String?,
@@ -264,13 +222,13 @@ class TaskMoreDetailDetailModel {
   }
 }
 
-class TaskParticipantDetailModel {
+class TaskParticipantUpdateModel {
   String? userId;
 
-  TaskParticipantDetailModel({this.userId});
+  TaskParticipantUpdateModel({this.userId});
 
-  factory TaskParticipantDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskParticipantDetailModel(
+  factory TaskParticipantUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskParticipantUpdateModel(
       userId: json['userId'] as String?,
     );
   }
@@ -282,14 +240,14 @@ class TaskParticipantDetailModel {
   }
 }
 
-class TaskChecklistDetailModel {
+class TaskChecklistUpdateModel {
   String? id;
   String? taskId;
   String? text;
   bool? isComplete;
   int? order;
 
-  TaskChecklistDetailModel({
+  TaskChecklistUpdateModel({
     this.id,
     this.taskId,
     this.text,
@@ -297,8 +255,8 @@ class TaskChecklistDetailModel {
     this.order,
   });
 
-  factory TaskChecklistDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskChecklistDetailModel(
+  factory TaskChecklistUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskChecklistUpdateModel(
       id: json['id'] as String?,
       taskId: json['taskId'] as String?,
       text: json['text'] as String?,
@@ -318,7 +276,7 @@ class TaskChecklistDetailModel {
   }
 }
 
-class TaskSubjectDetailModel {
+class TaskSubjectUpdateModel {
   String? id;
   String? type;
   String? name;
@@ -332,7 +290,7 @@ class TaskSubjectDetailModel {
   String? representativeId;
   String? customerSource;
 
-  TaskSubjectDetailModel({
+  TaskSubjectUpdateModel({
     this.id,
     this.type,
     this.name,
@@ -347,7 +305,7 @@ class TaskSubjectDetailModel {
     this.customerSource,
   });
 
-  TaskSubjectDetailModel copyWith({
+  TaskSubjectUpdateModel copyWith({
     String? id,
     String? type,
     String? name,
@@ -361,7 +319,7 @@ class TaskSubjectDetailModel {
     String? representativeId,
     String? customerSource,
   }) {
-    return TaskSubjectDetailModel(
+    return TaskSubjectUpdateModel(
       id: id ?? this.id,
       type: type ?? this.type,
       name: name ?? this.name,
@@ -377,8 +335,8 @@ class TaskSubjectDetailModel {
     );
   }
 
-  factory TaskSubjectDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskSubjectDetailModel(
+  factory TaskSubjectUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskSubjectUpdateModel(
       id: json['id'] as String?,
       type: json['type'] as String?,
       name: json['name'] as String?,
@@ -412,13 +370,13 @@ class TaskSubjectDetailModel {
   }
 }
 
-class TaskContractDetailModel {
+class TaskContractUpdateModel {
   String? annexId;
 
-  TaskContractDetailModel({this.annexId});
+  TaskContractUpdateModel({this.annexId});
 
-  factory TaskContractDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskContractDetailModel(
+  factory TaskContractUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskContractUpdateModel(
       annexId: json['annexId'] as String?,
     );
   }
@@ -430,13 +388,13 @@ class TaskContractDetailModel {
   }
 }
 
-class TaskConstructionDetailModel {
+class TaskConstructionUpdateModel {
   String? id;
 
-  TaskConstructionDetailModel({this.id});
+  TaskConstructionUpdateModel({this.id});
 
-  factory TaskConstructionDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskConstructionDetailModel(
+  factory TaskConstructionUpdateModel.fromJson(Map<String, dynamic> json) {
+    return TaskConstructionUpdateModel(
       id: json['id'] as String?,
     );
   }

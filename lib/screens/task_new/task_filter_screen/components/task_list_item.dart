@@ -28,7 +28,7 @@ class TaskListItem extends StatelessWidget {
         : null;
     var percentPass = (beginningDateTime != null && duration != null)
         ? DateTime.now()
-                .difference(DateTime.parse(beginningDateTime!))
+                .difference(DateTime.parse(beginningDateTime))
                 .inMinutes /
             duration.inMinutes
         : 0;

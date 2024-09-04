@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'child_product_model.dart';
 
 class ProductDetailModel {

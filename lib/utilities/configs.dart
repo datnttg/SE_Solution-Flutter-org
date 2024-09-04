@@ -113,5 +113,67 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
 var nf0 = NumberFormat("#,##0", sharedPref.getLocale().toString());
 var nf1 = NumberFormat("#,##0.0", sharedPref.getLocale().toString());
 var df0 = DateFormat('yyyy-MM-dd HH:mm:ss');
-var df1 = DateFormat(sharedPref.dateFormat);
+var df1 = DateFormat(sharedPref.dateFormat); //dd-MM-yyyy
 var df2 = DateFormat('dd-MM-yyyy HH:mm');
+
+String df0ConvertedFromDf1(String inputDateTime) {
+  try {
+    var year = '1900';
+    var month = '01';
+    var day = '01';
+    var dateElements = inputDateTime.split("-");
+    if (inputDateTime.isEmpty) return '';
+    if (dateElements.isNotEmpty) {
+      day =
+          NumberFormat("00").format(int.parse(dateElements[0])).substring(0, 2);
+    }
+    if (dateElements.length >= 2 &&
+        dateElements[1] != '' &&
+        dateElements[1] != '0') {
+      month =
+          NumberFormat("00").format(int.parse(dateElements[1])).substring(0, 2);
+    }
+    if (dateElements.length >= 3 &&
+        dateElements[2] != '' &&
+        dateElements[2] != '0') {
+      if (dateElements[2].length < 4) {
+        year = NumberFormat("0000").format(int.parse(dateElements[2]) + 2000);
+      } else {
+        year = NumberFormat("0000").format(int.parse(dateElements[2]));
+      }
+    }
+    return '$year-$month-$day 00:00:00';
+  } catch (e) {
+    return '';
+  }
+}
+
+String df0ConvertedFromDf2(String inputDateTime) {
+  var hour = '00';
+  var minute = '00';
+  var second = '00';
+  var elements = inputDateTime.split(" ");
+  if (elements.length > 1) {
+    var time = elements[1];
+    var timeSplit = time.split(":");
+    if (timeSplit[0].isNotEmpty) {
+      hour = NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+    }
+    if (timeSplit.length > 1 && timeSplit[1].isNotEmpty) {
+      minute =
+          NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+    }
+    if (timeSplit.length > 2 && timeSplit[2].isNotEmpty) {
+      second =
+          NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+    }
+  }
+
+  var df0String = df0ConvertedFromDf1(elements[0]);
+  if (df0String.isEmpty) {
+    return '';
+  } else {
+    var dateString = df0String.split(" ");
+    return '${dateString[0]} $hour:$minute:$second';
+  }
+}

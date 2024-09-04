@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution_ori/screens/task_new/task_detail_screen/models/task_detail_model.dart';
-import 'package:se_solution_ori/utilities/configs.dart';
-import 'package:se_solution_ori/utilities/custom_widgets.dart';
-import 'package:se_solution_ori/utilities/responsive.dart';
 
+import '../../../utilities/configs.dart';
+import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/enums/ui_enums.dart';
+import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import 'bloc/task_detail_bloc.dart';
 import 'bloc/task_detail_events.dart';
 import 'bloc/task_detail_states.dart';
+import 'models/task_update_model.dart';
 
 class TaskDetailBody extends StatelessWidget {
   const TaskDetailBody({super.key});
@@ -18,10 +18,10 @@ class TaskDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TaskDetailBloc, TaskDetailState>(
       builder: (context, state) {
-        var readOnly = state.taskDetail.taskAssignment?.id != '' &&
+        var readOnly = state.taskUpdate.taskAssignment?.id != '' &&
             state.screenMode == ScreenModeEnum.view;
         var showSubject = state.mappingConditions.any((e) =>
-            e.conditionValue == state.taskDetail.taskAssignment?.taskType &&
+            e.conditionValue == state.taskUpdate.taskAssignment?.taskType &&
             e.mappingEntity == 'AppSubject');
         double basicWidth = 360;
         return Align(
@@ -48,7 +48,7 @@ class TaskDetailBody extends StatelessWidget {
                             selectedMenuEntries: state.dropdownData.taskTypes!
                                 .where((e) =>
                                     e.value ==
-                                    state.taskDetail.taskAssignment?.taskType)
+                                    state.taskUpdate.taskAssignment?.taskType)
                                 .toList(),
                             onSelected: (value) {
                               context.read<TaskDetailBloc>().add(
@@ -58,9 +58,9 @@ class TaskDetailBody extends StatelessWidget {
                         ),
 
                         /// CONTACT PHONE
-                        if (state.taskDetail.taskAssignment?.taskType ==
+                        if (state.taskUpdate.taskAssignment?.taskType ==
                                 'Basic' ||
-                            (state.taskDetail.taskAssignment?.taskTitle
+                            (state.taskUpdate.taskAssignment?.taskTitle
                                     ?.isNotEmpty ??
                                 false))
                           ResponsiveItem(
@@ -73,7 +73,7 @@ class TaskDetailBody extends StatelessWidget {
                               required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               initialValue:
-                                  state.taskDetail.taskAssignment?.taskTitle ??
+                                  state.taskUpdate.taskAssignment?.taskTitle ??
                                       '',
                               onChanged: (value) {
                                 context
@@ -94,17 +94,17 @@ class TaskDetailBody extends StatelessWidget {
                               labelText: sharedPref.translate('Phone'),
                               required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
-                              autoFocus: state.taskDetail.subjects?.isEmpty,
+                              autoFocus: state.taskUpdate.subjects?.isEmpty,
                               initialValue:
-                                  state.taskDetail.subjects?.isEmpty == true
+                                  state.taskUpdate.subjects?.isEmpty == true
                                       ? ''
-                                      : state.taskDetail.subjects?[0].phone,
+                                      : state.taskUpdate.subjects?[0].phone,
                               onChanged: (value) {
                                 context.read<TaskDetailBloc>().add(
                                         TaskContactPointsChanged([
-                                      state.taskDetail.subjects?[0]
+                                      state.taskUpdate.subjects?[0]
                                               .copyWith(phone: value) ??
-                                          Subject()
+                                          TaskSubjectUpdateModel()
                                     ]));
                               },
                             ),
@@ -122,15 +122,15 @@ class TaskDetailBody extends StatelessWidget {
                               required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               initialValue:
-                                  state.taskDetail.subjects?.isEmpty == true
+                                  state.taskUpdate.subjects?.isEmpty == true
                                       ? ''
-                                      : state.taskDetail.subjects?[0].name,
+                                      : state.taskUpdate.subjects?[0].name,
                               onChanged: (value) {
                                 context.read<TaskDetailBloc>().add(
                                         TaskContactPointsChanged([
-                                      state.taskDetail.subjects?[0]
+                                      state.taskUpdate.subjects?[0]
                                               .copyWith(name: value) ??
-                                          Subject()
+                                          TaskSubjectUpdateModel()
                                     ]));
                               },
                             ),
@@ -148,15 +148,16 @@ class TaskDetailBody extends StatelessWidget {
                               // required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               initialValue:
-                                  state.taskDetail.subjects?.isEmpty == true
+                                  state.taskUpdate.subjects?.isEmpty == true
                                       ? ''
-                                      : state.taskDetail.subjects?[0].address,
+                                      : state.taskUpdate.subjects?[0].address,
                               onChanged: (value) {
-                                context.read<TaskDetailBloc>().add(
-                                        TaskContactPointsChanged([
-                                      state.taskDetail.subjects?[0]
-                                              .copyWith(name: value) ??
-                                          Subject()
+                                context
+                                    .read<TaskDetailBloc>()
+                                    .add(TaskContactPointsChanged([
+                                      state.taskUpdate.subjects?[0]
+                                              .copyWith(address: value) ??
+                                          TaskSubjectUpdateModel()
                                     ]));
                               },
                             ),
@@ -170,9 +171,11 @@ class TaskDetailBody extends StatelessWidget {
                       context: context,
                       children: [
                         /// DESCRIPTION
-                        if (state.taskDetail.taskAssignment?.taskDescription
-                                ?.isNotEmpty ??
-                            false)
+                        if (state.screenMode == ScreenModeEnum.edit ||
+                            state.taskUpdate.taskAssignment?.id == null ||
+                            (state.taskUpdate.taskAssignment?.taskDescription
+                                    ?.isNotEmpty ??
+                                false))
                           ResponsiveItem(
                             percentWidthOnParent: 100,
                             child: CTextFormField(
@@ -180,18 +183,15 @@ class TaskDetailBody extends StatelessWidget {
                               maxLines: 5,
                               // required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
-                              autoFocus: state.taskDetail.subjects?.isEmpty,
+                              autoFocus: state.taskUpdate.subjects?.isEmpty,
                               initialValue:
-                                  state.taskDetail.subjects?.isEmpty == true
+                                  state.taskUpdate.subjects?.isEmpty == true
                                       ? ''
-                                      : state.taskDetail.subjects?[0].phone,
+                                      : state.taskUpdate.subjects?[0].phone,
                               onChanged: (value) {
-                                context.read<TaskDetailBloc>().add(
-                                        TaskContactPointsChanged([
-                                      state.taskDetail.subjects?[0]
-                                              .copyWith(phone: value) ??
-                                          Subject()
-                                    ]));
+                                context
+                                    .read<TaskDetailBloc>()
+                                    .add(TaskDescriptionChanged(value));
                               },
                             ),
                           ),
@@ -203,10 +203,10 @@ class TaskDetailBody extends StatelessWidget {
                           child: CTextFormField(
                             labelText: sharedPref.translate('Beginning date'),
                             readOnly: readOnly,
-                            initialValue: state.taskDetail.taskAssignment
+                            initialValue: state.taskUpdate.taskAssignment
                                         ?.beginningDateTime?.isNotEmpty ==
                                     true
-                                ? df2.format(DateTime.parse(state.taskDetail
+                                ? df2.format(DateTime.parse(state.taskUpdate
                                         .taskAssignment?.beginningDateTime ??
                                     ''))
                                 : '',
@@ -232,17 +232,17 @@ class TaskDetailBody extends StatelessWidget {
                             labelText: sharedPref.translate('Deadline'),
                             required: state.screenMode == ScreenModeEnum.edit,
                             readOnly: readOnly,
-                            initialValue: state.taskDetail.taskAssignment
+                            initialValue: state.taskUpdate.taskAssignment
                                         ?.deadline?.isNotEmpty ==
                                     true
                                 ? df2.format(DateTime.parse(
-                                    state.taskDetail.taskAssignment?.deadline ??
+                                    state.taskUpdate.taskAssignment?.deadline ??
                                         ''))
                                 : '',
                             onChanged: (value) {
                               context
                                   .read<TaskDetailBloc>()
-                                  .add(TaskBeginningTimeChanged(value));
+                                  .add(TaskDeadlineChanged(value));
                             },
                             suffix: state.screenMode == ScreenModeEnum.edit
                                 ? IconButton(
@@ -264,7 +264,7 @@ class TaskDetailBody extends StatelessWidget {
                       context: context,
                       children: [
                         /// CREATOR
-                        if (state.taskDetail.taskAssignment?.id != null)
+                        if (state.taskUpdate.taskAssignment?.id != null)
                           ResponsiveItem(
                             percentWidthOnParent:
                                 constrains.maxWidth < 3 * basicWidth
@@ -309,7 +309,7 @@ class TaskDetailBody extends StatelessWidget {
                                     ? state.dropdownData.assignedUsers!
                                         .where((e) =>
                                             e.value ==
-                                            state.taskDetail.taskAssignment
+                                            state.taskUpdate.taskAssignment
                                                 ?.assignedUserId)
                                         .toList()
                                     : [],
@@ -337,7 +337,7 @@ class TaskDetailBody extends StatelessWidget {
                                         .dropdownData.participants !=
                                     null
                                 ? state.dropdownData.participants!
-                                    .where((e) => (state.taskDetail.participants
+                                    .where((e) => (state.taskUpdate.participants
                                             ?.any((i) => i.userId == e.value) ??
                                         false))
                                     .toList()
@@ -345,8 +345,9 @@ class TaskDetailBody extends StatelessWidget {
                             onSelected: (selections) {
                               context.read<TaskDetailBloc>().add(
                                   TaskParticipantsChanged(selections
-                                      .map<Participant>(
-                                          (e) => Participant(userId: e.value))
+                                      .map<TaskParticipantUpdateModel>((e) =>
+                                          TaskParticipantUpdateModel(
+                                              userId: e.value))
                                       .toList()));
                             },
                           ),
@@ -356,7 +357,7 @@ class TaskDetailBody extends StatelessWidget {
                   ),
 
                   /// TASK FLOW
-                  if (state.taskDetail.taskAssignment?.id != null)
+                  if (state.taskUpdate.taskAssignment?.id != null)
                     CGroup(
                       titleText: sharedPref.translate('History'),
                       child: ResponsiveRow(

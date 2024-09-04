@@ -1,5 +1,6 @@
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/task_detail_model.dart';
+import '../models/task_update_model.dart';
 
 abstract class ChangeTaskDetailEvents {}
 
@@ -56,32 +57,32 @@ class TaskBeginningTimeChanged extends ChangeTaskDetailEvents {
 }
 
 class TaskMoreDetailChanged extends ChangeTaskDetailEvents {
-  List<MoreDetail>? moreDetail;
+  List<TaskMoreDetailUpdateModel>? moreDetail;
   TaskMoreDetailChanged(this.moreDetail);
 }
 
 class TaskParticipantsChanged extends ChangeTaskDetailEvents {
-  List<Participant>? participants;
+  List<TaskParticipantUpdateModel>? participants;
   TaskParticipantsChanged(this.participants);
 }
 
 class TaskChecklistChanged extends ChangeTaskDetailEvents {
-  List<Checklist>? checklist;
+  List<TaskChecklistUpdateModel>? checklist;
   TaskChecklistChanged(this.checklist);
 }
 
 class TaskContactPointsChanged extends ChangeTaskDetailEvents {
-  List<Subject>? contactPoints;
+  List<TaskSubjectUpdateModel>? contactPoints;
   TaskContactPointsChanged(this.contactPoints);
 }
 
 class TaskContractsChanged extends ChangeTaskDetailEvents {
-  List<Contract>? contracts;
+  List<TaskContractUpdateModel>? contracts;
   TaskContractsChanged(this.contracts);
 }
 
 class TaskConstructionsChanged extends ChangeTaskDetailEvents {
-  List<Construction>? constructions;
+  List<TaskConstructionUpdateModel>? constructions;
   TaskConstructionsChanged(this.constructions);
 }
 
