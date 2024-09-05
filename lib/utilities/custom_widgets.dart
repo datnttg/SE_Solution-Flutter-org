@@ -165,12 +165,13 @@ class CDropdownMenu extends StatelessWidget {
     var displayItemCount = 7;
     var newMenuHeight = menuHeight ??
         min(dropdownMenuEntries.length * 50, dropdownMaxHeight).toDouble();
-    if (readOnly == true) {
-      newMenuHeight = 0;
-    }
+    // if (readOnly == true) {
+    //   newMenuHeight = 0;
+    // }
 
     var dropdownMenu = MultiDropdown<CDropdownMenuEntry>(
       items: dropdownEntries,
+      enabled: !readOnly!,
       fieldDecoration: FieldDecoration(
         border: const OutlineInputBorder(borderSide: BorderSide.none),
         disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
@@ -203,18 +204,19 @@ class CDropdownMenu extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(12))),
       ),
       chipDecoration: ChipDecoration(
-          wrap: wrapSelection!,
-          backgroundColor: Colors.white,
-          labelStyle: TextStyle(
-              color: Colors.black87,
-              fontWeight: boldText == true ? FontWeight.bold : null),
-          deleteIcon: newMenuHeight == 0
-              ? const Icon(
-                  Icons.close_outlined,
-                  size: 0,
-                  color: Colors.black54,
-                )
-              : null),
+        wrap: wrapSelection!,
+        backgroundColor: const Color.fromARGB(255, 244, 244, 244),
+        labelStyle: TextStyle(
+            color: Colors.black87,
+            fontWeight: boldText == true ? FontWeight.bold : null),
+        deleteIcon: readOnly!
+            ? const Icon(
+                Icons.close_outlined,
+                size: 0,
+                color: Colors.black54,
+              )
+            : null,
+      ),
       onSelectionChange: onSelected,
       validator: validator,
       searchEnabled: readOnly == false
@@ -1315,6 +1317,11 @@ class KTextFormField extends StatelessWidget {
 
 /// CUSTOM TEXT
 class CText extends StatelessWidget {
+  final String data;
+  final bool? wrapText;
+  final TextStyle? style;
+  final int? maxLines;
+
   const CText(
     this.data, {
     super.key,
@@ -1323,18 +1330,13 @@ class CText extends StatelessWidget {
     this.maxLines = 1,
   });
 
-  final String data;
-  final bool? wrapText;
-  final TextStyle? style;
-  final int? maxLines;
-
   @override
   Widget build(BuildContext context) {
     var dataWidget = Text(
       data,
       style: style,
       maxLines: maxLines,
-      overflow: TextOverflow.clip,
+      overflow: TextOverflow.ellipsis,
     );
     if (wrapText == true) {
       return Flexible(child: dataWidget);

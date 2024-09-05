@@ -88,33 +88,12 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
   return null;
 }
 
-// var customRoutes = <String, WidgetBuilder>{
-//   customRouteMapping.demo: (_) => const ActionBarDemoScreen(),
-//   customRouteMapping.demo2: (_) => const Demo2Screen(),
-//   customRouteMapping.demoResponsiveTabs: (_) => const ResponsiveTabsScreen(),
-//   customRouteMapping.dashboard: (_) => const DashboardScreen(),
-//   customRouteMapping.login: (_) => const LoginScreen(),
-//   customRouteMapping.logout: (_) => const LoginScreen(),
-//   customRouteMapping.owner: (_) => const DashboardScreen(),
-//   customRouteMapping.ownerAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.subject: (_) => const DashboardScreen(),
-//   customRouteMapping.subjectAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.user: (_) => const DashboardScreen(),
-//   customRouteMapping.userAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.powerStationMonitoring: (_) =>
-//       const PowerStationMonitorScreen(),
-//   customRouteMapping.task: (_) => const TaskFilterScreen(),
-//   customRouteMapping.taskAdd: (_) => const TaskDetailScreen(),
-//   customRouteMapping.taskDetail: (_) => const TaskDetailScreen(),
-//   //
-//   customRouteMapping.myProject: (_) => const OwnerProjectOverviewScreen(),
-// };
-
 var nf0 = NumberFormat("#,##0", sharedPref.getLocale().toString());
 var nf1 = NumberFormat("#,##0.0", sharedPref.getLocale().toString());
-var df0 = DateFormat('yyyy-MM-dd HH:mm:ss');
-var df1 = DateFormat(sharedPref.dateFormat); //dd-MM-yyyy
-var df2 = DateFormat('dd-MM-yyyy HH:mm');
+var df0 = DateFormat('yyyy-MM-dd HH:mm:ss', sharedPref.getLocaleCode());
+var df1 =
+    DateFormat(sharedPref.dateFormat, sharedPref.getLocaleCode()); //dd-MM-yyyy
+var df2 = DateFormat('dd-MM-yyyy HH:mm', sharedPref.getLocaleCode());
 
 String df0ConvertedFromDf1(String inputDateTime) {
   try {
@@ -161,11 +140,11 @@ String df0ConvertedFromDf2(String inputDateTime) {
     }
     if (timeSplit.length > 1 && timeSplit[1].isNotEmpty) {
       minute =
-          NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+          NumberFormat("00").format(int.parse(timeSplit[1])).substring(0, 2);
     }
     if (timeSplit.length > 2 && timeSplit[2].isNotEmpty) {
       second =
-          NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+          NumberFormat("00").format(int.parse(timeSplit[2])).substring(0, 2);
     }
   }
 

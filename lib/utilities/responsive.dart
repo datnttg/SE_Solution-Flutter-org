@@ -120,19 +120,13 @@ class ResponsiveRow extends StatelessWidget {
         }
         return SizedBox(
           width: parentWidth,
-          child: Row(
-            children: [
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: horizontalSpacing!,
-                  runAlignment: WrapAlignment.start,
-                  runSpacing: verticalSpacing!,
-                  crossAxisAlignment: crossAxisAlignment!,
-                  children: items,
-                ),
-              ),
-            ],
+          child: Wrap(
+            alignment: WrapAlignment.start,
+            spacing: horizontalSpacing!,
+            runAlignment: WrapAlignment.start,
+            runSpacing: verticalSpacing!,
+            crossAxisAlignment: crossAxisAlignment!,
+            children: items,
           ),
         );
       },

@@ -9,6 +9,7 @@ import '../../../utilities/shared_preferences.dart';
 import 'bloc/task_detail_bloc.dart';
 import 'bloc/task_detail_events.dart';
 import 'bloc/task_detail_states.dart';
+import 'components/task_flow.dart';
 import 'models/task_update_model.dart';
 
 class TaskDetailBody extends StatelessWidget {
@@ -140,12 +141,11 @@ class TaskDetailBody extends StatelessWidget {
                         if (showSubject)
                           ResponsiveItem(
                             percentWidthOnParent:
-                                constrains.maxWidth < 3 * basicWidth
+                                constrains.maxWidth < 4 * basicWidth
                                     ? 100
                                     : null,
                             child: CTextFormField(
                               labelText: sharedPref.translate('Address'),
-                              // required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               initialValue:
                                   state.taskUpdate.subjects?.isEmpty == true
@@ -181,7 +181,6 @@ class TaskDetailBody extends StatelessWidget {
                             child: CTextFormField(
                               labelText: sharedPref.translate('Description'),
                               maxLines: 5,
-                              // required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               autoFocus: state.taskUpdate.subjects?.isEmpty,
                               initialValue:
@@ -204,11 +203,10 @@ class TaskDetailBody extends StatelessWidget {
                             labelText: sharedPref.translate('Beginning date'),
                             readOnly: readOnly,
                             initialValue: state.taskUpdate.taskAssignment
-                                        ?.beginningDateTime?.isNotEmpty ==
-                                    true
-                                ? df2.format(DateTime.parse(state.taskUpdate
-                                        .taskAssignment?.beginningDateTime ??
-                                    ''))
+                                        ?.beginningDateTime !=
+                                    null
+                                ? df2.format(state.taskUpdate.taskAssignment!
+                                    .beginningDateTime!)
                                 : '',
                             onChanged: (value) {
                               context
@@ -232,12 +230,11 @@ class TaskDetailBody extends StatelessWidget {
                             labelText: sharedPref.translate('Deadline'),
                             required: state.screenMode == ScreenModeEnum.edit,
                             readOnly: readOnly,
-                            initialValue: state.taskUpdate.taskAssignment
-                                        ?.deadline?.isNotEmpty ==
-                                    true
-                                ? df2.format(DateTime.parse(
-                                    state.taskUpdate.taskAssignment?.deadline ??
-                                        ''))
+                            initialValue: state
+                                        .taskUpdate.taskAssignment?.deadline !=
+                                    null
+                                ? df2.format(
+                                    state.taskUpdate.taskAssignment!.deadline!)
                                 : '',
                             onChanged: (value) {
                               context
@@ -285,12 +282,6 @@ class TaskDetailBody extends StatelessWidget {
                                                   ?.createdUserId)
                                           .toList()
                                       : [],
-                              onSelected: (selections) {
-                                // context.read<TaskDetailBloc>().add(
-                                //     TaskAssignedUsersChanged(selections
-                                //         .map<String>((e) => e.value)
-                                //         .toList()));
-                              },
                             ),
                           ),
 
@@ -360,17 +351,9 @@ class TaskDetailBody extends StatelessWidget {
                   if (state.taskUpdate.taskAssignment?.id != null)
                     CGroup(
                       titleText: sharedPref.translate('History'),
-                      child: ResponsiveRow(
-                        context: context,
-                        children: [
-                          ResponsiveItem(
-                            percentWidthOnParent:
-                                constrains.maxWidth < 3 * basicWidth
-                                    ? 100
-                                    : null,
-                          ),
-                        ],
-                      ),
+                      child: Container(
+                          constraints: const BoxConstraints(maxHeight: 300),
+                          child: TaskFlows(flows: state.taskDetail.flows)),
                     ),
                 ],
               ),

@@ -39,8 +39,8 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     on<TaskStatusChanged>(_onTaskStatusChanged);
     on<TaskCategoryChanged>(_onTaskCategoryChanged);
     on<TaskAssignedUsersChanged>(_onTaskAssignedUsersChanged);
-    on<TaskDeadlineChanged>(_onTaskDeadlineChanged);
     on<TaskBeginningTimeChanged>(_onTaskBeginningTimeChanged);
+    on<TaskDeadlineChanged>(_onTaskDeadlineChanged);
     on<TaskMoreDetailChanged>(_onTaskMoreDetailChanged);
     on<TaskParticipantsChanged>(_onTaskParticipantsChanged);
     on<TaskChecklistChanged>(_onTaskChecklistChanged);
@@ -167,21 +167,26 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
                 ?.copyWith(assignedUserId: event.assignedUserIds?[0]))));
   }
 
-  void _onTaskDeadlineChanged(
-      TaskDeadlineChanged event, Emitter<TaskDetailState> emit) {
-    emit(state.copyWith(
-        taskUpdate: state.taskUpdate.copyWith(
-            taskAssignment: state.taskUpdate.taskAssignment
-                ?.copyWith(deadline: df0ConvertedFromDf2(event.deadline!)))));
-  }
-
   void _onTaskBeginningTimeChanged(
       TaskBeginningTimeChanged event, Emitter<TaskDetailState> emit) {
+    var beginningDateTime = df0ConvertedFromDf2(event.beginningTime!);
     emit(state.copyWith(
         taskUpdate: state.taskUpdate.copyWith(
             taskAssignment: state.taskUpdate.taskAssignment?.copyWith(
-                beginningDateTime:
-                    df0ConvertedFromDf2(event.beginningTime!)))));
+                beginningDateTime: (event.beginningTime?.isNotEmpty ?? false)
+                    ? df0.parse(beginningDateTime)
+                    : null))));
+  }
+
+  void _onTaskDeadlineChanged(
+      TaskDeadlineChanged event, Emitter<TaskDetailState> emit) {
+    var deadline = df0ConvertedFromDf2(event.deadline!);
+    emit(state.copyWith(
+        taskUpdate: state.taskUpdate.copyWith(
+            taskAssignment: state.taskUpdate.taskAssignment?.copyWith(
+                deadline: (event.deadline?.isNotEmpty ?? false)
+                    ? df0.parse(deadline)
+                    : null))));
   }
 
   void _onTaskMoreDetailChanged(

@@ -113,8 +113,8 @@ class TaskAssignmentUpdateModel {
   String? lastProgressCode;
   String? categoryCode;
   String? assignedUserId;
-  String? deadline;
-  String? beginningDateTime;
+  DateTime? deadline;
+  DateTime? beginningDateTime;
 
   TaskAssignmentUpdateModel({
     this.id,
@@ -138,8 +138,8 @@ class TaskAssignmentUpdateModel {
     String? lastProgressCode,
     String? categoryCode,
     String? assignedUserId,
-    String? deadline,
-    String? beginningDateTime,
+    DateTime? deadline,
+    DateTime? beginningDateTime,
   }) {
     return TaskAssignmentUpdateModel(
       id: id ?? this.id,
@@ -165,8 +165,11 @@ class TaskAssignmentUpdateModel {
       lastProgressCode: json['lastProgressCode'],
       categoryCode: json['categoryCode'],
       assignedUserId: json['assignedUserId'],
-      deadline: json['deadline'],
-      beginningDateTime: json['beginningDateTime'],
+      deadline:
+          json['deadline'] != null ? DateTime.parse(json['deadline']) : null,
+      beginningDateTime: json['beginningDateTime'] != null
+          ? DateTime.parse(json['beginningDateTime'])
+          : null,
     );
   }
 
@@ -180,8 +183,8 @@ class TaskAssignmentUpdateModel {
       'lastProgressCode': lastProgressCode,
       'categoryCode': categoryCode,
       'assignedUserId': assignedUserId,
-      'deadline': deadline,
-      'beginningDateTime': beginningDateTime,
+      'deadline': deadline?.toIso8601String(),
+      'beginningDateTime': beginningDateTime?.toIso8601String(),
     };
   }
 }

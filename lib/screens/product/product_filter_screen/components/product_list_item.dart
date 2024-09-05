@@ -52,151 +52,119 @@ class ProductListItem extends StatelessWidget {
           padding: const EdgeInsets.all(defaultPadding * 2),
           decoration:
               BoxDecoration(borderRadius: BorderRadius.circular(defaultRadius)),
-          child: Column(
+          child: ResponsiveRow(
+            context: context,
+            // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
+            basicWidth: 180,
             children: [
-              ResponsiveRow(
-                context: context,
-                // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
-                basicWidth: 180,
-                children: [
-                  /// TYPE
-                  ResponsiveItem(
-                    percentWidthOnParent: 100,
-                    child: Row(
-                      children: [
-                        CText(
-                          '${dataItem.name}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                          wrapText: true,
-                        )
-                      ],
+              /// TYPE
+              ResponsiveItem(
+                percentWidthOnParent: 100,
+                child: Row(
+                  children: [
+                    CText(
+                      '${dataItem.name}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      wrapText: true,
+                    )
+                  ],
+                ),
+              ),
+
+              /// CATEGORY
+              ResponsiveItem(
+                child: Row(
+                  children: [
+                    CText('${sharedPref.translate('Category')}: ',
+                        style: const TextStyle(fontSize: smallTextSize)),
+                    CText(
+                      '${dataItem.categoryText}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: smallTextSize,
+                        color: Colors.black,
+                      ),
+                      wrapText: true,
+                    )
+                  ],
+                ),
+              ),
+
+              /// TYPE
+              ResponsiveItem(
+                child: Row(
+                  children: [
+                    CText('${sharedPref.translate('Type')}: ',
+                        style: const TextStyle(fontSize: smallTextSize)),
+                    CText(
+                      '${dataItem.typeText}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: smallTextSize,
+                        color: Colors.black,
+                      ),
+                      wrapText: true,
+                    )
+                  ],
+                ),
+              ),
+
+              /// MONTHS OF WARRANTY
+              dataItem.monthsOfWarranty == null
+                  ? const ResponsiveItem(
+                      widthRatio: 0,
+                      child: SizedBox(),
+                    )
+                  : ResponsiveItem(
+                      child: Row(
+                        children: [
+                          CText('${sharedPref.translate('Warranty (month)')}: ',
+                              style: const TextStyle(fontSize: smallTextSize)),
+                          CText(
+                            numberFormat0(
+                                dataItem.monthsOfWarranty!.toDouble()),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: smallTextSize,
+                              color: Colors.black,
+                            ),
+                            wrapText: true,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // /// STATUS
-                  // ResponsiveItem(
-                  //   child: Row(
-                  //     children: [
-                  //       CText('${sharedPref.translate('Status')}: ',
-                  //           style: const TextStyle(fontSize: smallTextSize)),
-                  //       CText(
-                  //         '${dataItem.taskStatusText}',
-                  //         style: TextStyle(
-                  //           // fontWeight: FontWeight.bold,
-                  //           fontSize: smallTextSize,
-                  //           color: dataItem.taskStatusCode == "Completed"
-                  //               ? Colors.green
-                  //               : dataItem.taskStatusCode == "WaitToConfirm"
-                  //                   ? Colors.orange
-                  //                   : dataItem.taskStatusCode == "Rejected"
-                  //                       ? Colors.grey
-                  //                       : Colors.black,
-                  //         ),
-                  //         warpText: true,
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
-
-                  /// CATEGORY
-                  ResponsiveItem(
-                    child: Row(
-                      children: [
-                        CText('${sharedPref.translate('Category')}: ',
-                            style: const TextStyle(fontSize: smallTextSize)),
-                        CText(
-                          '${dataItem.categoryText}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: smallTextSize,
-                            color: Colors.black,
-                          ),
-                          wrapText: true,
-                        )
-                      ],
+              /// MIN PRICE
+              dataItem.minPrice == null
+                  ? const ResponsiveItem()
+                  : ResponsiveItem(
+                      child: Row(
+                        children: [
+                          CText('${sharedPref.translate('Min price')}: ',
+                              style: const TextStyle(fontSize: smallTextSize)),
+                          CText(
+                            numberFormat0(dataItem.minPrice!),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: smallTextSize,
+                              color: Colors.black,
+                            ),
+                            wrapText: true,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
 
-                  /// TYPE
-                  ResponsiveItem(
-                    child: Row(
-                      children: [
-                        CText('${sharedPref.translate('Type')}: ',
-                            style: const TextStyle(fontSize: smallTextSize)),
-                        CText(
-                          '${dataItem.typeText}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: smallTextSize,
-                            color: Colors.black,
-                          ),
-                          wrapText: true,
-                        )
-                      ],
-                    ),
-                  ),
-
-                  /// MONTHS OF WARRANTY
-                  dataItem.monthsOfWarranty == null
-                      ? const ResponsiveItem(
-                          widthRatio: 0,
-                          child: SizedBox(),
-                        )
-                      : ResponsiveItem(
-                          child: Row(
-                            children: [
-                              CText(
-                                  '${sharedPref.translate('Warranty (month)')}: ',
-                                  style:
-                                      const TextStyle(fontSize: smallTextSize)),
-                              CText(
-                                numberFormat0(
-                                    dataItem.monthsOfWarranty!.toDouble()),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: smallTextSize,
-                                  color: Colors.black,
-                                ),
-                                wrapText: true,
-                              )
-                            ],
-                          ),
-                        ),
-
-                  /// MIN PRICE
-                  dataItem.minPrice == null
-                      ? const ResponsiveItem()
-                      : ResponsiveItem(
-                          child: Row(
-                            children: [
-                              CText('${sharedPref.translate('Min price')}: ',
-                                  style:
-                                      const TextStyle(fontSize: smallTextSize)),
-                              CText(
-                                numberFormat0(dataItem.minPrice!),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: smallTextSize,
-                                  color: Colors.black,
-                                ),
-                                wrapText: true,
-                              )
-                            ],
-                          ),
-                        ),
-
-                  /// DESCRIPTION
-                  ResponsiveItem(
-                    widthRatio: 2,
-                    child: dataItem.description == null
-                        ? Container()
-                        : CText('${dataItem.description}'),
-                  ),
-                ],
-              )
+              /// DESCRIPTION
+              ResponsiveItem(
+                widthRatio: 2,
+                child: dataItem.description == null
+                    ? Container()
+                    : CText('${dataItem.description}'),
+              ),
             ],
           ),
         ),

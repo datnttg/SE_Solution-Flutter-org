@@ -97,10 +97,10 @@ class SaveTaskButton extends StatelessWidget {
                     .read<TaskDetailBloc>()
                     .add(TaskSaving(state.taskDetail));
                 if (context.mounted) {
-                  context
-                      .read<TaskDetailBloc>()
-                      .add(TaskIdChanged(state.taskDetail.taskAssignment?.id));
-                  context.read<TaskFilterBloc>().add(TaskFilterListLoading());
+                  // context
+                  //     .read<TaskDetailBloc>()
+                  //     .add(TaskIdChanged(state.taskDetail.taskAssignment?.id));
+                  // context.read<TaskFilterBloc>().add(TaskFilterListLoading());
                 }
               },
             ));

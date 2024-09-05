@@ -4,6 +4,7 @@ class TaskDetailModel {
   List<TaskParticipantDetailModel>? participants;
   List<TaskChecklistDetailModel>? checklist;
   // List<TaskSubjectDetailModel>? contactPoints;
+  List<TaskFlowDetailModel>? flows;
   List<TaskSubjectDetailModel>? subjects;
   List<TaskContractDetailModel>? contracts;
   List<TaskConstructionDetailModel>? constructions;
@@ -14,6 +15,7 @@ class TaskDetailModel {
     this.participants,
     this.checklist,
     // this.contactPoints,
+    this.flows,
     this.subjects,
     this.contracts,
     this.constructions,
@@ -25,6 +27,7 @@ class TaskDetailModel {
     List<TaskParticipantDetailModel>? participants,
     List<TaskChecklistDetailModel>? checklist,
     List<TaskSubjectDetailModel>? subjects,
+    List<TaskFlowDetailModel>? flows,
     List<TaskContractDetailModel>? contracts,
     List<TaskConstructionDetailModel>? constructions,
   }) {
@@ -34,6 +37,7 @@ class TaskDetailModel {
       participants: participants ?? this.participants,
       checklist: checklist ?? this.checklist,
       subjects: subjects ?? this.subjects,
+      flows: flows ?? this.flows,
       contracts: contracts ?? this.contracts,
       constructions: constructions ?? this.constructions,
     );
@@ -64,6 +68,11 @@ class TaskDetailModel {
               .map((i) => TaskSubjectDetailModel.fromJson(i))
               .toList()
           : null,
+      flows: json['flows'] != null
+          ? (json['flows'] as List)
+              .map((i) => TaskFlowDetailModel.fromJson(i))
+              .toList()
+          : null,
       contracts: json['contracts'] != null
           ? (json['contracts'] as List)
               .map((i) => TaskContractDetailModel.fromJson(i))
@@ -84,6 +93,7 @@ class TaskDetailModel {
       'participants': participants?.map((i) => i.toMap()).toList(),
       'checklist': checklist?.map((i) => i.toMap()).toList(),
       'subjects': subjects?.map((i) => i.toMap()).toList(),
+      'flows': flows?.map((i) => i.toMap()).toList(),
       'contracts': contracts?.map((i) => i.toMap()).toList(),
       'constructions': constructions?.map((i) => i.toMap()).toList(),
     };
@@ -97,6 +107,7 @@ class TaskDetailModel {
           participants?.map((i) => i.toMap()).toList().toString() ?? '',
       'checklist': checklist?.map((i) => i.toMap()).toList().toString() ?? '',
       'subjects': subjects?.map((i) => i.toMap()).toList().toString() ?? '',
+      'flows': flows?.map((i) => i.toMap()).toList().toString() ?? '',
       'contracts': contracts?.map((i) => i.toMap()).toList().toString() ?? '',
       'constructions':
           constructions?.map((i) => i.toMap()).toList().toString() ?? '',
@@ -106,7 +117,7 @@ class TaskDetailModel {
 
 class TaskAssignmentDetailModel {
   String? id;
-  String? createdTime;
+  DateTime? createdTime;
   String? createdUserId;
   String? createdName;
   String? taskType;
@@ -120,8 +131,8 @@ class TaskAssignmentDetailModel {
   String? taskCategoryTitle;
   String? assignedUserId;
   String? assignedName;
-  String? deadline;
-  String? beginningDateTime;
+  DateTime? deadline;
+  DateTime? beginningDateTime;
 
   TaskAssignmentDetailModel({
     this.id,
@@ -145,7 +156,7 @@ class TaskAssignmentDetailModel {
 
   TaskAssignmentDetailModel copyWith({
     String? id,
-    String? createdTime,
+    DateTime? createdTime,
     String? createdUserId,
     String? createdName,
     String? taskType,
@@ -159,8 +170,8 @@ class TaskAssignmentDetailModel {
     String? taskCategoryTitle,
     String? assignedUserId,
     String? assignedName,
-    String? deadline,
-    String? beginningDateTime,
+    DateTime? deadline,
+    DateTime? beginningDateTime,
   }) {
     return TaskAssignmentDetailModel(
       id: id ?? this.id,
@@ -186,7 +197,9 @@ class TaskAssignmentDetailModel {
   factory TaskAssignmentDetailModel.fromJson(Map<String, dynamic> json) {
     return TaskAssignmentDetailModel(
       id: json['id'],
-      createdTime: json['createdTime'],
+      createdTime: json['createdTime'] != null
+          ? DateTime.parse(json['createdTime'])
+          : null,
       createdUserId: json['createdUserId'],
       createdName: json['createdName'],
       taskType: json['taskType'],
@@ -200,8 +213,11 @@ class TaskAssignmentDetailModel {
       taskCategoryTitle: json['taskCategoryTitle'],
       assignedUserId: json['assignedUserId'],
       assignedName: json['assignedName'],
-      deadline: json['deadline'],
-      beginningDateTime: json['beginningDateTime'],
+      deadline:
+          json['deadline'] != null ? DateTime.parse(json['deadline']) : null,
+      beginningDateTime: json['beginningDateTime'] != null
+          ? DateTime.parse(json['beginningDateTime'])
+          : null,
     );
   }
 
@@ -222,8 +238,8 @@ class TaskAssignmentDetailModel {
       'taskCategoryTitle': taskCategoryTitle,
       'assignedUserId': assignedUserId,
       'assignedName': assignedName,
-      'deadline': deadline,
-      'beginningDateTime': beginningDateTime,
+      'deadline': deadline?.toIso8601String(),
+      'beginningDateTime': beginningDateTime?.toIso8601String(),
     };
   }
 }
@@ -444,6 +460,82 @@ class TaskConstructionDetailModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+    };
+  }
+}
+
+class TaskFlowDetailModel {
+  String id;
+  String action;
+  String actionText;
+  DateTime createdTime;
+  String createdUserId;
+  String createdUserName;
+  String taskId;
+  String progressStatus;
+  String progressStatusText;
+  String? taskFlowDescription;
+  String? taskSchedule;
+  String? referenceSubjectId;
+  String? taskFlowDetail;
+  List<dynamic> proposals;
+  List<dynamic> files;
+
+  TaskFlowDetailModel({
+    required this.id,
+    required this.action,
+    required this.actionText,
+    required this.createdTime,
+    required this.createdUserId,
+    required this.createdUserName,
+    required this.taskId,
+    required this.progressStatus,
+    required this.progressStatusText,
+    this.taskFlowDescription,
+    this.taskSchedule,
+    this.referenceSubjectId,
+    required this.taskFlowDetail,
+    required this.proposals,
+    required this.files,
+  });
+
+  factory TaskFlowDetailModel.fromJson(Map<String, dynamic> json) {
+    return TaskFlowDetailModel(
+      id: json['id'],
+      action: json['action'],
+      actionText: json['actionText'],
+      createdTime: DateTime.parse(json['createdTime']),
+      createdUserId: json['createdUserId'],
+      createdUserName: json['createdUserName'],
+      taskId: json['taskId'],
+      progressStatus: json['progressStatus'],
+      progressStatusText: json['progressStatusText'],
+      taskFlowDescription: json['taskFlowDescription'],
+      taskSchedule: json['taskSchedule'],
+      referenceSubjectId: json['referenceSubjectId'],
+      taskFlowDetail: json['taskFlowDetail'],
+      proposals: json['proposals'],
+      files: json['files'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'action': action,
+      'actionText': actionText,
+      'createdTime': createdTime.toIso8601String(),
+      'createdUserId': createdUserId,
+      'createdUserName': createdUserName,
+      'taskId': taskId,
+      'progressStatus': progressStatus,
+      'progressStatusText': progressStatusText,
+      'taskFlowDescription': taskFlowDescription,
+      'taskSchedule': taskSchedule,
+      'referenceSubjectId': referenceSubjectId,
+      'taskFlowDetail': taskFlowDetail,
+      'proposals': proposals,
+      'files': files,
     };
   }
 }

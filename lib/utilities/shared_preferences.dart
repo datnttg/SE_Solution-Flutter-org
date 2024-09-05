@@ -105,6 +105,11 @@ class SharedPref {
     return mapLocale(languageCode);
   }
 
+  String getLocaleCode() {
+    return _sharedPref!.getString('locale') ??
+        constants.defaultLocale.toString();
+  }
+
   Future setLocale(Locale? locale) async {
     String localeString = locale.toString();
     _sharedPref!.setString('locale', localeString);
