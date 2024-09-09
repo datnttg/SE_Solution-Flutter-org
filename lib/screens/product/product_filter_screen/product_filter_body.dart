@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import 'bloc/product_filter_bloc.dart';
@@ -29,137 +30,102 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constrains) {
-      return Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            height: constrains.maxHeight,
-            width: constrains.maxWidth,
-            child: BlocBuilder<ProductFilterBloc, ProductFilterState>(
-              builder: (context, state) {
-                var all = state.products ?? [];
-                if (all.isNotEmpty) {
-                  all.sort((a, b) => b.name == null
-                      ? -1
-                      : a.name == null
-                          ? 1
-                          : b.name!.compareTo(a.name!));
-                }
-                var normal = all
-                    .where((e) => ['Normal'].any((u) => u == e.statusCode))
-                    .toList();
-                var locked = all
-                    .where((e) => ['Locked'].any((u) => u == e.statusCode))
-                    .toList();
-                var cancelled = all
-                    .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
-                    .toList();
-                return NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return <Widget>[
-                      SliverToBoxAdapter(
-                        child: Container(
-                          color: kBgColor,
-                          padding: const EdgeInsets.only(
-                              left: defaultPadding * 2,
-                              right: defaultPadding * 2),
-
-                          /// FILTER FORM
-                          child: const ProductFilterForm(),
-                        ),
-                      ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: defaultPadding * 2,
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _SliverAppBarDelegate(
-                          TabBar(
-                            controller: _tabController,
-                            labelColor: Colors.black87,
-                            unselectedLabelColor: Colors.grey,
-                            isScrollable: true,
-                            tabAlignment: TabAlignment.center,
-                            tabs: [
-                              Tab(
-                                  child: Text(
-                                      '${sharedPrefs.translate("Normal")} (${normal.length})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              Tab(
-                                  child: Text(
-                                      '${sharedPrefs.translate("Locked")} (${locked.length})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              Tab(
-                                  child: Text(
-                                      '${sharedPrefs.translate("Cancelled")} (${cancelled.length})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              Tab(
-                                  child: Text(
-                                      '${sharedPrefs.translate("All")} (${all.length})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ];
-                  },
-                  body: Center(
-                    child: TabBarView(
+    return BlocBuilder<ProductFilterBloc, ProductFilterState>(
+      builder: (context, state) {
+        var all = state.products ?? [];
+        if (all.isNotEmpty) {
+          all.sort((a, b) => b.name == null
+              ? -1
+              : a.name == null
+                  ? 1
+                  : b.name!.compareTo(a.name!));
+        }
+        var normal =
+            all.where((e) => ['Normal'].any((u) => u == e.statusCode)).toList();
+        var locked =
+            all.where((e) => ['Locked'].any((u) => u == e.statusCode)).toList();
+        var cancelled = all
+            .where((e) => ['Cancelled'].any((u) => u == e.statusCode))
+            .toList();
+        return RefreshIndicator(
+          onRefresh: () async {
+            return context
+                .read<ProductFilterBloc>()
+                .add(ProductFilterSubmitted());
+          },
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                const SliverToBoxAdapter(
+                  /// FILTER FORM
+                  child: ProductFilterForm(),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: defaultPadding * 2,
+                  ),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverAppBarDelegate(
+                    TabBar(
                       controller: _tabController,
-                      children: [
-                        /// PRODUCT LIST
-                        ProductList(list: normal),
-                        ProductList(list: locked),
-                        ProductList(list: cancelled),
-                        ProductList(list: all),
+                      labelColor: Colors.black87,
+                      unselectedLabelColor: Colors.grey,
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.center,
+                      tabs: [
+                        Tab(
+                            child: Text(
+                                '${sharedPref.translate("Normal")} (${normal.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
+                        Tab(
+                            child: Text(
+                                '${sharedPref.translate("Locked")} (${locked.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
+                        Tab(
+                            child: Text(
+                                '${sharedPref.translate("Cancelled")} (${cancelled.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
+                        Tab(
+                            child: Text(
+                                '${sharedPref.translate("All")} (${all.length})',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold))),
                       ],
                     ),
                   ),
-                );
-              },
+                ),
+              ];
+            },
+            body: Center(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  /// PRODUCT LIST
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: normal)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: locked)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: cancelled)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: all)
+                      : const Center(child: CircularProgressIndicator()),
+                ],
+              ),
             ),
           ),
-
-          /// ADD PRODUCT BUTTON
-          // Positioned(
-          //   bottom: 50,
-          //   right: 50,
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //       color: kBgColorRow1,
-          //       border: Border.all(width: 1, color: kBgColorHeader),
-          //       borderRadius: BorderRadius.circular(800),
-          //     ),
-          //     child: IconButton(
-          //       icon: const Icon(Icons.add),
-          //       padding: const EdgeInsets.all(15),
-          //       onPressed: () async {
-          //         if (Responsive.isSmallWidth(context)) {
-          //           final isReload = await Navigator.pushNamed(
-          //               context, customRouteMapping.productAdd);
-          //           if (isReload == true) {
-          //             widget.bloc.loadData();
-          //           }
-          //         } else {
-          //           widget.bloc.eventController
-          //               .add(ChangeSelectedProduct(productId: ''));
-          //         }
-          //       },
-          //     ),
-          //   ),
-          // ),
-        ],
-      );
-    });
+        );
+      },
+    );
   }
 }
 

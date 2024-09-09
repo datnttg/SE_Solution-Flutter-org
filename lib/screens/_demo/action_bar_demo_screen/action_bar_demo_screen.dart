@@ -15,7 +15,7 @@ class _ActionBarDemoScreenState extends State<ActionBarDemoScreen> {
     return Scaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate("Dashboard")),
+        title: Text(sharedPref.translate("Dashboard")),
         actions: [
           Container(
             width: 100,

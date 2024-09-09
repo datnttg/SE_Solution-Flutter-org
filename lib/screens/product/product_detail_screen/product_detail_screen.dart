@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/custom_widgets.dart';
+import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
@@ -26,7 +27,7 @@ class ProductDetailScreen extends StatelessWidget {
           child: CScaffold(
             drawer: const MainMenu(),
             appBar: AppBar(
-              title: Text(sharedPrefs.translate('Product information'),
+              title: Text(sharedPref.translate('Product information'),
                   style: const TextStyle(
                       fontSize: mediumTextSize * 1.2,
                       fontWeight: FontWeight.bold)),
@@ -49,11 +50,11 @@ class ProductDetailScreen extends StatelessWidget {
                   child: Builder(
                     builder: (context) {
                       return BlocSelector<ProductDetailBloc, ProductDetailState,
-                          ProductDetailLoadingStatus>(
+                          ProcessingStatusEnum>(
                         selector: (state) => state.loadingStatus,
                         builder: (context, loadingStatus) {
                           switch (loadingStatus) {
-                            case ProductDetailLoadingStatus.success:
+                            case ProcessingStatusEnum.success:
                               return const ProductDetailBody();
                             default:
                               context

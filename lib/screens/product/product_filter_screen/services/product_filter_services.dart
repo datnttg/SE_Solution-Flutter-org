@@ -15,7 +15,7 @@ Future<ProductDetailModel> fetchProductDetailEntry(String productId) async {
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['code'],
-            labelText: e[sharedPrefs.getLocale().languageCode],
+            labelText: e[sharedPref.getLocale().languageCode],
           ))
       .toList();
   return listEntries;
@@ -29,7 +29,7 @@ Future<List<CDropdownMenuEntry>> fetchProductCategoryEntry(
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['code'],
-            labelText: e[sharedPrefs.getLocale().languageCode],
+            labelText: e[sharedPref.getLocale().languageCode],
           ))
       .toList();
   return listEntries;

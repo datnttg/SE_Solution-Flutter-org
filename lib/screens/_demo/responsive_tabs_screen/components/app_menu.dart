@@ -19,14 +19,14 @@ import '../../../../utilities/shared_preferences.dart';
 //       ),
 //     )
 //   ];
-//   var functions = sharedPrefs.getFunctions();
+//   var functions = sharedPref.getFunctions();
 //   var appMenu = jsonDecode(functions);
 //   for (var item in appMenu) {
 //     Widget listTile = GestureDetector(
 //       onTap: () => Navigator.pushNamed(context, item['link']),
 //       child: ListTile(
 //         leading: const Icon(Icons.settings),
-//         title: Text(item[sharedPrefs.getLocale().languageCode]),
+//         title: Text(item[sharedPref.getLocale().languageCode]),
 //       ),
 //     );
 //     listView.add(listTile);
@@ -110,7 +110,7 @@ class _AppMenuState extends State<AppMenu> {
       return result;
     }
 
-    List<dynamic> functions = jsonDecode(sharedPrefs.getFunctions());
+    List<dynamic> functions = jsonDecode(sharedPref.getFunctions());
     List<Node> nodes = buildMenuTree(functions, null, 1);
 
     TreeViewController treeViewController = TreeViewController(

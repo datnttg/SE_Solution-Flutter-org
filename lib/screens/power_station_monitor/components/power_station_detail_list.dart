@@ -29,7 +29,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                 child: Padding(
                   padding: const EdgeInsets.all(defaultPadding * 2),
                   child: Text(
-                    sharedPrefs.translate("Information"),
+                    sharedPref.translate("Information"),
                     maxLines: 2,
                     softWrap: true,
                     style: const TextStyle(
@@ -69,7 +69,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                     ),
                                   )),
                                   Text(
-                                    sharedPrefs.translate(widget
+                                    sharedPref.translate(widget
                                             .stationEnergyDataCurrent?[index]
                                             .status ??
                                         ""),
@@ -124,7 +124,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('System')}: "),
+                                                "${sharedPref.translate('System')}: "),
                                             Text(
                                               widget
                                                       .stationEnergyDataCurrent?[
@@ -144,7 +144,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('Installed capacity')}: "),
+                                                "${sharedPref.translate('Installed capacity')}: "),
                                             Text(
                                               nf0.format(widget
                                                       .stationEnergyDataCurrent?[
@@ -165,7 +165,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('Current power')}: "),
+                                                "${sharedPref.translate('Current power')}: "),
                                             Text(
                                               nf1.format(widget
                                                       .stationEnergyDataCurrent?[
@@ -186,7 +186,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('Today energy')}: "),
+                                                "${sharedPref.translate('Today energy')}: "),
                                             Text(
                                               nf0.format(widget
                                                       .stationEnergyDataCurrent?[
@@ -207,7 +207,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('Total energy')}: "),
+                                                "${sharedPref.translate('Total energy')}: "),
                                             Text(
                                               nf0.format(widget
                                                       .stationEnergyDataCurrent?[
@@ -228,7 +228,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                                "${sharedPrefs.translate('Peak power')}: "),
+                                                "${sharedPref.translate('Peak power')}: "),
                                             Text(
                                               nf0.format(widget
                                                       .stationEnergyDataCurrent?[
@@ -240,7 +240,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                                 fontSize: largeTextSize,
                                               ),
                                             ),
-                                            Text(sharedPrefs
+                                            Text(sharedPref
                                                 .translate('Hours')
                                                 .toLowerCase()),
                                           ]),
@@ -271,7 +271,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                           child: Padding(
                             padding: const EdgeInsets.all(defaultPadding * 2),
                             child: Text(
-                              sharedPrefs.translate("Station name"),
+                              sharedPref.translate("Station name"),
                               softWrap: true,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Status"),
+                          sharedPref.translate("Status"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("System"),
+                          sharedPref.translate("System"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -330,7 +330,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Installed capacity"),
+                          sharedPref.translate("Installed capacity"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -349,7 +349,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Current power"),
+                          sharedPref.translate("Current power"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -368,7 +368,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Today energy"),
+                          sharedPref.translate("Today energy"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -387,7 +387,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Total energy"),
+                          sharedPref.translate("Total energy"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -406,7 +406,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                         padding: const EdgeInsets.fromLTRB(
                             defaultPadding * 2, 0, defaultPadding * 2, 0),
                         child: Text(
-                          sharedPrefs.translate("Peak power"),
+                          sharedPref.translate("Peak power"),
                           softWrap: true,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -453,9 +453,8 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                                                   .stationEnergyDataCurrent?[
                                                                       index]
                                                                   .name ??
-                                                              sharedPrefs
-                                                                  .translate(
-                                                                      "(No name)"))
+                                                              sharedPref.translate(
+                                                                  "(No name)"))
                                                           .toUpperCase(),
                                                       maxLines: 2,
                                                       softWrap: true,
@@ -489,7 +488,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                                 defaultPadding * 2,
                                                 0),
                                             child: Text(
-                                              sharedPrefs.translate(widget
+                                              sharedPref.translate(widget
                                                       .stationEnergyDataCurrent?[
                                                           index]
                                                       .status ??
@@ -718,7 +717,7 @@ class _PowerStationDetailListState extends State<PowerStationDetailList> {
                                                       fontSize: largeTextSize),
                                                 ),
                                                 Text(
-                                                    sharedPrefs
+                                                    sharedPref
                                                         .translate("Hours")
                                                         .toLowerCase(),
                                                     style: const TextStyle(

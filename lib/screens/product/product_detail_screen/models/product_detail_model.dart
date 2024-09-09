@@ -1,5 +1,3 @@
-import 'child_product_model.dart';
-
 class ProductDetailModel {
   String? id;
   String? code;
@@ -16,7 +14,7 @@ class ProductDetailModel {
   bool? serialRequired;
   int? monthsOfWarranty;
   double? minPrice;
-  List<ChildProductModel>? children;
+  List<ChildProductDetailModel>? children;
 
   ProductDetailModel({
     this.id,
@@ -55,7 +53,7 @@ class ProductDetailModel {
       typeCode: json['typeCode'],
       typeText: json['typeText'],
       children: (json['children'] as List<dynamic>?)
-          ?.map((childJson) => ChildProductModel.fromJson(childJson))
+          ?.map((childJson) => ChildProductDetailModel.fromJson(childJson))
           .toList(),
     );
   }
@@ -81,6 +79,29 @@ class ProductDetailModel {
     };
   }
 
+  Map<String, String> toJson() {
+    return {
+      'id': id ?? '',
+      'code': code ?? '',
+      'name': name ?? '',
+      'description': description ?? '',
+      'unitCode': unitCode ?? '',
+      'unitText': unitText ?? '',
+      'statusCode': statusCode ?? '',
+      'statusText': statusText ?? '',
+      'categoryCode': categoryCode ?? '',
+      'categoryText': categoryText ?? '',
+      'typeCode': typeCode ?? '',
+      'typeText': typeText ?? '',
+      'serialRequired': serialRequired?.toString() ?? '',
+      'monthsOfWarranty': monthsOfWarranty?.toString() ?? '',
+      'minPrice': minPrice?.toString() ?? '',
+      'children': children != null
+          ? children!.map((e) => e.toMap()).toList().toString()
+          : '',
+    };
+  }
+
   ProductDetailModel copyWith({
     String? id,
     String? code,
@@ -97,7 +118,7 @@ class ProductDetailModel {
     bool? serialRequired,
     int? monthsOfWarranty,
     double? minPrice,
-    List<ChildProductModel>? children,
+    List<ChildProductDetailModel>? children,
   }) {
     return ProductDetailModel(
       id: id ?? this.id,
@@ -117,5 +138,36 @@ class ProductDetailModel {
       minPrice: minPrice ?? this.minPrice,
       children: children ?? this.children,
     );
+  }
+}
+
+class ChildProductDetailModel {
+  String? childId;
+  double? quantityOfChild;
+  String? unitCode;
+  String? note;
+
+  ChildProductDetailModel({
+    this.childId,
+    this.quantityOfChild = 0,
+    this.unitCode,
+    this.note,
+  });
+
+  factory ChildProductDetailModel.fromJson(Map<String, dynamic> json) {
+    return ChildProductDetailModel(
+      childId: json['childId'],
+      quantityOfChild: json['quantityOfChild'],
+      unitCode: json['unitCode'],
+      note: json['note'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'childId': childId,
+      'quantityOfChild': quantityOfChild,
+      'note': note,
+    };
   }
 }

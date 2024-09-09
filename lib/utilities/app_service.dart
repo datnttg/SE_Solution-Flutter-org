@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:open_app_file/open_app_file.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_io/io.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import 'configs.dart';
 import 'constants/core_constants.dart';
@@ -58,7 +62,7 @@ Future<bool> updateFirebaseToken(
   var deviceId = await getDeviceId();
   var deviceName = await getDeviceName();
   Map parameters = {
-    "userId": sharedPrefs.getUserId(),
+    "userId": sharedPref.getUserId(),
     "deviceId": deviceId,
     "deviceName": deviceName,
     "firebaseInstallationId": firebaseInstallationId,
@@ -71,7 +75,7 @@ Future<bool> updateFirebaseToken(
 Future<void> updateVersion(String downloadUrl) async {
   if (Platform.isAndroid || Platform.isIOS) {
     await Permission.storage.request();
-    kShowProcessingDialog(title: sharedPrefs.translate('Processing...'));
+    kShowProcessingDialog(title: sharedPref.translate('Processing...'));
     var path = '/storage/emulated/0/Download/se-solution.apk';
     var file = File(path);
     var res = await http.get(Uri.parse(downloadUrl));
@@ -108,21 +112,44 @@ Future<void> checkUpdate() async {
             PopScope(
               canPop: false, // Prevent dialog from closing
               child: AlertDialog(
-                title: Text(sharedPrefs.translate('Update available')),
+                title: Text(sharedPref.translate('Update available')),
                 content: SizedBox(
-                  height: 100,
+                  height: 155,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            '${sharedPrefs.translate('A new version is available! You need to update to continue!')} '),
+                            '${sharedPref.translate('A new version is available! You need to update to continue!')} '),
                         const SizedBox(height: defaultPadding * 2),
                         Text(
-                            '- ${sharedPrefs.translate('New version')}: $targetVersion'),
+                            '- ${sharedPref.translate('New version')}: $targetVersion'),
                         Text(
-                            '- ${sharedPrefs.translate('Current version')}: $appVersion'),
+                            '- ${sharedPref.translate('Current version')}: $appVersion'),
                         const SizedBox(height: defaultPadding * 2),
+                        CText("${sharedPref.translate('Manual download')}:"),
+                        InkWell(
+                          onTap: () async {
+                            const url =
+                                'https://storage.dnsgroup.vn/qltt/release/applications/se-solution-release-v7a.apk';
+                            if (await canLaunchUrlString(url)) {
+                              await launchUrlString(url);
+                            }
+                          },
+                          child: CText(sharedPref.translate('- 32bit'),
+                              style: const TextStyle(color: Colors.blue)),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            const url =
+                                'https://storage.dnsgroup.vn/qltt/release/applications/se-solution-release-v8a.apk';
+                            if (await canLaunchUrlString(url)) {
+                              await launchUrlString(url);
+                            }
+                          },
+                          child: CText(sharedPref.translate('- 64bit'),
+                              style: const TextStyle(color: Colors.blue)),
+                        ),
                       ],
                     ),
                   ),
@@ -130,7 +157,7 @@ Future<void> checkUpdate() async {
                 actions: [
                   TextButton(
                     child: Text(
-                        sharedPrefs.translate('Download update').toUpperCase()),
+                        sharedPref.translate('Download update').toUpperCase()),
                     onPressed: () async {
                       String downloadUrl = "";
                       if (Platform.isAndroid) {
@@ -144,7 +171,7 @@ Future<void> checkUpdate() async {
                 ],
               ),
             ),
-            barrierDismissible: false);
+            barrierDismissible: true);
       }
     }
   } catch (ex) {
@@ -220,14 +247,14 @@ Future<void> login(BuildContext context, Map payload) async {
     if (responseBody['success'] == true) {
       var accessToken = responseData['accessToken'];
       var refreshToken = responseData['refreshToken'];
-      sharedPrefs.setAccessToken(accessToken);
-      sharedPrefs.setRefreshToken(refreshToken);
-      sharedPrefs.setUserId(responseData['userId']);
-      sharedPrefs.setUsername(payload['username']);
-      sharedPrefs.setPassword(payload['password']);
+      sharedPref.setAccessToken(accessToken);
+      sharedPref.setRefreshToken(refreshToken);
+      sharedPref.setUserId(responseData['userId']);
+      sharedPref.setUsername(payload['username']);
+      sharedPref.setPassword(payload['password']);
       updateFirebaseToken(
-          firebaseToken: sharedPrefs.getFirebaseToken(),
-          firebaseInstallationId: sharedPrefs.getFirebaseInstallationId());
+          firebaseToken: sharedPref.getFirebaseToken(),
+          firebaseInstallationId: sharedPref.getFirebaseInstallationId());
       var getFunctions = await getAppFunctions();
       if (context.mounted && getFunctions) {
         Navigator.of(context).pushReplacement(
@@ -240,8 +267,8 @@ Future<void> login(BuildContext context, Map payload) async {
       }
       // } else {
       //   kShowToast(
-      //     title: sharedPrefs.translate('Fail'),
-      //     content: sharedPrefs.translate('Login failed'),
+      //     title: sharedPref.translate('Fail'),
+      //     content: sharedPref.translate('Login failed'),
       //     detail: responseData?.toString(),
       //     style: 'danger',
       //   );
@@ -252,7 +279,7 @@ Future<void> login(BuildContext context, Map payload) async {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text(sharedPrefs.translate("Connection failed!")),
+                Text(sharedPref.translate("Connection failed!")),
               ],
             ),
           ),
@@ -306,7 +333,7 @@ kShowToast({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${sharedPrefs.translate('Detail')}: ',
+                      '${sharedPref.translate('Detail')}: ',
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     Flexible(
@@ -334,7 +361,7 @@ kShowAlert({required Widget body, String? title}) {
   return Get.dialog(
     AlertDialog(
       title:
-          title == null ? null : KSelectableText(sharedPrefs.translate(title)),
+          title == null ? null : KSelectableText(sharedPref.translate(title)),
       content: SingleChildScrollView(
         child: body,
       ),
@@ -351,7 +378,13 @@ kShowAlert({required Widget body, String? title}) {
   );
 }
 
-kShowDialog(Widget child, {String? title}) {
+kShowDialog(
+  Widget child, {
+  String? title,
+  double? maxWidth,
+  bool? dismissible = true,
+  Function? onCancel,
+}) {
   return Get.dialog(
     barrierDismissible: false,
     AlertDialog(
@@ -363,29 +396,31 @@ kShowDialog(Widget child, {String? title}) {
             child: title == null
                 ? Container()
                 : SelectableText(
-                    sharedPrefs.translate(title),
+                    sharedPref.translate(title),
                   )),
-        KElevatedButton(
-          msBackgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.hovered)) {
-              return kSecondaryColor;
-            }
-            if (states.contains(WidgetState.pressed)) {
-              return kButtonPressedBgColor;
-            }
-            return kButtonBgColor1;
-          }),
-          child: Text(
-            sharedPrefs.translate('Close'),
-            style: const TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            Get.back();
-          },
-        )
+        if (dismissible == true)
+          KElevatedButton(
+            msBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.hovered)) {
+                return kSecondaryColor;
+              }
+              if (states.contains(WidgetState.pressed)) {
+                return kButtonPressedBgColor;
+              }
+              return kButtonBgColor1;
+            }),
+            child: Text(
+              sharedPref.translate('Close'),
+              style: const TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              onCancel?.call();
+              Get.back();
+            },
+          )
       ]),
       content: SizedBox(
-        width: double.maxFinite,
+        width: maxWidth ?? double.maxFinite,
         child: SingleChildScrollView(child: child),
       ),
       backgroundColor: Theme.of(Get.context!).scaffoldBackgroundColor,
@@ -414,7 +449,7 @@ Future<bool> getAppFunctions() async {
     var response = await fetchData(hostAddress);
     if (response['success'] == true) {
       var functions = jsonEncode(response['responseData']);
-      sharedPrefs.setFunctions(functions);
+      sharedPref.setFunctions(functions);
       return true;
     }
   } catch (e) {
@@ -424,29 +459,19 @@ Future<bool> getAppFunctions() async {
 }
 
 Future<bool> refreshToken() async {
-// var httpClient = http.Client();
   try {
     var url = Uri.parse('${constants.hostAddress}/token/refresh');
     Map payload = {
-      'AccessToken': sharedPrefs.getAccessToken(),
-      'RefreshToken': sharedPrefs.getRefreshToken(),
+      'AccessToken': sharedPref.getAccessToken(),
+      'RefreshToken': sharedPref.getRefreshToken(),
     };
-// var response = await httpClient.post(url,
-//     headers: {
-//       'Accept': '*/*',
-//       'Access-Control-Allow-Origin': '*',
-//       'Content-Type': 'application/json',
-//     },
-//     encoding: Encoding.getByName('utf-8'),
-//     body: jsonEncode(payload));
-// var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
     var responseBody = await fetchData(url, parameters: payload);
     if (responseBody['success'] == true) {
       var responseData = responseBody['responseData'];
-      sharedPrefs.setAccessToken(responseData['accessToken']);
+      sharedPref.setAccessToken(responseData['accessToken']);
       updateFirebaseToken(
-          firebaseToken: sharedPrefs.getFirebaseToken(),
-          firebaseInstallationId: sharedPrefs.getFirebaseInstallationId());
+          firebaseToken: sharedPref.getFirebaseToken(),
+          firebaseInstallationId: sharedPref.getFirebaseInstallationId());
       checkUpdate();
       return true;
     } else {
@@ -455,103 +480,118 @@ Future<bool> refreshToken() async {
   } catch (e) {
     return false;
   }
-// finally {
-//   httpClient.close();
-// }
 }
 
-Future<Map> fetchDataUI(
-  Uri hostAddress, {
-  Map? parameters,
-  String? method,
-  bool? showSuccessNotification = true,
-}) async {
-  kShowProcessingDialog(title: sharedPrefs.translate("Processing..."));
-  await Future.delayed(const Duration(milliseconds: 300));
-  var response =
-      await fetchData(hostAddress, parameters: parameters, method: method);
-  Get.back();
-  if (response['success'] == true && showSuccessNotification == true) {
-    kShowToast(
-      title: sharedPrefs.translate('Success'),
-      content: response['responseMessage'],
-      style: 'success',
-    );
-  } else if (response['success'] == false &&
-      response['responseMessage'] != '') {
-    // kShowAlert(
-    //     title: sharedPrefs.translate('Fail'),
-    //     body: Text(response['responseMessage']));
-    kShowToast(
-      title: sharedPrefs.translate('Fail'),
-      content: response['responseMessage'],
-      style: 'danger',
-    );
-  } else if (response['success'] == false) {
-    kShowToast(
-      title: sharedPrefs.translate('Fail'),
-      content: sharedPrefs.translate("Connection failed!"),
-      style: 'danger',
-    );
-  }
-  return response;
-}
+Future<Map> streamData(Uri hostAddress,
+    {Map<String, String>? parameters,
+    List<Map<String, dynamic>>? fileGroups,
+    String? method,
+    bool? showProgressingDialog = true,
+    bool? showSuccessNotification = true}) async {
+  debugPrint("streamData(): $hostAddress");
+  StreamSubscription? subscription;
 
-Future<Map> fetchData(Uri hostAddress,
-    {Map? parameters, String? method}) async {
   try {
-    var headers = {
-      'Accept': '*/*',
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${sharedPrefs.getAccessToken()}',
-      "Localization": sharedPrefs.getLocale().toString(),
-    };
-    var body = jsonEncode(parameters);
-    var encoding = Encoding.getByName('utf-8');
-    http.Response response;
-    debugPrint("fetchData(): $hostAddress");
-    switch (method) {
-      case 'get':
-        response = await http.get(hostAddress, headers: headers)
-// .timeout(const Duration(seconds: 10))
-            ;
-        break;
-      case 'post':
-        response = await http.post(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      case 'put':
-        response = await http.put(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      case 'delete':
-        response = await http.delete(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
-      default:
-        response = await http.post(hostAddress,
-            headers: headers, body: body, encoding: encoding);
-        break;
+    var request = http.MultipartRequest(method ?? 'POST', hostAddress);
+    request = request
+      ..headers['Accept'] = '*/*'
+      ..headers['Access-Control-Allow-Origin'] = '*'
+      ..headers['Content-Type'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer ${sharedPref.getAccessToken()}'
+      ..headers['Localization'] = sharedPref.getLocale().toString();
+
+    if (parameters != null) {
+      request.fields.addAll(parameters);
     }
 
-    if (response.statusCode == 401) {
-      var success = await refreshToken();
-      if (success) {
-        return fetchData(hostAddress, parameters: parameters);
-      } else {
-        navigatorKey.currentState?.pushNamed('/login');
-        return {};
+    if (fileGroups != null) {
+      for (var group in fileGroups) {
+        String groupName = group['groupName'];
+        List<File> files = group['files'];
+
+        request.fields['groupName'] = groupName;
+
+        for (var file in files) {
+          var stream = http.ByteStream(Stream.castFrom(file.openRead()));
+          var length = await file.length();
+          var multipartFile = http.MultipartFile('files', stream, length,
+              filename: basename(file.path));
+          request.files.add(multipartFile);
+        }
       }
     }
-    var responseBody = jsonDecode(utf8.decode(response.bodyBytes));
+
+    var response = await request.send();
+    var totalBytes = request.contentLength;
+    var bytesSent = 0;
+
+    var broadcastStream = response.stream.asBroadcastStream();
+    subscription = broadcastStream.listen((value) {
+      bytesSent += value.length;
+      double progress = bytesSent / totalBytes;
+      if (showProgressingDialog == true) {
+        kShowDialog(
+          LinearProgressIndicator(value: progress),
+          title: sharedPref.translate('Uploading...'),
+          maxWidth: 100,
+          dismissible: true,
+          onCancel: () {
+            subscription?.cancel();
+          },
+        );
+      }
+    });
+
+    var responseBodyBytes = await broadcastStream.toBytes();
+    var responseBody = jsonDecode(utf8.decode(responseBodyBytes));
+
+    subscription.cancel();
+
+    if (responseBody['success'] == null) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: sharedPref.translate("Connection failed!"),
+        style: 'danger',
+      );
+    } else if (responseBody['success'] == true) {
+      if (showSuccessNotification == true) {
+        kShowToast(
+          title: sharedPref.translate('Success'),
+          content: responseBody['responseMessage'],
+          style: 'success',
+        );
+      }
+    } else {
+      if (responseBody['responseMessage'] == null) {
+        kShowToast(
+          title: sharedPref.translate('Fail'),
+          content: responseBody['title'].toString(),
+          style: 'danger',
+        );
+      } else {
+        kShowToast(
+          title: sharedPref.translate('Fail'),
+          content: responseBody['responseMessage'],
+          style: 'danger',
+        );
+      }
+    }
+
+    if (showProgressingDialog == true) {
+      Get.back();
+    }
+
     return responseBody;
   } catch (e) {
-    debugPrint("fetchData() error: $e");
+    debugPrint("streamData() error: $e");
     return {
       "success": false,
-      "responseMessage": sharedPrefs.translate("Connection failed!")
+      "responseMessage": sharedPref.translate("Connection failed!")
     };
+  } finally {
+    if (showProgressingDialog == true) {
+      Get.back();
+    }
   }
 }
 
@@ -571,6 +611,105 @@ void showProgressing(BuildContext context) {
       );
     },
   );
+}
+
+Future<Map> fetchDataUI(
+  Uri url, {
+  Map? parameters,
+  String? method,
+  String? contentType,
+  bool? showSuccessNotification = true,
+}) async {
+  kShowProcessingDialog(title: sharedPref.translate("Processing..."));
+  await Future.delayed(const Duration(milliseconds: 300));
+  var response = await fetchData(url, parameters: parameters, method: method);
+  Get.back();
+  if (response['success'] != true) {
+    if (response['responseMessage'] != '') {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['responseMessage'],
+        style: 'danger',
+      );
+    } else if (response['success'] == false) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: sharedPref.translate("Connection failed!"),
+        style: 'danger',
+      );
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: response['title'].toString(),
+        style: 'danger',
+      );
+    }
+  } else {
+    if (showSuccessNotification == false) {
+      return response;
+    } else {
+      kShowToast(
+        title: sharedPref.translate('Success'),
+        content: response['responseMessage'],
+        style: 'success',
+      );
+    }
+  }
+  return response;
+}
+
+Future<Map> fetchData(
+  Uri url, {
+  Map? parameters,
+  String? method,
+  bool? showFailureNotification = false,
+}) async {
+  debugPrint("fetchData(): $url");
+  try {
+    var body = jsonEncode(parameters);
+    var request = http.Request(method ?? 'POST', url);
+    request = request
+      ..headers['Accept'] = '*/*'
+      ..headers['Access-Control-Allow-Origin'] = '*'
+      ..headers['Content-Type'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer ${sharedPref.getAccessToken()}'
+      ..headers['Localization'] = sharedPref.getLocale().toString()
+      ..body = body;
+
+    var response = await request.send();
+    if (response.statusCode == 401) {
+      var success = await refreshToken();
+      if (success) {
+        return fetchData(url, parameters: parameters);
+      } else {
+        navigatorKey.currentState?.pushNamed('/login');
+        return {};
+      }
+    }
+    var responseBodyBytes = await response.stream.bytesToString();
+    var responseBody = jsonDecode(responseBodyBytes);
+    if (showFailureNotification == true && responseBody['success'] == false) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: responseBody['responseMessage'],
+        style: 'danger',
+      );
+    }
+    return responseBody;
+  } catch (e) {
+    debugPrint("fetchData() error: $e");
+    if (showFailureNotification == true) {
+      kShowToast(
+        title: sharedPref.translate('Fail'),
+        content: e.toString(),
+        style: 'danger',
+      );
+    }
+    return {
+      "success": false,
+      "responseMessage": sharedPref.translate("Connection failed!")
+    };
+  }
 }
 
 Locale mapLocale(String localeString) {

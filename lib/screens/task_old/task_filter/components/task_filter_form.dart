@@ -62,9 +62,9 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                 // widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
                 child: KTextFormField(
                   controller: dateRangeInputController,
-                  // label: Text(sharedPrefs.translate('Assigned date')),
-                  labelText: sharedPrefs.translate('Assigned date'),
-                  hintText: sharedPrefs.translate('dd/mm/yyyy - dd/mm/yyyy'),
+                  // label: Text(sharedPref.translate('Assigned date')),
+                  labelText: sharedPref.translate('Assigned date'),
+                  hintText: sharedPref.translate('dd/mm/yyyy - dd/mm/yyyy'),
                   suffix: InkWell(
                     child: const Icon(Icons.calendar_month),
                     onTap: () async {
@@ -105,18 +105,18 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return KOnLoadingDropdownMenu(
-                        label: Text(sharedPrefs.translate('Status')),
+                        label: Text(sharedPref.translate('Status')),
                       );
                     }
                     if (snapshot.hasData) {
                       return KDropdownMenu(
                         menuHeight: null,
-                        labelText: sharedPrefs.translate('Status'),
-                        hintText: sharedPrefs.translate('Choose one'),
+                        labelText: sharedPref.translate('Status'),
+                        hintText: sharedPref.translate('Choose one'),
                         dropdownMenuEntries: snapshot.data!
                             .map((e) => DropdownMenuEntry(
                                 value: e['code'],
-                                label: e[sharedPrefs.getLocale().languageCode]))
+                                label: e[sharedPref.getLocale().languageCode]))
                             .toList(),
                         initialSelection: snapshot.data![0]['code'],
                         onSelected: (selected) {
@@ -138,18 +138,18 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return KOnLoadingDropdownMenu(
-                        label: Text(sharedPrefs.translate('Task type')),
+                        label: Text(sharedPref.translate('Task type')),
                       );
                     }
                     if (snapshot.hasData) {
                       return KDropdownMenu(
                         menuHeight: null,
-                        labelText: sharedPrefs.translate('Task type'),
-                        hintText: sharedPrefs.translate('Choose one'),
+                        labelText: sharedPref.translate('Task type'),
+                        hintText: sharedPref.translate('Choose one'),
                         dropdownMenuEntries: snapshot.data!
                             .map((e) => DropdownMenuEntry(
                                 value: e['id'],
-                                label: e[sharedPrefs.getLocale().languageCode]))
+                                label: e[sharedPref.getLocale().languageCode]))
                             .toList(),
                         initialSelection: snapshot.data![0]['id'],
                         onSelected: (selected) {
@@ -173,14 +173,14 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                     Widget child = Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return KOnLoadingDropdownMenu(
-                        label: Text(sharedPrefs.translate('Assigned to')),
+                        label: Text(sharedPref.translate('Assigned to')),
                       );
                     }
                     if (snapshot.hasData) {
                       return KDropdownMenu(
-                        // label: Text(sharedPrefs.translate('Assigned to')),
-                        labelText: sharedPrefs.translate('Assigned to'),
-                        hintText: sharedPrefs.translate('Choose one'),
+                        // label: Text(sharedPref.translate('Assigned to')),
+                        labelText: sharedPref.translate('Assigned to'),
+                        hintText: sharedPref.translate('Choose one'),
                         dropdownMenuEntries: snapshot.data!
                             .map((e) => DropdownMenuEntry(
                                 value: e['id'],
@@ -238,7 +238,7 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
               //           }
               //         },
               //         child: Text(
-              //           sharedPrefs.translate('Filter'),
+              //           sharedPref.translate('Filter'),
               //           style: const TextStyle(color: Colors.white),
               //         ),
               //       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
+
+import '../../../utilities/custom_widgets.dart';
 
 class DemoScreen extends StatefulWidget {
   const DemoScreen({super.key});

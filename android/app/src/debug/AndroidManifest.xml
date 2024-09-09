@@ -8,7 +8,7 @@
 
 
     <application
-        android:label="SE Solution"
+        android:label="SE Solution Ori"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- DATNT - Start -->

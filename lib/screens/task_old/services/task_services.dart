@@ -29,8 +29,7 @@ Future<List> fetchTaskCategoryFilter({categoryProperty}) async {
     categories.insert(0, {
       'id': '',
       'code': '',
-      sharedPrefs.getLocale().languageCode:
-          '--${sharedPrefs.translate('All')}--',
+      sharedPref.getLocale().languageCode: '--${sharedPref.translate('All')}--',
     });
   }
   return categories;
@@ -48,7 +47,7 @@ Future<List> taskUsersFilter() async {
   if (users.length > 1) {
     users.insert(0, {
       'id': '',
-      'displayName': '--${sharedPrefs.translate('All')}--',
+      'displayName': '--${sharedPref.translate('All')}--',
     });
   }
   return users;
@@ -70,7 +69,7 @@ Future<List> fetchListAssignedUsers() async {
   if (responseData.length > 1) {
     responseData.insert(0, {
       'id': '',
-      'displayName': '--${sharedPrefs.translate('All')}--',
+      'displayName': '--${sharedPref.translate('All')}--',
     });
   }
   return responseData;
@@ -118,7 +117,7 @@ Future<List<DropdownMenuEntry>> getTaskTypeEntries() =>
     fetchTaskCategories(categoryProperty: "Type").then((value) => value
         .map(
           (e) => DropdownMenuEntry(
-              value: e['id'], label: e[sharedPrefs.getLocale().languageCode]),
+              value: e['id'], label: e[sharedPref.getLocale().languageCode]),
         )
         .toList());
 
@@ -196,7 +195,7 @@ Future<List<DropdownMenuEntry>> getTaskStatusEntries() =>
     fetchTaskCategories(categoryProperty: "Status").then((value) => value
         .map(
           (e) => DropdownMenuEntry(
-              value: e['code'], label: e[sharedPrefs.getLocale().languageCode]),
+              value: e['code'], label: e[sharedPref.getLocale().languageCode]),
         )
         .toList());
 
@@ -226,8 +225,8 @@ bool checkConditions() {
           null) {
     kShowAlert(
         body: KSelectableText(
-            sharedPrefs.translate('Reference subject(s) is required!')),
-        title: sharedPrefs.translate('Result'));
+            sharedPref.translate('Reference subject(s) is required!')),
+        title: sharedPref.translate('Result'));
     return false;
   }
   return true;

@@ -25,7 +25,7 @@ class _PowerStationStatusSummaryState extends State<PowerStationStatusSummary> {
         children: [
           Row(
             children: [
-              Text("${sharedPrefs.translate("Total stations")}: ",
+              Text("${sharedPref.translate("Total stations")}: ",
                   style: const TextStyle(fontSize: largeTextSize)),
               Expanded(
                 child: Text(
@@ -43,7 +43,7 @@ class _PowerStationStatusSummaryState extends State<PowerStationStatusSummary> {
           ),
           Row(
             children: [
-              Text("${sharedPrefs.translate("Online")}: ",
+              Text("${sharedPref.translate("Online")}: ",
                   style: const TextStyle(
                       fontSize: largeTextSize, color: Colors.green)),
               Expanded(
@@ -59,7 +59,7 @@ class _PowerStationStatusSummaryState extends State<PowerStationStatusSummary> {
           ),
           Row(
             children: [
-              Text("${sharedPrefs.translate("Offline")}: ",
+              Text("${sharedPref.translate("Offline")}: ",
                   style: const TextStyle(
                       fontSize: largeTextSize, color: Colors.red)),
               Expanded(
@@ -75,7 +75,7 @@ class _PowerStationStatusSummaryState extends State<PowerStationStatusSummary> {
           ),
           Row(
             children: [
-              Text("${sharedPrefs.translate("Abnormal")}: ",
+              Text("${sharedPref.translate("Abnormal")}: ",
                   style: const TextStyle(
                       fontSize: largeTextSize, color: Colors.orange)),
               Expanded(
@@ -95,7 +95,7 @@ class _PowerStationStatusSummaryState extends State<PowerStationStatusSummary> {
           ),
           Row(
             children: [
-              Text("${sharedPrefs.translate("Alert")}: ",
+              Text("${sharedPref.translate("Alert")}: ",
                   style: const TextStyle(
                       fontSize: largeTextSize, color: Colors.blue)),
               const Expanded(

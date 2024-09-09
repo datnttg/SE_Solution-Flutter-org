@@ -48,7 +48,7 @@ class TaskListItem extends StatelessWidget {
                   // percentWidthOnParent: 100,
                   child: Row(
                     children: [
-                      // CText('${sharedPrefs.translate('Type')}: ',
+                      // CText('${sharedPref.translate('Type')}: ',
                       //     style: const TextStyle(fontSize: smallTextSize)),
                       CText(
                         '${dataItem.taskTypeTitle}',
@@ -57,7 +57,7 @@ class TaskListItem extends StatelessWidget {
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -67,7 +67,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPrefs.translate('Status')}: ',
+                      CText('${sharedPref.translate('Status')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       CText(
                         '${dataItem.taskStatusText}',
@@ -82,7 +82,7 @@ class TaskListItem extends StatelessWidget {
                                       ? Colors.grey
                                       : Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -92,7 +92,7 @@ class TaskListItem extends StatelessWidget {
                 // ResponsiveItem(
                 //   child: Row(
                 //     children: [
-                //       CText('${sharedPrefs.translate('Creator')}: ',
+                //       CText('${sharedPref.translate('Creator')}: ',
                 //           style: const TextStyle(fontSize: smallTextSize)),
                 //       CText(
                 //         '${dataItem.createdName}',
@@ -101,7 +101,7 @@ class TaskListItem extends StatelessWidget {
                 //           fontSize: smallTextSize,
                 //           color: Colors.black,
                 //         ),
-                //         warpText: true,
+                //         wrapText: true,
                 //       )
                 //     ],
                 //   ),
@@ -111,7 +111,7 @@ class TaskListItem extends StatelessWidget {
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPrefs.translate('Executor')}: ',
+                      CText('${sharedPref.translate('Executor')}: ',
                           style: const TextStyle(fontSize: smallTextSize)),
                       CText(
                         '${dataItem.assignedName}',
@@ -120,7 +120,7 @@ class TaskListItem extends StatelessWidget {
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        warpText: true,
+                        wrapText: true,
                       )
                     ],
                   ),
@@ -131,7 +131,7 @@ class TaskListItem extends StatelessWidget {
                   child: dataItem.deadline != null
                       ? Row(
                           children: [
-                            CText('${sharedPrefs.translate('Deadline')}: ',
+                            CText('${sharedPref.translate('Deadline')}: ',
                                 style:
                                     const TextStyle(fontSize: smallTextSize)),
                             CText(
@@ -150,7 +150,7 @@ class TaskListItem extends StatelessWidget {
                                             ? Colors.orange
                                             : Colors.black,
                               ),
-                              warpText: true,
+                              wrapText: true,
                             )
                           ],
                         )

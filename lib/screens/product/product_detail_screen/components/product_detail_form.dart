@@ -33,7 +33,7 @@ class ProductDetailForm extends StatelessWidget {
                   percentWidthOnParent:
                       constrains.maxWidth < 3 * basicWidth ? 100 : null,
                   child: CTextFormField(
-                    labelText: sharedPrefs.translate('Code'),
+                    labelText: sharedPref.translate('Code'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
                     autoFocus: state.productDetail.code == null ? true : false,
@@ -50,7 +50,7 @@ class ProductDetailForm extends StatelessWidget {
                 ResponsiveItem(
                   widthRatio: 2,
                   child: CTextFormField(
-                    labelText: sharedPrefs.translate('Name'),
+                    labelText: sharedPref.translate('Name'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
                     initialValue: state.productDetail.name,
@@ -65,7 +65,7 @@ class ProductDetailForm extends StatelessWidget {
                 /// UNIT
                 ResponsiveItem(
                   child: CDropdownMenu(
-                    labelText: sharedPrefs.translate('Unit'),
+                    labelText: sharedPref.translate('Unit'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
                     dropdownMenuEntries: state.lstUnit,
@@ -83,7 +83,7 @@ class ProductDetailForm extends StatelessWidget {
                 /// SERIAL REQUIRED
                 ResponsiveItem(
                   child: CSwitch(
-                    labelText: sharedPrefs.translate('Serial monitoring'),
+                    labelText: sharedPref.translate('Serial monitoring'),
                     readOnly: readOnly,
                     value: state.productDetail.serialRequired ?? false,
                     onChanged: (value) {
@@ -99,7 +99,7 @@ class ProductDetailForm extends StatelessWidget {
                   percentWidthOnParent:
                       constrains.maxWidth < 3 * basicWidth ? 100 : null,
                   child: CTextFormField(
-                    labelText: sharedPrefs.translate('Warranty (month)'),
+                    labelText: sharedPref.translate('Warranty (month)'),
                     keyboardType: TextInputType.number,
                     readOnly: readOnly,
                     initialValue:
@@ -115,7 +115,7 @@ class ProductDetailForm extends StatelessWidget {
                 ResponsiveItem(
                   percentWidthOnParent: 100,
                   child: CTextFormField(
-                    labelText: sharedPrefs.translate('Description'),
+                    labelText: sharedPref.translate('Description'),
                     readOnly: readOnly,
                     initialValue: state.productDetail.description,
                     onChanged: (value) {
@@ -129,7 +129,7 @@ class ProductDetailForm extends StatelessWidget {
                 /// CATEGORY
                 ResponsiveItem(
                   child: CDropdownMenu(
-                    labelText: sharedPrefs.translate('Category'),
+                    labelText: sharedPref.translate('Category'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
                     dropdownMenuEntries: state.lstCategory,
@@ -147,7 +147,7 @@ class ProductDetailForm extends StatelessWidget {
                 /// STATUS
                 ResponsiveItem(
                   child: CDropdownMenu(
-                    labelText: sharedPrefs.translate('Status'),
+                    labelText: sharedPref.translate('Status'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
                     dropdownMenuEntries: state.lstStatus,
@@ -165,7 +165,7 @@ class ProductDetailForm extends StatelessWidget {
                 /// TYPE
                 ResponsiveItem(
                   child: CDropdownMenu(
-                    labelText: sharedPrefs.translate('Type'),
+                    labelText: sharedPref.translate('Type'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: state.productDetail.id != null &&
                         state.screenMode == ScreenModeEnum.view,

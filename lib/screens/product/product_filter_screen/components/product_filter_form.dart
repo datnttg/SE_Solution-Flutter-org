@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../bloc/product_filter_bloc.dart';
 import '../bloc/product_filter_events.dart';
 import '../bloc/product_filter_states.dart';
@@ -15,18 +16,18 @@ class ProductFilterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductFilterBloc, ProductFilterState>(
         builder: (context, state) {
-      return Form(
+      return CGroup(
         child: ResponsiveRow(
           context: context,
-          basicWidth: 400,
-          horizontalSpacing: 0,
+          basicWidth: Responsive.isSmallWidth(context) ? 300 : 400,
+          horizontalSpacing: defaultPadding * 5,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             /// CODE
             ResponsiveItem(
                 child: CTextFormField(
-              labelText: sharedPrefs.translate('Product code'),
-              // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
+              labelText: sharedPref.translate('Product code'),
+              hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
                 context
@@ -38,9 +39,8 @@ class ProductFilterForm extends StatelessWidget {
             /// NAME
             ResponsiveItem(
                 child: CTextFormField(
-              labelText: sharedPrefs.translate('Product name'),
-              // wrap: true,
-              hintText: '--${sharedPrefs.translate('All')}--',
+              labelText: sharedPref.translate('Product name'),
+              hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
                 context
@@ -49,36 +49,37 @@ class ProductFilterForm extends StatelessWidget {
               },
             )),
 
-            /// ASSIGNED USER
+            /// CATEGORY
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: CDropdownMenu(
-                labelText: sharedPrefs.translate('Category'),
+                labelText: sharedPref.translate('Category'),
                 multiSelect: true,
-                hintText: '--${sharedPrefs.translate('All')}--',
-                dropdownMenuEntries: state.productCategories ?? [],
+                hintText: '--${sharedPref.translate('All')}--',
+                dropdownMenuEntries:
+                    state.dropdownData?.productCategories ?? [],
                 onSelected: (values) {
                   context
                       .read<ProductFilterBloc>()
-                      .add(ProductFilterSelectedCategoriesChanged(values));
+                      .add(ProductFilterCategoriesChanged(values));
                 },
               ),
             ),
 
-            /// ASSIGNED USER
+            /// TYPE
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
               child: CDropdownMenu(
-                labelText: sharedPrefs.translate('Type'),
+                labelText: sharedPref.translate('Type'),
                 multiSelect: true,
-                hintText: '--${sharedPrefs.translate('All')}--',
-                dropdownMenuEntries: state.productTypes ?? [],
+                hintText: '--${sharedPref.translate('All')}--',
+                dropdownMenuEntries: state.dropdownData?.productTypes ?? [],
                 onSelected: (values) {
                   context
                       .read<ProductFilterBloc>()
-                      .add(ProductFilterSelectedTypesChanged(values));
+                      .add(ProductFilterTypesChanged(values));
                 },
               ),
             ),

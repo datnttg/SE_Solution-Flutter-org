@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution/utilities/custom_widgets.dart';
-import 'package:se_solution/utilities/responsive.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
-import 'package:se_solution/utilities/ui_styles.dart';
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/constants/core_constants.dart';
+import '../../../../utilities/custom_widgets.dart';
+import '../../../../utilities/responsive.dart';
+import '../../../../utilities/shared_preferences.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../../controllers/task_data_controllers.dart';
 import '../../services/task_services.dart';
 
@@ -51,7 +51,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                           percentWidthOnParent:
                               Responsive.isSmallWidth(context) ? 100 : 30,
                           child: KDropdownMenu(
-                            labelText: sharedPrefs.translate('Status'),
+                            labelText: sharedPref.translate('Status'),
                             dropdownMenuEntries: taskStatusEntries,
                             initialSelection:
                                 taskInfoController.taskStatus.value,
@@ -63,7 +63,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                           percentWidthOnParent:
                               Responsive.isSmallWidth(context) ? 100 : 70,
                           child: KTextFormField(
-                            label: Text(sharedPrefs.translate('Description')),
+                            label: Text(sharedPref.translate('Description')),
                             onChanged: ((p0) {
                               taskInfoController.taskDescription.value = p0;
                             }),
@@ -78,7 +78,7 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                               children: [
                                 KElevatedButton(
                                   child: Text(
-                                    sharedPrefs.translate('Update'),
+                                    sharedPref.translate('Update'),
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   onPressed: () async {
@@ -119,15 +119,15 @@ class _TaskUpdateFormState extends State<TaskUpdateForm> {
                                           kShowToast(
                                               content:
                                                   response['responseMessage'],
-                                              title: sharedPrefs
+                                              title: sharedPref
                                                   .translate('Result'),
                                               style: 'success');
                                         }
                                         // else {
                                         //   kShowAlert(
-                                        //       Text(sharedPrefs.translate(
+                                        //       Text(sharedPref.translate(
                                         //           "Connection failed!")),
-                                        //       sharedPrefs.translate('Result'));
+                                        //       sharedPref.translate('Result'));
                                         // }
                                       }
                                     }

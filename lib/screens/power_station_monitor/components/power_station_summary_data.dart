@@ -17,7 +17,7 @@ class PowerStationSummaryData extends StatefulWidget {
 class _PowerStationSummaryDataState extends State<PowerStationSummaryData> {
   @override
   Widget build(BuildContext context) {
-    var nf0 = NumberFormat("#,##0", sharedPrefs.getLocale().toString());
+    var nf0 = NumberFormat("#,##0", sharedPref.getLocale().toString());
     double todayEnergy = 0;
     for (var i = 0; i < (widget.stationEnergyDataCurrent?.length ?? 0); i++) {
       todayEnergy += widget.stationEnergyDataCurrent?[i].todayEnergy ?? 0;
@@ -56,7 +56,7 @@ class _PowerStationSummaryDataState extends State<PowerStationSummaryData> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sharedPrefs.translate("Installed capacity")),
+                    Text(sharedPref.translate("Installed capacity")),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -72,7 +72,7 @@ class _PowerStationSummaryDataState extends State<PowerStationSummaryData> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(sharedPrefs.translate("Current power")),
+                    Text(sharedPref.translate("Current power")),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -102,7 +102,7 @@ class _PowerStationSummaryDataState extends State<PowerStationSummaryData> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sharedPrefs.translate("Today energy")),
+                    Text(sharedPref.translate("Today energy")),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -126,7 +126,7 @@ class _PowerStationSummaryDataState extends State<PowerStationSummaryData> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(sharedPrefs.translate("Total energy")),
+                  Text(sharedPref.translate("Total energy")),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_treeview/flutter_treeview.dart';
-import 'package:se_solution/utilities/configs.dart';
+import '../../utilities/configs.dart';
 import '../../utilities/shared_preferences.dart';
 import '../../utilities/ui_styles.dart';
 
@@ -69,7 +69,7 @@ class _MainMenuState extends State<MainMenu> {
       return result;
     }
 
-    List<dynamic> functions = jsonDecode(sharedPrefs.getFunctions());
+    List<dynamic> functions = jsonDecode(sharedPref.getFunctions());
     List<Node> nodes = buildMenuTree(functions, null, 1);
 
     treeViewController = TreeViewController(
@@ -136,7 +136,7 @@ class _MainMenuState extends State<MainMenu> {
               color: Theme.of(context).colorScheme.primary,
             ),
             child: Text(
-              sharedPrefs.translate("Menu"),
+              sharedPref.translate("Menu"),
               style: const TextStyle(
                 color: kContentColor,
                 fontSize: 24,
@@ -155,7 +155,7 @@ class _MainMenuState extends State<MainMenu> {
                       treeViewController.copyWith(selectedKey: key);
 
                   List<dynamic> functions =
-                      jsonDecode(sharedPrefs.getFunctions());
+                      jsonDecode(sharedPref.getFunctions());
                   for (var function in functions) {
                     if (function['id'] == key && function['link'] != '#') {
                       Navigator.pushNamed(context, function['link']);
@@ -173,7 +173,7 @@ class _MainMenuState extends State<MainMenu> {
             ),
             child: Center(
               child: Text(
-                '${sharedPrefs.translate('Version')}: ${Config().appVersion}',
+                '${sharedPref.translate('Version')}: ${Config().appVersion}',
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
             ),

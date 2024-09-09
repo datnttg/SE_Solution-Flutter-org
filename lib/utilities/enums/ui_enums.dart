@@ -8,3 +8,9 @@ enum DisplayTypeEnum {
   disabled,
   normal,
 }
+
+enum ProcessingStatusEnum {
+  processing,
+  success,
+  failure,
+}

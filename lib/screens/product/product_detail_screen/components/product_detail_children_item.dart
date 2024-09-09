@@ -53,7 +53,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
             .toList();
 
         Widget productNameWidget = CDropdownMenu(
-            labelText: sharedPrefs.translate('Select product'),
+            labelText: sharedPref.translate('Select product'),
             labelTextAsHint: true,
             showDivider: false,
             enableSearch: true,
@@ -92,7 +92,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
                   ),
                   Expanded(
                     child: CTextFormField(
-                      labelText: sharedPrefs.translate('Qty'),
+                      labelText: sharedPref.translate('Qty'),
                       keyboardType: TextInputType.number,
                       labelTextAsHint: true,
                       textAlign: TextAlign.end,
@@ -105,7 +105,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
                             var input = double.parse(value);
                             if (input <= 0) {
                               kShowAlert(
-                                  body: Text(sharedPrefs.translate(
+                                  body: Text(sharedPref.translate(
                                       'Quantity must be better than 0')));
                             }
                             context.read<ProductDetailBloc>().add(
@@ -117,7 +117,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
                         } else {
                           quantityController.text = quantity.toString();
                           kShowAlert(
-                              body: Text(sharedPrefs
+                              body: Text(sharedPref
                                   .translate('Quantity must be a number')));
                         }
                       },
@@ -153,14 +153,14 @@ class ProductDetailChildrenItem extends StatelessWidget {
         Widget categoryWidget = child?.categoryText == null
             ? const SizedBox()
             : CText(
-                '${sharedPrefs.translate('Category')}: ${child?.categoryText}',
+                '${sharedPref.translate('Category')}: ${child?.categoryText}',
                 style: const TextStyle(fontSize: smallTextSize),
               );
 
         Widget typeWidget = child?.typeText == null
             ? const SizedBox()
             : CText(
-                '${sharedPrefs.translate('Type')}: ${child?.typeText}',
+                '${sharedPref.translate('Type')}: ${child?.typeText}',
                 style: const TextStyle(fontSize: smallTextSize),
               );
 

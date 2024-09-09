@@ -1,26 +1,21 @@
-import 'package:se_solution/screens/product/product_detail_screen/models/product_detail_model.dart';
-
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../models/product_detail_model.dart';
+import '../models/product_update_model.dart';
 
-// class ScreenModeState {
-//   ScreenModeEnum? state;
-//   ScreenModeState(this.state);
+// extension ProcessingStatusEnumX on ProcessingStatusEnum {
+//   bool get isInitial => this == ProductDetailLoadingStatus.initial;
+//   bool get isLoading => this == ProductDetailLoadingStatus.loading;
+//   bool get isSuccess => this == ProductDetailLoadingStatus.success;
+//   bool get isFailure => this == ProductDetailLoadingStatus.failure;
 // }
-
-enum ProductDetailLoadingStatus { initial, loading, success, failure }
-
-extension WeatherStatusX on ProductDetailLoadingStatus {
-  bool get isInitial => this == ProductDetailLoadingStatus.initial;
-  bool get isLoading => this == ProductDetailLoadingStatus.loading;
-  bool get isSuccess => this == ProductDetailLoadingStatus.success;
-  bool get isFailure => this == ProductDetailLoadingStatus.failure;
-}
 
 class ProductDetailState {
   ScreenModeEnum screenMode;
-  ProductDetailLoadingStatus loadingStatus;
+  ProcessingStatusEnum initialStatus;
   ProductDetailModel productDetail;
+  ProductUpdateModel productUpdate;
+  ProcessingStatusEnum loadingStatus;
   List<ProductDetailModel> lstProduct;
   List<CDropdownMenuEntry> lstType;
   List<CDropdownMenuEntry> lstUnit;
@@ -29,8 +24,10 @@ class ProductDetailState {
 
   ProductDetailState({
     required this.screenMode,
-    required this.loadingStatus,
+    required this.initialStatus,
     required this.productDetail,
+    required this.productUpdate,
+    required this.loadingStatus,
     required this.lstProduct,
     required this.lstUnit,
     required this.lstStatus,
@@ -39,9 +36,11 @@ class ProductDetailState {
   });
 
   ProductDetailState copyWith({
-    ProductDetailLoadingStatus? loadingStatus,
+    ProcessingStatusEnum? initialStatus,
     ScreenModeEnum? screenMode,
     ProductDetailModel? productDetail,
+    ProductUpdateModel? productUpdate,
+    ProcessingStatusEnum? loadingStatus,
     List<ProductDetailModel>? lstProduct,
     List<CDropdownMenuEntry>? lstUnit,
     List<CDropdownMenuEntry>? lstStatus,
@@ -49,9 +48,11 @@ class ProductDetailState {
     List<CDropdownMenuEntry>? lstType,
   }) {
     return ProductDetailState(
+      initialStatus: initialStatus ?? this.initialStatus,
       loadingStatus: loadingStatus ?? this.loadingStatus,
       screenMode: screenMode ?? this.screenMode,
       productDetail: productDetail ?? this.productDetail,
+      productUpdate: productUpdate ?? this.productUpdate,
       lstProduct: lstProduct ?? this.lstProduct,
       lstUnit: lstUnit ?? this.lstUnit,
       lstStatus: lstStatus ?? this.lstStatus,
@@ -60,17 +61,3 @@ class ProductDetailState {
     );
   }
 }
-
-// class ProductDetailDataState {
-//   List<CDropdownMenuEntry>? listUnit;
-//   List<CDropdownMenuEntry>? listStatus;
-//   List<CDropdownMenuEntry>? listCategory;
-//   List<CDropdownMenuEntry>? listType;
-
-//   ProductDetailDataState({
-//     this.listUnit,
-//     this.listStatus,
-//     this.listCategory,
-//     this.listType,
-//   });
-// }

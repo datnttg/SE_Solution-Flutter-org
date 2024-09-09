@@ -161,7 +161,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
     return KScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
-        title: Text(sharedPrefs.translate("Dashboard")),
+        title: Text(sharedPref.translate("Dashboard")),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -227,7 +227,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          bodyHeading(sharedPrefs.translate('MyProjects')),
+          bodyHeading(sharedPref.translate('MyProjects')),
           Wrap(
             children: [
               /// PROJECT STATUS
@@ -292,10 +292,10 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
                         unselectedLabelColor: Colors.grey,
                         controller: _controller,
                         tabs: [
-                          Tab(text: sharedPrefs.translate('Day')),
-                          Tab(text: sharedPrefs.translate('Month')),
-                          Tab(text: sharedPrefs.translate('Year')),
-                          Tab(text: sharedPrefs.translate('All')),
+                          Tab(text: sharedPref.translate('Day')),
+                          Tab(text: sharedPref.translate('Month')),
+                          Tab(text: sharedPref.translate('Year')),
+                          Tab(text: sharedPref.translate('All')),
                         ],
                       ),
                     ),
@@ -642,7 +642,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(kMinPadding),
                   child:
-                      Text("${sharedPrefs.translate('Numbers of projects')}:")),
+                      Text("${sharedPref.translate('Numbers of projects')}:")),
             ),
             Expanded(
               flex: 1,
@@ -671,7 +671,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
                   child: Row(
                     children: [
                       const Icon(Icons.fact_check, color: Colors.green),
-                      Text("${sharedPrefs.translate('Online')}:"),
+                      Text("${sharedPref.translate('Online')}:"),
                     ],
                   )),
             ),
@@ -699,7 +699,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
                     children: [
                       const Icon(Icons.featured_video_outlined,
                           color: Colors.orange),
-                      Text("${sharedPrefs.translate('PartlyOnline')}:"),
+                      Text("${sharedPref.translate('PartlyOnline')}:"),
                     ],
                   )),
             ),
@@ -726,7 +726,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
                   child: Row(
                     children: [
                       const Icon(Icons.do_disturb_outlined, color: Colors.red),
-                      Text("${sharedPrefs.translate('Offline')}:"),
+                      Text("${sharedPref.translate('Offline')}:"),
                     ],
                   )),
             ),
@@ -761,7 +761,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
               child: Column(
                 children: [
                   // indicatorInfo('Công suất lắp đặt', installedCapacity, 'kWp'),
-                  indicatorInfo(sharedPrefs.translate('Total power'),
+                  indicatorInfo(sharedPref.translate('Total power'),
                       double.parse((data['totalPower'] ?? 0).toString()), 'kW'),
                 ],
               ),
@@ -774,14 +774,14 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
             Expanded(
               flex: 1,
               child: indicatorInfo(
-                  sharedPrefs.translate('Energy in day'),
+                  sharedPref.translate('Energy in day'),
                   double.parse((data['inDayProduction'] ?? 0).toString()),
                   'kWh'),
             ),
             Expanded(
               flex: 1,
               child: indicatorInfo(
-                  sharedPrefs.translate('Energy in month'),
+                  sharedPref.translate('Energy in month'),
                   double.parse((data['inMonthProduction'] ?? 0).toString()),
                   'kWh'),
             )
@@ -792,14 +792,14 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
             Expanded(
               flex: 1,
               child: indicatorInfo(
-                  sharedPrefs.translate('Energy in year'),
+                  sharedPref.translate('Energy in year'),
                   double.parse((data['inYearProduction'] ?? 0).toString()),
                   'kWh'),
             ),
             Expanded(
               flex: 1,
               child: indicatorInfo(
-                  sharedPrefs.translate('Total energy'),
+                  sharedPref.translate('Total energy'),
                   double.parse((data['totalProduction'] ?? 0).toString()),
                   'kWh'),
             )

@@ -5,6 +5,7 @@ import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/constants/core_constants.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../models/product_detail_model.dart';
+import '../models/product_update_model.dart';
 
 var hostAddress = constants.hostAddress;
 
@@ -45,13 +46,13 @@ Future<List<CDropdownMenuEntry>> fetchProductCategory(
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['code'],
-            labelText: e[sharedPrefs.getLocale().languageCode],
+            labelText: e[sharedPref.getLocale().languageCode],
           ))
       .toList();
   return listEntries;
 }
 
-Future<String?> submitProductDetail(ProductDetailModel params) async {
+Future<String?> submitProductDetail(ProductUpdateModel params) async {
   var response = await fetchDataUI(Uri.parse('$hostAddress/Product/Update'),
       parameters: params.toMap());
   if (response['success'] == true) {

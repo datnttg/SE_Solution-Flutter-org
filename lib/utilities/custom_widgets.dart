@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:dropdown_plus_plus/dropdown_plus_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:se_solution/utilities/responsive.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'classes/custom_widget_models.dart';
+import 'responsive.dart';
 import 'shared_preferences.dart';
 import 'ui_styles.dart';
 
@@ -24,24 +24,26 @@ class CScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar == null
-          ? null
-          : PreferredSize(
-              preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
-              child: appBar!,
-            ),
-      drawer: !Responsive.isSmallWidth(context) ? drawer : null,
-      endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor:
-              Colors.blue.shade200, // Set your desired background color
+    return CSwipeByDismissible(
+      child: Scaffold(
+        appBar: appBar == null
+            ? null
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(mediumTextSize * 3.5),
+                child: appBar!,
+              ),
+        drawer: !Responsive.isSmallWidth(context) ? drawer : null,
+        endDrawer: Responsive.isSmallWidth(context) ? drawer : null,
+        body: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor:
+                Colors.blue.shade200, // Set your desired background color
+          ),
+          child: body ?? const SizedBox(),
+          // child: SafeArea(child: body ?? const SizedBox()),
         ),
-        child: body ?? const SizedBox(),
-        // child: SafeArea(child: body ?? const SizedBox()),
+        bottomNavigationBar: bottomNavigationBar,
       ),
-      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }
@@ -87,6 +89,7 @@ class CDropdownMenu extends StatelessWidget {
   final List<CDropdownMenuEntry>? disabledMenuEntries;
   final bool? multiSelect,
       wrap,
+      wrapSelection,
       enabled,
       readOnly,
       enableSearch,
@@ -99,6 +102,8 @@ class CDropdownMenu extends StatelessWidget {
   final String? hintText;
   final double? width, menuHeight;
   final Function(List<CDropdownMenuEntry<dynamic>>)? onSelected;
+  final String? Function(List<DropdownItem<CDropdownMenuEntry<dynamic>>>?)?
+      validator;
 
   const CDropdownMenu({
     super.key,
@@ -112,7 +117,8 @@ class CDropdownMenu extends StatelessWidget {
     this.hintText,
     this.boldText = true,
     this.multiSelect = false,
-    this.wrap,
+    this.wrap = false,
+    this.wrapSelection = false,
     this.enabled = true,
     this.readOnly = false,
     this.enableSearch,
@@ -121,30 +127,27 @@ class CDropdownMenu extends StatelessWidget {
     this.showClearIcon = false,
     this.width,
     this.menuHeight,
+    this.validator,
   });
 
-  List<ValueItem> convertToValueItem(List<CDropdownMenuEntry>? values) {
+  List<DropdownItem<CDropdownMenuEntry>> convertToDropdownItem(
+      List<CDropdownMenuEntry>? values) {
     if (values?.isEmpty ?? true) return [];
     return values!
-        .map<ValueItem>(
-            (e) => ValueItem(label: e.labelText ?? '', value: e.value))
+        .map<DropdownItem<CDropdownMenuEntry>>((e) => DropdownItem(
+              label: e.labelText ?? '',
+              value: e,
+              selected:
+                  selectedMenuEntries?.any((u) => u.value == e.value) ?? false,
+              disabled:
+                  disabledMenuEntries?.any((u) => u.value == e.value) ?? false,
+            ))
         .toList();
-  }
-
-  void newOnSelected(List<ValueItem<dynamic>> entries) {
-    final List<CDropdownMenuEntry<dynamic>> valueItems = entries
-        .map((e) =>
-            CDropdownMenuEntry<dynamic>(value: e.value, labelText: e.label))
-        .toList();
-    onSelected?.call(valueItems);
   }
 
   @override
   Widget build(BuildContext context) {
-    var dropdownEntries = convertToValueItem(dropdownMenuEntries);
-    var selectedEntries = convertToValueItem(selectedMenuEntries);
-    var disabledEntries = convertToValueItem(disabledMenuEntries);
-
+    var dropdownEntries = convertToDropdownItem(dropdownMenuEntries);
     var requireSign = required == true
         ? const Text(
             '*',
@@ -153,62 +156,80 @@ class CDropdownMenu extends StatelessWidget {
         : const SizedBox();
     var newHintText = hintText;
     if (newHintText == null && multiSelect == false) {
-      newHintText = sharedPrefs.translate('Choose one');
+      newHintText = sharedPref.translate('Choose one');
     } else if (newHintText == null && multiSelect == true) {
-      newHintText = sharedPrefs.translate('Choose many');
+      newHintText = sharedPref.translate('Choose many');
     }
 
-    var newMenuHeight =
-        menuHeight ?? min(dropdownMenuEntries.length * 50, 240).toDouble();
-    if (readOnly == true) {
-      newMenuHeight = 0;
-    }
+    var dropdownMaxHeight = 360;
+    var displayItemCount = 7;
+    var newMenuHeight = menuHeight ??
+        min(dropdownMenuEntries.length * 50, dropdownMaxHeight).toDouble();
+    // if (readOnly == true) {
+    //   newMenuHeight = 0;
+    // }
 
-    var dropdownMenu = MultiSelectDropDown(
-      padding: EdgeInsets.zero,
-      dropdownMargin: 1,
-      animateSuffixIcon: newMenuHeight == 0 ? false : true,
-      clearIcon: showClearIcon == true
-          ? const Icon(Icons.close_outlined, size: 20)
-          : null,
-      options: dropdownEntries,
-      selectedOptions: selectedEntries,
-      disabledOptions: disabledEntries,
-      dropdownHeight: newMenuHeight,
-      chipConfig: ChipConfig(
-          backgroundColor: Colors.white,
-          labelStyle: const TextStyle(color: Colors.black87),
-          deleteIconColor: Colors.black54,
-          deleteIcon: newMenuHeight == 0
-              ? const Icon(Icons.close_outlined, size: 0)
-              : null),
-      onOptionSelected: newOnSelected,
-      searchEnabled: readOnly == false
-          ? (enableSearch ?? dropdownEntries.length > 5)
-          : false,
-      hint: labelTextAsHint == true
-          ? labelText ?? ''
-          : newHintText ?? sharedPrefs.translate('Select'),
-      searchLabel: sharedPrefs.translate('Search'),
-      selectionType:
-          multiSelect == true ? SelectionType.multi : SelectionType.single,
-      inputDecoration: const BoxDecoration(),
-      optionTextStyle: const TextStyle(fontSize: mediumTextSize),
-      singleSelectItemStyle: TextStyle(
-          fontSize: mediumTextSize,
-          fontWeight: boldText == true ? FontWeight.bold : null),
-      hintStyle: TextStyle(
+    var dropdownMenu = MultiDropdown<CDropdownMenuEntry>(
+      items: dropdownEntries,
+      enabled: !readOnly!,
+      fieldDecoration: FieldDecoration(
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+        animateSuffixIcon: newMenuHeight == 0 ? false : true,
+        labelStyle: TextStyle(
           fontSize: mediumTextSize,
           fontWeight: boldText == true ? FontWeight.bold : null,
-          color: Colors.black54),
+        ),
+        hintText: labelTextAsHint == true
+            ? labelText ?? ''
+            : newHintText ?? sharedPref.translate('Select'),
+        hintStyle: TextStyle(
+            fontSize: mediumTextSize,
+            fontWeight: boldText == true ? FontWeight.bold : null,
+            color: Colors.black54),
+        showClearIcon: showClearIcon ?? false,
+      ),
+      dropdownDecoration: DropdownDecoration(
+        maxHeight: newMenuHeight,
+        marginTop: 1,
+        backgroundColor: const Color.fromARGB(255, 239, 241, 242),
+      ),
+      dropdownItemDecoration: const DropdownItemDecoration(),
+      searchDecoration: SearchFieldDecoration(
+        hintText: sharedPref.translate('Search'),
+        border: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.outline),
+            borderRadius: const BorderRadius.all(Radius.circular(12))),
+      ),
+      chipDecoration: ChipDecoration(
+        wrap: wrapSelection!,
+        backgroundColor: const Color.fromARGB(255, 244, 244, 244),
+        labelStyle: TextStyle(
+            color: Colors.black87,
+            fontWeight: boldText == true ? FontWeight.bold : null),
+        deleteIcon: readOnly!
+            ? const Icon(
+                Icons.close_outlined,
+                size: 0,
+                color: Colors.black54,
+              )
+            : null,
+      ),
+      onSelectionChange: onSelected,
+      validator: validator,
+      searchEnabled: readOnly == false
+          ? (enableSearch ?? dropdownEntries.length > displayItemCount)
+          : false,
+      singleSelect: !(multiSelect ?? false),
     );
 
     /// RETURN
     return Container(
-      height: fieldHeight,
+      constraints: BoxConstraints(minHeight: fieldHeight),
       alignment: Alignment.centerLeft,
-      padding:
-          const EdgeInsets.only(left: defaultPadding, right: defaultPadding),
+      padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
           ? const BoxDecoration(
               border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
@@ -252,6 +273,7 @@ class CDropdownMenu extends StatelessWidget {
                 labelTextAsHint == true
                     ? const SizedBox()
                     : const SizedBox(width: defaultPadding),
+                // const SizedBox(width: defaultPadding * 3),
                 Expanded(
                   child: dropdownMenu,
                 )
@@ -411,9 +433,9 @@ class KDropdownMenu extends StatelessWidget {
 //             Expanded(
 //               child: DropdownFormField<Map<String, dynamic>>(
 //                 controller: controller,
-//                 emptyText: sharedPrefs.translate('No matching found!'),
+//                 emptyText: sharedPref.translate('No matching found!'),
 //                 emptyActionText:
-//                     addNew == true ? sharedPrefs.translate('Create new') : '',
+//                     addNew == true ? sharedPref.translate('Create new') : '',
 //                 // onEmptyActionPressed: (String str) async {},
 //                 // dropdownItemSeparator: const Divider(
 //                 //   color: Colors.grey,
@@ -545,8 +567,8 @@ class KDropdownSearch extends StatelessWidget {
       }
       return DropdownFormField<Map<String, dynamic>>(
         controller: controller,
-        emptyText: sharedPrefs.translate('No matching found!'),
-        // emptyActionText: sharedPrefs.translate('Create new'),
+        emptyText: sharedPref.translate('No matching found!'),
+        // emptyActionText: sharedPref.translate('Create new'),
         // onEmptyActionPressed: (String str) async {},
         // dropdownItemSeparator: const Divider(
         //   color: Colors.grey,
@@ -613,7 +635,7 @@ class COnLoadingDropdownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return CTextFormField(
       labelText: labelText,
-      hintText: sharedPrefs.translate('Loading...'),
+      hintText: sharedPref.translate('Loading...'),
       readOnly: true,
       required: required,
       wrap: wrap,
@@ -653,7 +675,7 @@ class KOnLoadingDropdownMenu extends StatelessWidget {
 
     return KTextFormField(
         label: newLabel,
-        hintText: sharedPrefs.translate('Loading...'),
+        hintText: sharedPref.translate('Loading...'),
         readOnly: true,
         suffixIcon: const CircularProgressIndicator(),
         suffixIconConstraints: const BoxConstraints(
@@ -1132,14 +1154,14 @@ class CTextFormField extends StatelessWidget {
     var height = isDense == true ? 40.0 : fieldHeight;
 
     return Container(
-      height: wrap == true ? height * maxLines! + 8 : height,
+      height: (wrap == true || (maxLines ?? 1) > 1) ? null : height,
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: defaultPadding),
       decoration: showDivider == true
           ? const BoxDecoration(
               border: Border(bottom: BorderSide(width: 1, color: kBorderColor)))
           : null,
-      child: wrap == true
+      child: wrap == true || (maxLines ?? 1) > 1
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1175,7 +1197,7 @@ class CTextFormField extends StatelessWidget {
                   children: [
                     labelTextAsHint == true
                         ? const SizedBox()
-                        : Text(
+                        : CText(
                             '$labelText',
                             style: TextStyle(
                                 fontSize: Theme.of(context)
@@ -1191,7 +1213,7 @@ class CTextFormField extends StatelessWidget {
                     Container(
                       width: suffixIconConstraints?.maxWidth,
                       height: suffixIconConstraints?.maxHeight,
-                      padding: const EdgeInsets.all(defaultPadding / 2),
+                      padding: const EdgeInsets.only(left: defaultPadding),
                       child: suffix,
                     ),
                   ],
@@ -1262,7 +1284,7 @@ class KTextFormField extends StatelessWidget {
       // ?? (required == true
       //     ? (value) {
       //         if (value == null || value.isEmpty) {
-      //           return sharedPrefs.translate('This field is required!');
+      //           return sharedPref.translate('This field is required!');
       //         }
       //         return null;
       //       }
@@ -1295,25 +1317,28 @@ class KTextFormField extends StatelessWidget {
 
 /// CUSTOM TEXT
 class CText extends StatelessWidget {
+  final String data;
+  final bool? wrapText;
+  final TextStyle? style;
+  final int? maxLines;
+
   const CText(
     this.data, {
     super.key,
-    this.warpText,
+    this.wrapText,
     this.style,
+    this.maxLines = 1,
   });
-
-  final String data;
-  final bool? warpText;
-  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     var dataWidget = Text(
       data,
       style: style,
-      overflow: TextOverflow.clip,
+      maxLines: maxLines,
+      overflow: TextOverflow.ellipsis,
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1325,12 +1350,12 @@ class KText extends StatelessWidget {
   const KText(
     this.data, {
     super.key,
-    this.warpText,
+    this.wrapText,
     this.style,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
 
   @override
@@ -1340,7 +1365,7 @@ class KText extends StatelessWidget {
       style: style,
       overflow: TextOverflow.clip,
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1354,23 +1379,26 @@ class CSelectableText extends StatelessWidget {
     this.data, {
     super.key,
     this.style,
-    this.warpText = false,
+    this.wrapText = false,
+    this.maxLines = 1,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     var dataWidget = SelectableText(
       data,
+      maxLines: maxLines,
       style: style ??
           const TextStyle(
             overflow: TextOverflow.clip,
           ),
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1383,11 +1411,11 @@ class KSelectableText extends StatelessWidget {
     this.data, {
     super.key,
     this.style,
-    this.warpText = false,
+    this.wrapText = false,
   });
 
   final String data;
-  final bool? warpText;
+  final bool? wrapText;
   final TextStyle? style;
 
   @override
@@ -1399,7 +1427,7 @@ class KSelectableText extends StatelessWidget {
             overflow: TextOverflow.clip,
           ),
     );
-    if (warpText == true) {
+    if (wrapText == true) {
       return Flexible(child: dataWidget);
     } else {
       return dataWidget;
@@ -1468,7 +1496,7 @@ class KIcon extends StatelessWidget {
 //       this.lastDate,
 //       this.hintText,
 //       this.readOnly});
-
+//
 //   @override
 //   State<CustomDatePicker> createState() => _CustomDatePickerState();
 // }
@@ -1494,7 +1522,7 @@ class KIcon extends StatelessWidget {
 //             lastDate: widget.lastDate ?? DateTime(2100),
 //             initialDate: widget.initialDate,
 //           );
-
+//
 //           if (pickedDate != null && widget.controller != null) {
 //             String formattedDate = df1.format(pickedDate);
 //             setState(() {
@@ -1513,7 +1541,7 @@ class KIcon extends StatelessWidget {
 //   final DateTime? initialDate, firstDate, lastDate;
 //   final String? hintText;
 //   final bool? readOnly;
-
+//
 //   const CustomDateTimePicker(
 //       {super.key,
 //       this.controller,
@@ -1523,7 +1551,7 @@ class KIcon extends StatelessWidget {
 //       this.lastDate,
 //       this.hintText,
 //       this.readOnly});
-
+//
 //   @override
 //   State<CustomDateTimePicker> createState() => _CustomDateTimePickerState();
 // }
@@ -1531,19 +1559,19 @@ class KIcon extends StatelessWidget {
 // class _CustomDateTimePickerState extends State<CustomDateTimePicker>
 //     with SingleTickerProviderStateMixin {
 //   late AnimationController _controller;
-
+//
 //   @override
 //   void initState() {
 //     super.initState();
 //     _controller = AnimationController(vsync: this);
 //   }
-
+//
 //   @override
 //   void dispose() {
 //     _controller.dispose();
 //     super.dispose();
 //   }
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     if (widget.initialDate != null) {
@@ -1564,7 +1592,7 @@ class KIcon extends StatelessWidget {
 //             lastDate: widget.lastDate ?? DateTime(2100),
 //             initialDate: widget.initialDate,
 //           );
-
+//
 //           if (pickedDate != null && widget.controller != null) {
 //             String formattedDate = df2.format(
 //                 DateTime(pickedDate.year, pickedDate.month, pickedDate.day)
@@ -1583,20 +1611,20 @@ class KIcon extends StatelessWidget {
 // class CustomMultiselectDropDown extends StatefulWidget {
 //   final Function(List<String>) selectedList;
 //   final List<String> listOfStrings;
-
+//
 //   const CustomMultiselectDropDown(
 //       {super.key, required this.selectedList, required this.listOfStrings});
-
+//
 //   @override
 //   createState() {
 //     return _CustomMultiselectDropDownState();
 //   }
 // }
-
+//
 // class _CustomMultiselectDropDownState extends State<CustomMultiselectDropDown> {
 //   List<String> listOFSelectedItem = [];
 //   String selectedText = "";
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
@@ -1642,10 +1670,10 @@ class KIcon extends StatelessWidget {
 //   String item;
 //   bool itemSelected;
 //   final Function(String) selected;
-
+//
 //   _ViewItem(
 //       {required this.item, required this.itemSelected, required this.selected});
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     var size = MediaQuery.of(context).size;
@@ -1676,3 +1704,145 @@ class KIcon extends StatelessWidget {
 //     );
 //   }
 // }
+
+class CSwipeByDismissible extends StatelessWidget {
+  /// A wrapper widget that adds swipe functionality to its child.
+  ///
+  /// This widget uses [Dismissible] to provide left and right swipe actions.
+  /// It can be customized to enable or disable swipes in either direction,
+  /// and to specify custom actions for each swipe direction.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// SwipeWrapper(
+  ///   onLeftSwipe: () => print('Swiped left'),
+  ///   onRightSwipe: () => print('Swiped right'),
+  ///   child: YourWidget(),
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  ///  * [Dismissible], which this widget uses internally to handle swipes.
+
+  final Widget child;
+  final Function()? onLeftSwipe;
+  final Function()? onRightSwipe;
+  final bool enableLeftSwipe;
+  final bool enableRightSwipe;
+  final Color? backgroundColor;
+  final Widget? iconDisplay;
+  const CSwipeByDismissible({
+    super.key,
+    required this.child,
+    this.onLeftSwipe,
+    this.onRightSwipe,
+    this.enableLeftSwipe = false,
+    this.enableRightSwipe = true,
+    this.backgroundColor = Colors.white,
+    this.iconDisplay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    if (route?.isFirst ?? false) {
+      return child;
+    }
+
+    double defaultPadding = 20;
+    double defaultPadding2 = 0;
+    return Dismissible(
+        key: const Key('backUnique'),
+        direction: _getDismissDirection(),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart && enableLeftSwipe) {
+            onLeftSwipe?.call() ?? Navigator.of(context).maybePop();
+          } else if (direction == DismissDirection.startToEnd &&
+              enableRightSwipe) {
+            onRightSwipe?.call() ?? Navigator.of(context).maybePop();
+          }
+        },
+        background: Container(
+          color: backgroundColor,
+          alignment: onRightSwipe != null
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          padding: EdgeInsets.only(
+            right: onRightSwipe != null ? defaultPadding2 : defaultPadding,
+            left: onRightSwipe != null ? defaultPadding2 : defaultPadding,
+          ),
+          child: iconDisplay ??
+              Icon(
+                onRightSwipe != null
+                    ? Icons.exit_to_app
+                    : Icons.arrow_back_rounded,
+                color: Colors.black,
+              ),
+        ),
+        child: child);
+  }
+
+  DismissDirection _getDismissDirection() {
+    /*if (enableLeftSwipe && enableRightSwipe) {
+      return DismissDirection.horizontal;
+    } else */
+    if (enableLeftSwipe) {
+      return DismissDirection.endToStart;
+    } else if (enableRightSwipe) {
+      return DismissDirection.startToEnd;
+    }
+    return DismissDirection.none;
+  }
+}
+
+class CGroup extends StatelessWidget {
+  const CGroup({
+    super.key,
+    this.titleText,
+    this.child,
+    this.padding,
+    this.constraints,
+    this.backgroundColor,
+  });
+
+  final String? titleText;
+  final Widget? child;
+  final EdgeInsetsGeometry? padding;
+  final BoxConstraints? constraints;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (titleText != null)
+          Padding(
+            padding: const EdgeInsets.only(
+              top: defaultPadding,
+              bottom: defaultPadding,
+              left: defaultPadding * 2,
+              right: defaultPadding,
+            ),
+            child: CText(
+              titleText!,
+              style: const TextStyle(
+                  fontSize: largeTextSize, fontWeight: FontWeight.bold),
+            ),
+          ),
+        Container(
+          color: backgroundColor ?? kBgColor,
+          constraints: constraints,
+          padding: padding ??
+              const EdgeInsets.only(
+                left: defaultPadding * 2,
+                right: defaultPadding * 2,
+              ),
+          child: child,
+        ),
+        const SizedBox(height: defaultPadding * 2),
+      ],
+    );
+  }
+}

@@ -12,7 +12,7 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tasks.isEmpty) {
       return Center(
-        child: SelectableText('(${sharedPrefs.translate('Empty list')})'),
+        child: SelectableText('(${sharedPref.translate('Empty list')})'),
       );
     } else {
       return Container(

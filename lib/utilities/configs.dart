@@ -6,12 +6,14 @@ import '../screens/owner_project_overview/owner_project_overview_screen.dart';
 import '../screens/power_station_monitor/power_station_monitor_screen.dart';
 import '../screens/product/product_detail_screen/product_detail_screen.dart';
 import '../screens/product/product_filter_screen/product_filter_screen.dart';
-import '../screens/task/task_filter_screen/task_filter_screen.dart';
-import '../screens/task_old/task_detail/task_detail_screen.dart';
+// import '../screens/task/task_filter_screen/task_filter_screen.dart';
+// import '../screens/task_old/task_detail/task_detail_screen.dart';
+import '../screens/task_new/task_detail_screen/task_detail_screen.dart';
+import '../screens/task_new/task_filter_screen/task_filter_screen.dart';
 import 'shared_preferences.dart';
 
 class Config {
-  String appVersion = sharedPrefs.getVersion();
+  String appVersion = sharedPref.getVersion();
 }
 
 var customRouteMapping = CustomRouteMapping();
@@ -69,37 +71,6 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
           builder: (_) => const OwnerProjectOverviewScreen());
     }
     return MaterialPageRoute(builder: (_) => const LoginScreen());
-
-    // switch (settings.name?.toLowerCase()) {
-    //   /// Demo
-    //   case '/demo':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const DemoHomePage(title: 'Demo'));
-    //
-    //   /// Implement
-    //   case '/':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/login':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/logout':
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //   case '/task':
-    //     return MaterialPageRoute(builder: (_) => const TaskFilterScreen());
-    //   case '/task/create':
-    //     return MaterialPageRoute(builder: (_) => const TaskDetailScreen());
-    //   case '/product':
-    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-    //   case '/product/create':
-    //     return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
-    //   case '/powerstation/monitoring':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const PowerStationMonitorScreen());
-    //   case '/my/project':
-    //     return MaterialPageRoute(
-    //         builder: (_) => const OwnerProjectOverviewScreen());
-    //   default:
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    // }
   }
 
   /// DETAIL routing
@@ -113,46 +84,75 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
               ProductDetailScreen(productId: pathComponents?[1]));
     }
     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    //
-    // switch (pathComponents?[0]) {
-    //   case '/task':
-    //     return MaterialPageRoute(
-    //         builder: (context) => TaskDetailScreen(taskId: pathComponents?[1]));
-    //   case '/product':
-    //     return MaterialPageRoute(
-    //         builder: (context) =>
-    //             ProductDetailScreen(productId: pathComponents?[1]));
-    //   default:
-    //     return MaterialPageRoute(builder: (_) => const LoginScreen());
-    // }
   }
   return null;
 }
 
-// var customRoutes = <String, WidgetBuilder>{
-//   customRouteMapping.demo: (_) => const ActionBarDemoScreen(),
-//   customRouteMapping.demo2: (_) => const Demo2Screen(),
-//   customRouteMapping.demoResponsiveTabs: (_) => const ResponsiveTabsScreen(),
-//   customRouteMapping.dashboard: (_) => const DashboardScreen(),
-//   customRouteMapping.login: (_) => const LoginScreen(),
-//   customRouteMapping.logout: (_) => const LoginScreen(),
-//   customRouteMapping.owner: (_) => const DashboardScreen(),
-//   customRouteMapping.ownerAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.subject: (_) => const DashboardScreen(),
-//   customRouteMapping.subjectAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.user: (_) => const DashboardScreen(),
-//   customRouteMapping.userAdd: (_) => const DashboardScreen(),
-//   customRouteMapping.powerStationMonitoring: (_) =>
-//       const PowerStationMonitorScreen(),
-//   customRouteMapping.task: (_) => const TaskFilterScreen(),
-//   customRouteMapping.taskAdd: (_) => const TaskDetailScreen(),
-//   customRouteMapping.taskDetail: (_) => const TaskDetailScreen(),
-//   //
-//   customRouteMapping.myProject: (_) => const OwnerProjectOverviewScreen(),
-// };
+var nf0 = NumberFormat("#,##0", sharedPref.getLocale().toString());
+var nf1 = NumberFormat("#,##0.0", sharedPref.getLocale().toString());
+var df0 = DateFormat('yyyy-MM-dd HH:mm:ss', sharedPref.getLocaleCode());
+var df1 =
+    DateFormat(sharedPref.dateFormat, sharedPref.getLocaleCode()); //dd-MM-yyyy
+var df2 = DateFormat('dd-MM-yyyy HH:mm', sharedPref.getLocaleCode());
 
-var nf0 = NumberFormat("#,##0", sharedPrefs.getLocale().toString());
-var nf1 = NumberFormat("#,##0.0", sharedPrefs.getLocale().toString());
-var df0 = DateFormat('yyyy-MM-dd HH:mm:ss');
-var df1 = DateFormat(sharedPrefs.dateFormat);
-var df2 = DateFormat('dd-MM-yyyy HH:mm');
+String df0ConvertedFromDf1(String inputDateTime) {
+  try {
+    var year = '1900';
+    var month = '01';
+    var day = '01';
+    var dateElements = inputDateTime.split("-");
+    if (inputDateTime.isEmpty) return '';
+    if (dateElements.isNotEmpty) {
+      day =
+          NumberFormat("00").format(int.parse(dateElements[0])).substring(0, 2);
+    }
+    if (dateElements.length >= 2 &&
+        dateElements[1] != '' &&
+        dateElements[1] != '0') {
+      month =
+          NumberFormat("00").format(int.parse(dateElements[1])).substring(0, 2);
+    }
+    if (dateElements.length >= 3 &&
+        dateElements[2] != '' &&
+        dateElements[2] != '0') {
+      if (dateElements[2].length < 4) {
+        year = NumberFormat("0000").format(int.parse(dateElements[2]) + 2000);
+      } else {
+        year = NumberFormat("0000").format(int.parse(dateElements[2]));
+      }
+    }
+    return '$year-$month-$day 00:00:00';
+  } catch (e) {
+    return '';
+  }
+}
+
+String df0ConvertedFromDf2(String inputDateTime) {
+  var hour = '00';
+  var minute = '00';
+  var second = '00';
+  var elements = inputDateTime.split(" ");
+  if (elements.length > 1) {
+    var time = elements[1];
+    var timeSplit = time.split(":");
+    if (timeSplit[0].isNotEmpty) {
+      hour = NumberFormat("00").format(int.parse(timeSplit[0])).substring(0, 2);
+    }
+    if (timeSplit.length > 1 && timeSplit[1].isNotEmpty) {
+      minute =
+          NumberFormat("00").format(int.parse(timeSplit[1])).substring(0, 2);
+    }
+    if (timeSplit.length > 2 && timeSplit[2].isNotEmpty) {
+      second =
+          NumberFormat("00").format(int.parse(timeSplit[2])).substring(0, 2);
+    }
+  }
+
+  var df0String = df0ConvertedFromDf1(elements[0]);
+  if (df0String.isEmpty) {
+    return '';
+  } else {
+    var dateString = df0String.split(" ");
+    return '${dateString[0]} $hour:$minute:$second';
+  }
+}

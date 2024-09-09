@@ -5,13 +5,16 @@ import '../classes/app_models.dart';
 final constants = Constants();
 
 class Constants {
-  String appName = 'SE Solution';
-  String hostAddress = kDebugMode == false
-      ? 'https://test-api.sepower.vn'
-      : 'http://localhost:5155';
-  // : kIsWeb
+  String appName = 'SE Solution Ori';
+
+  String hostAddress = 'https://localhost:7299';
+  // String hostAddress = 'https://test-api.sepower.vn';
+  // String hostAddress = 'https://api.sepower.vn';
+  // String hostAddress = !kDebugMode
   //     ? 'https://test-api.sepower.vn'
-  //     : 'http://localhost:5155';
+  //     : kIsWeb
+  //         ? 'https://localhost:7299'
+  //         : 'https://test-api.sepower.vn';
 
   String defaultLocaleName = 'vi_VN';
   Locale defaultLocale = const Locale('vi', 'VN');

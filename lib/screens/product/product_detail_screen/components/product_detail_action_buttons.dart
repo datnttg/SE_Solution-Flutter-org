@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se_solution/utilities/responsive.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/enums/ui_enums.dart';
+import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../../product_filter_screen/bloc/product_filter_bloc.dart';
@@ -25,7 +25,7 @@ class AddProductFilterButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Add'),
+              labelText: sharedPref.translate('Add'),
               onPressed: () async {
                 if (Responsive.isSmallWidth(context)) {
                   Navigator.of(context)
@@ -45,6 +45,43 @@ class AddProductFilterButton extends StatelessWidget {
   }
 }
 
+class AddProductFilterFloatingButton extends StatelessWidget {
+  const AddProductFilterFloatingButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductDetailBloc, ProductDetailState>(
+        builder: (context, state) {
+      if (state.screenMode == ScreenModeEnum.view) {
+        return Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: FloatingActionButton(
+              tooltip: sharedPref.translate('Add'),
+              backgroundColor: cButtonTextHoverColor,
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: cButtonBorderColor, width: 1.0),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              onPressed: () async {
+                if (Responsive.isSmallWidth(context)) {
+                  Navigator.of(context)
+                      .pushNamed(customRouteMapping.productAdd);
+                } else {
+                  context
+                      .read<ProductFilterBloc>()
+                      .add(SelectedFilterProductChanged(''));
+                  context.read<ProductDetailBloc>().add(ProductIdChanged(''));
+                }
+              },
+              child: const Icon(Icons.add, color: kBgColorHeader, size: 30),
+            ));
+      } else {
+        return const SizedBox();
+      }
+    });
+  }
+}
+
 class SaveProductButton extends StatelessWidget {
   const SaveProductButton({super.key});
 
@@ -56,24 +93,26 @@ class SaveProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Save'),
+              labelText: sharedPref.translate('Save'),
               onPressed: () async {
-                var product = state.productDetail;
-                var response = await submitProductDetail(product.copyWith(
-                    children: (product.children ?? [])
-                        .where(
-                            (e) => e.childId != null && e.childId!.isNotEmpty)
-                        .toList()));
-                try {
-                  if (response != null && context.mounted) {
-                    context
-                        .read<ProductDetailBloc>()
-                        .add(ProductIdChanged(state.productDetail.id));
-                    context
-                        .read<ProductFilterBloc>()
-                        .add(InitProductFilterData());
-                  }
-                } catch (ex) {}
+                context.read<ProductDetailBloc>().add(ProductSaving());
+                // var product = state.productUpdate;
+                // var response = await submitProductDetail(product.copyWith(
+                //     children: (product.children ?? [])
+                //         .where(
+                //             (e) => e.childId != null && e.childId!.isNotEmpty)
+                //         .toList()));
+                // try {
+                //   if (response != null && context.mounted) {
+                //     context
+                //         .read<ProductDetailBloc>()
+                //         .add(ProductIdChanged(state.productDetail.id));
+                //     context
+                //         .read<ProductFilterBloc>()
+                //         .add(InitProductFilterData());
+                //   }
+                //   // ignore: empty_catches
+                // } catch (ex) {}
               },
             ));
       } else {
@@ -95,7 +134,7 @@ class EditProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Edit'),
+              labelText: sharedPref.translate('Edit'),
               onPressed: () {
                 context
                     .read<ProductDetailBloc>()
@@ -120,7 +159,7 @@ class DiscardProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Discard'),
+              labelText: sharedPref.translate('Discard'),
               onPressed: () {
                 context
                     .read<ProductDetailBloc>()
@@ -167,7 +206,7 @@ class BackProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Back'),
+              labelText: sharedPref.translate('Back'),
               onPressed: () {
                 Navigator.pop(context);
               },

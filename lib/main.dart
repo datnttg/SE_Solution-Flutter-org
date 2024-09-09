@@ -18,7 +18,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await sharedPrefs.sharePrefsInit();
+  await sharedPref.sharePrefInit();
   if (Platform.isAndroid || Platform.isIOS) {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeDependencies() {
-    Locale appLocale = sharedPrefs.getLocale();
+    Locale appLocale = sharedPref.getLocale();
     setState(() {
       _locale = appLocale;
     });
@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           // designSize: const Size(428.0, 926.0),
           builder: (context, child) {
         return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: true,
           title: constants.appName,
           theme: lightTheme,
           darkTheme: darkTheme,
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             }
             return supportedLocales.first;
           },
-          // home: sharedPrefs.getUsername().isNotEmpty
+          // home: sharedPref.getUsername().isNotEmpty
           //     ? const DashboardScreen()
           //     : const LoginScreen(),
           home: const LoginScreen(),

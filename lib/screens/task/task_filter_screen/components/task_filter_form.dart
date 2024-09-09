@@ -47,8 +47,8 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
             /// CREATED DATE
             ResponsiveItem(
                 child: CTextFormField(
-              labelText: sharedPrefs.translate('Assigned date'),
-              hintText: '--${sharedPrefs.translate('All')}--',
+              labelText: sharedPref.translate('Assigned date'),
+              hintText: '--${sharedPref.translate('All')}--',
               controller: dateRangeInputController,
               suffix: IconButton(
                 icon: const Icon(Icons.calendar_month_outlined),
@@ -87,13 +87,13 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
               child: StreamBuilder(
                   stream: fetchAssignedUserEntries(),
                   builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Creator');
+                    var labelText = sharedPref.translate('Creator');
                     Widget child = COnLoadingDropdownMenu(labelText: labelText);
                     if (snapshot.hasData) {
                       child = CDropdownMenu(
                         labelText: labelText,
                         multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
+                        hintText: '--${sharedPref.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,
                         onSelected: (values) {
                           widget.bloc.eventController
@@ -112,13 +112,13 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
               child: StreamBuilder(
                   stream: fetchAssignedUserEntries(),
                   builder: (context, snapshot) {
-                    var labelText = sharedPrefs.translate('Assigned to');
+                    var labelText = sharedPref.translate('Assigned to');
                     Widget child = COnLoadingDropdownMenu(labelText: labelText);
                     if (snapshot.hasData) {
                       child = CDropdownMenu(
                         labelText: labelText,
                         multiSelect: true,
-                        hintText: '--${sharedPrefs.translate('All')}--',
+                        hintText: '--${sharedPref.translate('All')}--',
                         dropdownMenuEntries: snapshot.data!,
                         onSelected: (values) {
                           widget.bloc.eventController
@@ -137,7 +137,7 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                 child: StreamBuilder(
                     stream: fetchTaskCategory(categoryProperty: 'TaskType'),
                     builder: (context, snapshot) {
-                      var labelText = sharedPrefs.translate('Task type');
+                      var labelText = sharedPref.translate('Task type');
                       Widget child =
                           COnLoadingDropdownMenu(labelText: labelText);
                       if (snapshot.hasData) {
@@ -145,7 +145,7 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
                           labelText: labelText,
                           // enableSearch: true,
                           multiSelect: true,
-                          hintText: '--${sharedPrefs.translate('All')}--',
+                          hintText: '--${sharedPref.translate('All')}--',
                           dropdownMenuEntries: snapshot.data!,
                           onSelected: (values) {
                             widget.bloc.eventController
@@ -164,13 +164,13 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
             //     child: StreamBuilder(
             //       stream: fetchTaskCategory(categoryProperty: 'TaskStatus'),
             //       builder: (context, snapshot) {
-            //         var labelText = sharedPrefs.translate('Status');
+            //         var labelText = sharedPref.translate('Status');
             //         Widget child = COnLoadingDropdownMenu(labelText: labelText);
             //         if (snapshot.hasData) {
             //           child = CDropdownMenu(
             //             labelText: labelText,
             //             multiSelect: true,
-            //             hintText: '--${sharedPrefs.translate('All')}--',
+            //             hintText: '--${sharedPref.translate('All')}--',
             //             dropdownMenuEntries: snapshot.data!,
             //             selectedMenuEntries: snapshot.data!
             //                 .where((e) => [

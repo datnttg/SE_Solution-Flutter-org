@@ -32,7 +32,7 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
       },
       {
         "id": "Other",
-        "title": "(${sharedPrefs.translate('Other')})",
+        "title": "(${sharedPref.translate('Other')})",
       },
     ]
         .map((e) => DropdownMenuEntry(value: e['id'], label: e['title']!))
@@ -59,12 +59,12 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-                  title: KText(sharedPrefs.translate('Duplicate')),
+                  title: KText(sharedPref.translate('Duplicate')),
                   content: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       KText(
-                          '${subject.phone} ${sharedPrefs.translate('is already existed!')}'),
+                          '${subject.phone} ${sharedPref.translate('is already existed!')}'),
                     ],
                   ),
                   actions: [
@@ -93,28 +93,28 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
                   controller: nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return sharedPrefs.translate('This field is required!');
+                      return sharedPref.translate('This field is required!');
                     }
                     return null;
                   },
-                  label: Text(sharedPrefs.translate('Name')),
+                  label: Text(sharedPref.translate('Name')),
                 )),
                 ResponsiveItem(
                     child: KTextFormField(
                   controller: phoneController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return sharedPrefs.translate('This field is required!');
+                      return sharedPref.translate('This field is required!');
                     }
                     return null;
                   },
-                  label: Text(sharedPrefs.translate('Phone')),
+                  label: Text(sharedPref.translate('Phone')),
                 )),
                 ResponsiveItem(
                     widthRatio: 2,
                     child: KTextFormField(
                       controller: addressController,
-                      label: Text(sharedPrefs.translate('Address')),
+                      label: Text(sharedPref.translate('Address')),
                     )),
                 ResponsiveItem(
                     child: KDropdownMenu(
@@ -124,7 +124,7 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
                   },
                   controller: customerSourceController,
                   dropdownMenuEntries: customerSourceEntries,
-                      labelText: sharedPrefs.translate('Customer source'),
+                  labelText: sharedPref.translate('Customer source'),
                 ))
               ]),
             ),
@@ -145,7 +145,7 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
                   }
                 },
                 child: Text(
-                  sharedPrefs.translate('Add & Close'),
+                  sharedPref.translate('Add & Close'),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -160,7 +160,7 @@ class TaskReferenceSubjectAdding extends StatelessWidget {
                 },
                 backgroundColor: Colors.green,
                 child: Text(
-                  sharedPrefs.translate('Add & New'),
+                  sharedPref.translate('Add & New'),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

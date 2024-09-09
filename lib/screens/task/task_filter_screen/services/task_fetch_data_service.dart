@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:se_solution/utilities/constants/core_constants.dart';
-import 'package:se_solution/utilities/shared_preferences.dart';
 import '../../../../utilities/app_service.dart';
 import '../../../../utilities/classes/custom_widget_models.dart';
+import '../../../../utilities/constants/core_constants.dart';
+import '../../../../utilities/shared_preferences.dart';
 import '../models/task_filter_item_model.dart';
 import '../models/task_filter_parameter_model.dart';
 
@@ -16,7 +16,7 @@ Stream<List<CDropdownMenuEntry>> fetchTaskCategory(
   var listEntries = data['responseData']
       .map<CDropdownMenuEntry>((e) => CDropdownMenuEntry(
             value: e['code'],
-            labelText: e[sharedPrefs.getLocale().languageCode],
+            labelText: e[sharedPref.getLocale().languageCode],
           ))
       .toList();
   yield listEntries;

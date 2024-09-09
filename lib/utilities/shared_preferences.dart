@@ -8,16 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_service.dart';
 import 'constants/core_constants.dart';
 
-final sharedPrefs = SharedPrefs();
+final sharedPref = SharedPref();
 late String currency;
 
-class SharedPrefs {
-  static SharedPreferences? _sharedPrefs;
+class SharedPref {
+  static SharedPreferences? _sharedPref;
 
   /// Implementations
-  String getFunctions() => _sharedPrefs!.getString('functions').toString();
+  String getFunctions() => _sharedPref!.getString('functions').toString();
   void setFunctions(String functionValues) {
-    _sharedPrefs!.setString('functions', functionValues);
+    _sharedPref!.setString('functions', functionValues);
   }
 
   bool get isDarkMode {
@@ -27,72 +27,70 @@ class SharedPrefs {
     return brightness == Brightness.dark;
   }
 
-  String getThemeMode() =>
-      _sharedPrefs?.getString('themeMode').toString() ?? '';
+  String getThemeMode() => _sharedPref?.getString('themeMode').toString() ?? '';
   void setThemeMode(String themeModeValue) =>
-      _sharedPrefs!.setString('themeMode', themeModeValue);
+      _sharedPref!.setString('themeMode', themeModeValue);
 
-  String getFirebaseToken() => _sharedPrefs?.getString('firebaseToken') ?? '';
+  String getFirebaseToken() => _sharedPref?.getString('firebaseToken') ?? '';
   void setFirebaseToken(String firebaseToken) =>
-      _sharedPrefs!.setString('firebaseToken', firebaseToken);
+      _sharedPref!.setString('firebaseToken', firebaseToken);
 
   String getFirebaseInstallationId() =>
-      _sharedPrefs?.getString('firebaseInstallationId') ?? '';
+      _sharedPref?.getString('firebaseInstallationId') ?? '';
   void setFirebaseInstallationId(String firebaseInstallationId) =>
-      _sharedPrefs!.setString('firebaseInstallationId', firebaseInstallationId);
+      _sharedPref!.setString('firebaseInstallationId', firebaseInstallationId);
 
-  String getUsername() => _sharedPrefs?.getString('username') ?? '';
+  String getUsername() => _sharedPref?.getString('username') ?? '';
   void setUsername(String username) =>
-      _sharedPrefs!.setString('username', username);
+      _sharedPref!.setString('username', username);
 
-  String getPassword() => _sharedPrefs?.getString('password') ?? '';
+  String getPassword() => _sharedPref?.getString('password') ?? '';
   void setPassword(String password) =>
-      _sharedPrefs!.setString('password', password);
+      _sharedPref!.setString('password', password);
 
-  String getUserId() => _sharedPrefs?.getString('userId') ?? '';
-  void setUserId(String userId) => _sharedPrefs!.setString('userId', userId);
+  String getUserId() => _sharedPref?.getString('userId') ?? '';
+  void setUserId(String userId) => _sharedPref!.setString('userId', userId);
 
   String translate(String key) {
-    var dictionary = _sharedPrefs!.getString('dictionary').toString();
+    var dictionary = _sharedPref!.getString('dictionary').toString();
     var res = json.decode(dictionary);
     return res[key] ?? key;
   }
 
-  String getRefreshToken() =>
-      _sharedPrefs!.getString('refreshToken').toString();
+  String getRefreshToken() => _sharedPref!.getString('refreshToken').toString();
   void setRefreshToken(String refreshToken) =>
-      _sharedPrefs!.setString('refreshToken', refreshToken);
+      _sharedPref!.setString('refreshToken', refreshToken);
 
-  String getAccessToken() => _sharedPrefs!.getString('accessToken').toString();
+  String getAccessToken() => _sharedPref!.getString('accessToken').toString();
   void setAccessToken(String accessToken) =>
-      _sharedPrefs!.setString('accessToken', accessToken);
+      _sharedPref!.setString('accessToken', accessToken);
 
-  String getDictionary() => _sharedPrefs!.getString('dictionary')!;
+  String getDictionary() => _sharedPref!.getString('dictionary')!;
   Future setDictionary(Locale? locale) async {
     locale ??= constants.defaultLocale;
     String jsonStringValues = await rootBundle.loadString(
         'lib/utilities/localization/languages/${locale.languageCode}.json');
-    await _sharedPrefs!.setString('dictionary', jsonStringValues);
+    await _sharedPref!.setString('dictionary', jsonStringValues);
   }
 
-  void setSharedPrefsItems({required bool setCategoriesToDefault}) {
+  void setSharedPrefItems({required bool setCategoriesToDefault}) {
     if (setCategoriesToDefault) {
-      _sharedPrefs!.clear();
+      _sharedPref!.clear();
     }
   }
 
   void removeItem(String itemName) {
-    _sharedPrefs!.remove(itemName);
+    _sharedPref!.remove(itemName);
   }
 
   String get appCurrency =>
-      _sharedPrefs!.getString('appCurrency') ?? constants.defaultLocaleName;
+      _sharedPref!.getString('appCurrency') ?? constants.defaultLocaleName;
   set appCurrency(String appCurrency) =>
-      _sharedPrefs!.setString('appCurrency', appCurrency);
+      _sharedPref!.setString('appCurrency', appCurrency);
 
   void getCurrency() {
-    if (_sharedPrefs!.containsKey('appCurrency')) {
-      var format = NumberFormat.simpleCurrency(locale: sharedPrefs.appCurrency);
+    if (_sharedPref!.containsKey('appCurrency')) {
+      var format = NumberFormat.simpleCurrency(locale: sharedPref.appCurrency);
       currency = format.currencySymbol;
     } else {
       var format =
@@ -103,51 +101,54 @@ class SharedPrefs {
 
   Locale getLocale() {
     String languageCode =
-        _sharedPrefs!.getString('locale') ?? constants.defaultLocale.toString();
+        _sharedPref!.getString('locale') ?? constants.defaultLocale.toString();
     return mapLocale(languageCode);
+  }
+
+  String getLocaleCode() {
+    return _sharedPref!.getString('locale') ??
+        constants.defaultLocale.toString();
   }
 
   Future setLocale(Locale? locale) async {
     String localeString = locale.toString();
-    _sharedPrefs!.setString('locale', localeString);
+    _sharedPref!.setString('locale', localeString);
     await setDictionary(locale);
     // getCurrency();
   }
 
-  String getVersion() => _sharedPrefs?.getString('version') ?? '';
-  void setVersion(String version) =>
-      _sharedPrefs!.setString('version', version);
+  String getVersion() => _sharedPref?.getString('version') ?? '';
+  void setVersion(String version) => _sharedPref!.setString('version', version);
 
   // not yet use this set method
-  String get selectedDate => _sharedPrefs!.getString('selectedDate')!;
+  String get selectedDate => _sharedPref!.getString('selectedDate')!;
 
   set selectedDate(String value) {
-    _sharedPrefs!.setString('selectedDate', value);
+    _sharedPref!.setString('selectedDate', value);
   }
 
-  String get dateFormat =>
-      _sharedPrefs!.getString('dateFormat') ?? 'dd-MM-yyyy';
+  String get dateFormat => _sharedPref!.getString('dateFormat') ?? 'dd-MM-yyyy';
   set dateFormat(String dateFormat) =>
-      _sharedPrefs!.setString('dateFormat', dateFormat);
+      _sharedPref!.setString('dateFormat', dateFormat);
 
-  bool get isPasscodeOn => _sharedPrefs!.getBool('isPasscodeOn') ?? false;
-  set isPasscodeOn(bool value) => _sharedPrefs!.setBool('isPasscodeOn', value);
+  bool get isPasscodeOn => _sharedPref!.getBool('isPasscodeOn') ?? false;
+  set isPasscodeOn(bool value) => _sharedPref!.setBool('isPasscodeOn', value);
 
   String get passcodeScreenLock =>
-      _sharedPrefs!.getString('passcodeScreenLock')!;
+      _sharedPref!.getString('passcodeScreenLock')!;
   set passcodeScreenLock(String value) =>
-      _sharedPrefs!.setString('passcodeScreenLock', value);
+      _sharedPref!.setString('passcodeScreenLock', value);
 
   List<String> get parentExpenseItemNames =>
-      _sharedPrefs!.getStringList('parent expense item names')!;
+      _sharedPref!.getStringList('parent expense item names')!;
   set parentExpenseItemNames(List<String> parentExpenseItemNames) =>
-      _sharedPrefs!
+      _sharedPref!
           .setStringList('parent expense item names', parentExpenseItemNames);
 
-  sharePrefsInit() async {
-    _sharedPrefs ??= await SharedPreferences.getInstance();
-    await sharedPrefs.setLocale(sharedPrefs.getLocale());
-    sharedPrefs.setSharedPrefsItems(setCategoriesToDefault: false);
+  sharePrefInit() async {
+    _sharedPref ??= await SharedPreferences.getInstance();
+    await sharedPref.setLocale(sharedPref.getLocale());
+    sharedPref.setSharedPrefItems(setCategoriesToDefault: false);
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setVersion(packageInfo.version);
   }

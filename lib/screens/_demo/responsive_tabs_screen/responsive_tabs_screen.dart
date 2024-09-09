@@ -23,7 +23,7 @@ class _ResponsiveTabsScreenState extends State<ResponsiveTabsScreen> {
   @override
   void initState() {
     _navigationIndex = 0;
-    _title = sharedPrefs.translate('Main screen');
+    _title = sharedPref.translate('Main screen');
     _bodies = [
       overviewBody(),
       customersBody(),
@@ -70,19 +70,19 @@ class _ResponsiveTabsScreenState extends State<ResponsiveTabsScreen> {
             icon: const Icon(
               Icons.home,
             ),
-            label: sharedPrefs.translate('Overview'),
+            label: sharedPref.translate('Overview'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(
               Icons.people,
             ),
-            label: sharedPrefs.translate('Customers'),
+            label: sharedPref.translate('Customers'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(
               Icons.money,
             ),
-            label: sharedPrefs.translate('Remuneration'),
+            label: sharedPref.translate('Remuneration'),
           ),
         ],
         showSelectedLabels: true,
@@ -175,7 +175,7 @@ class _ResponsiveTabsScreenState extends State<ResponsiveTabsScreen> {
                           ? kSecondaryColor
                           : Colors.white),
                   Text(
-                    sharedPrefs.translate('Overview'),
+                    sharedPref.translate('Overview'),
                     style: TextStyle(
                         color: _navigationIndex == 0
                             ? kSecondaryColor
@@ -200,7 +200,7 @@ class _ResponsiveTabsScreenState extends State<ResponsiveTabsScreen> {
                           ? kSecondaryColor
                           : Colors.white),
                   Text(
-                    sharedPrefs.translate('Customers'),
+                    sharedPref.translate('Customers'),
                     style: TextStyle(
                         color: _navigationIndex == 1
                             ? kSecondaryColor
@@ -225,7 +225,7 @@ class _ResponsiveTabsScreenState extends State<ResponsiveTabsScreen> {
                           ? kSecondaryColor
                           : Colors.white),
                   Text(
-                    sharedPrefs.translate('Remuneration'),
+                    sharedPref.translate('Remuneration'),
                     style: TextStyle(
                         color: _navigationIndex == 2
                             ? kSecondaryColor

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utilities/custom_widgets.dart';
 import '../../../utilities/shared_preferences.dart';
-import '../../../utilities/ui_styles.dart';
 import 'bloc/product_detail_bloc.dart';
 import 'bloc/product_detail_states.dart';
 import 'components/product_detail_form.dart';
@@ -21,43 +20,18 @@ class ProductDetailBody extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: defaultPadding * 2,
-                    right: defaultPadding * 2,
-                  ),
-                  color: kBgColor,
-
+                const CGroup(
                   /// PRODUCT DETAIL
-                  child: const ProductDetailForm(),
+                  child: ProductDetailForm(),
                 ),
-                const SizedBox(height: defaultPadding * 2),
-
-                /// CHILD PRODUCTS
                 BlocBuilder<ProductDetailBloc, ProductDetailState>(
                     builder: (context, state) {
                   if (state.productDetail.typeCode == 'BundleProduct') {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        /// TEXT: CHILD
-                        Padding(
-                          padding: const EdgeInsets.all(defaultPadding),
-                          child: CText(
-                            sharedPrefs.translate('Elements'),
-                            style: const TextStyle(
-                                fontSize: largeTextSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                    return CGroup(
+                      titleText: sharedPref.translate('Elements'),
 
-                        /// LIST: CHILD
-                        Container(
-                          color: kBgColor,
-                          constraints: const BoxConstraints(maxHeight: 360),
-                          child: const ProductDetailChildren(),
-                        ),
-                      ],
+                      /// CHILD PRODUCTS
+                      child: const ProductDetailChildren(),
                     );
                   } else {
                     return const SizedBox();

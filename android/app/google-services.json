@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "249185202958",
-    "project_id": "se-solution-53715",
-    "storage_bucket": "se-solution-53715.appspot.com"
+    "project_number": "253923075568",
+    "project_id": "se-solution-original",
+    "storage_bucket": "se-solution-original.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:249185202958:android:1a276e354a19f1d04d9d5f",
+        "mobilesdk_app_id": "1:253923075568:android:a3014585216c21c87e6935",
         "android_client_info": {
-          "package_name": "vn.sepower.se_solution"
+          "package_name": "vn.sepower.se_solution_ori"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA3UnyJm6hGl172H3JMPXKFN-0Cia4fATw"
+          "current_key": "AIzaSyA6esLhD3ur5gic9RUCUuLr7ojaTEllvmk"
         }
       ],
       "services": {
