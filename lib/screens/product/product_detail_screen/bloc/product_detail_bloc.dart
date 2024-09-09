@@ -79,6 +79,7 @@ class ProductDetailBloc
 
   Future<void> _onProductCodeChanged(
       ProductCodeChanged event, Emitter<ProductDetailState> emit) async {
+    state.productDetail.code = event.code;
     emit(state.copyWith(
         productDetail: state.productDetail.copyWith(code: event.code)));
   }

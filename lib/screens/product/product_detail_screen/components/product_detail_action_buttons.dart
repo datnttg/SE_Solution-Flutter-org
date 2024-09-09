@@ -83,8 +83,8 @@ class SaveProductButton extends StatelessWidget {
   }
 }
 
-class UpdateProductButton extends StatelessWidget {
-  const UpdateProductButton({super.key});
+class EditProductButton extends StatelessWidget {
+  const EditProductButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class UpdateProductButton extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.all(defaultPadding),
             child: CElevatedButton(
-              labelText: sharedPrefs.translate('Update'),
+              labelText: sharedPrefs.translate('Edit'),
               onPressed: () {
                 context
                     .read<ProductDetailBloc>()

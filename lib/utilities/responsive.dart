@@ -36,21 +36,21 @@ class Responsive extends StatelessWidget {
   static bool isPortraitAndSmallWidth(BuildContext context) =>
       isSmallWidth(context) && isPortrait(context);
 
-  static bool isSmallWidthParent() =>
-      WidgetsBinding
-          .instance.platformDispatcher.views.first.physicalSize.width <
-      smallWidthScope;
+  // static bool isSmallWidthParent() =>
+  //     WidgetsBinding
+  //         .instance.platformDispatcher.views.first.physicalSize.width <
+  //     smallWidthScope;
 
-  static bool isMediumWidthParent(BuildContext context) {
-    var view = WidgetsBinding.instance.platformDispatcher.views.first;
-    return view.physicalSize.width >= smallWidthScope &&
-        view.physicalSize.width < mediumWidthScope;
-  }
+  // static bool isMediumWidthParent(BuildContext context) {
+  //   var view = WidgetsBinding.instance.platformDispatcher.views.first;
+  //   return view.physicalSize.width >= smallWidthScope &&
+  //       view.physicalSize.width < mediumWidthScope;
+  // }
 
-  static bool isLargeWidthParent(BuildContext context) =>
-      WidgetsBinding
-          .instance.platformDispatcher.views.first.physicalSize.width >=
-      mediumWidthScope;
+  // static bool isLargeWidthParent(BuildContext context) =>
+  //     WidgetsBinding
+  //         .instance.platformDispatcher.views.first.physicalSize.width >=
+  //     mediumWidthScope;
 
   static bool isMobile() => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
