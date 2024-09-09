@@ -1,51 +1,40 @@
-import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_filter_item_model.dart';
+import '../models/product_filter_dropdowns_model.dart';
+import '../models/product_filter_parameter_model.dart';
 
 class ProductFilterState {
+  ProductFilterParameters? parameters;
+
+  ProcessingStatusEnum? initialStatus;
+  ProductFilterDropdownsModel? dropdownData;
+
   ProcessingStatusEnum? loadingStatus;
-  String? productCode;
-  String? productName;
-  List<CDropdownMenuEntry>? productCategories;
-  List<CDropdownMenuEntry>? selectedProductCategories;
-  List<CDropdownMenuEntry>? productTypes;
-  List<CDropdownMenuEntry>? selectedProductTypes;
   List<ProductFilterItemModel>? products;
   String? selectedId;
 
   ProductFilterState({
+    this.initialStatus = ProcessingStatusEnum.processing,
     this.loadingStatus = ProcessingStatusEnum.processing,
-    this.productCode,
-    this.productName,
-    this.productCategories,
-    this.selectedProductCategories,
-    this.productTypes,
-    this.selectedProductTypes,
+    this.parameters,
+    this.dropdownData,
     this.products,
     this.selectedId,
   });
 
   ProductFilterState copyWith({
+    ProductFilterParameters? parameters,
+    ProcessingStatusEnum? initialStatus,
     ProcessingStatusEnum? loadingStatus,
-    String? productCode,
-    String? productName,
-    List<CDropdownMenuEntry>? productCategories,
-    List<CDropdownMenuEntry>? selectedProductCategories,
-    List<CDropdownMenuEntry>? productTypes,
-    List<CDropdownMenuEntry>? selectedProductTypes,
+    ProductFilterDropdownsModel? dropdownData,
     List<ProductFilterItemModel>? products,
     String? selectedId,
   }) {
     return ProductFilterState(
+      parameters: parameters ?? this.parameters,
+      initialStatus: initialStatus ?? this.initialStatus,
       loadingStatus: loadingStatus ?? this.loadingStatus,
-      productCode: productCode ?? this.productCode,
-      productName: productName ?? this.productName,
-      productCategories: productCategories ?? this.productCategories,
-      selectedProductCategories:
-          selectedProductCategories ?? this.selectedProductCategories,
-      productTypes: productTypes ?? this.productTypes,
-      selectedProductTypes:
-          selectedProductTypes ?? this.selectedProductCategories,
+      dropdownData: dropdownData ?? this.dropdownData,
       products: products ?? this.products,
       selectedId: selectedId,
     );

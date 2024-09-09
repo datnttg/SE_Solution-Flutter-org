@@ -58,7 +58,7 @@ class ProductFilterScreen extends StatelessWidget {
                   bool isSmallWidthAndActive =
                       Responsive.isSmallWidth(context) &&
                           state.selectedId != null;
-                  switch (state.loadingStatus) {
+                  switch (state.initialStatus) {
                     case ProcessingStatusEnum.success:
                       return Row(
                         children: [

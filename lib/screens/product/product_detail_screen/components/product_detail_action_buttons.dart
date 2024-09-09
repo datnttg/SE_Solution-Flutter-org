@@ -95,23 +95,24 @@ class SaveProductButton extends StatelessWidget {
             child: CElevatedButton(
               labelText: sharedPref.translate('Save'),
               onPressed: () async {
-                var product = state.productDetail;
-                var response = await submitProductDetail(product.copyWith(
-                    children: (product.children ?? [])
-                        .where(
-                            (e) => e.childId != null && e.childId!.isNotEmpty)
-                        .toList()));
-                try {
-                  if (response != null && context.mounted) {
-                    context
-                        .read<ProductDetailBloc>()
-                        .add(ProductIdChanged(state.productDetail.id));
-                    context
-                        .read<ProductFilterBloc>()
-                        .add(InitProductFilterData());
-                  }
-                  // ignore: empty_catches
-                } catch (ex) {}
+                context.read<ProductDetailBloc>().add(ProductSaving());
+                // var product = state.productUpdate;
+                // var response = await submitProductDetail(product.copyWith(
+                //     children: (product.children ?? [])
+                //         .where(
+                //             (e) => e.childId != null && e.childId!.isNotEmpty)
+                //         .toList()));
+                // try {
+                //   if (response != null && context.mounted) {
+                //     context
+                //         .read<ProductDetailBloc>()
+                //         .add(ProductIdChanged(state.productDetail.id));
+                //     context
+                //         .read<ProductFilterBloc>()
+                //         .add(InitProductFilterData());
+                //   }
+                //   // ignore: empty_catches
+                // } catch (ex) {}
               },
             ));
       } else {

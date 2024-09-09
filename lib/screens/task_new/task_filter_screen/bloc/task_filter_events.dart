@@ -1,14 +1,9 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
-import '../models/task_filter_item_model.dart';
 
 abstract class TaskFilterEvents {}
 
 class InitTaskFilterData extends TaskFilterEvents {
   InitTaskFilterData();
-}
-
-class TaskFilterListLoading extends TaskFilterEvents {
-  TaskFilterListLoading();
 }
 
 class TaskFilterCreatedTimeChanged extends TaskFilterEvents {
@@ -46,9 +41,8 @@ class TaskFilterTypesChanged extends TaskFilterEvents {
   TaskFilterTypesChanged(this.taskTypes);
 }
 
-class TaskFilterListChanged extends TaskFilterEvents {
-  List<TaskFilterItemModel>? list;
-  TaskFilterListChanged(this.list);
+class TaskFilterSubmitted extends TaskFilterEvents {
+  TaskFilterSubmitted();
 }
 
 class SelectedFilterItemChanged extends TaskFilterEvents {

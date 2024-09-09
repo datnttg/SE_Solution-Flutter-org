@@ -35,10 +35,6 @@ class ProductListItem extends StatelessWidget {
             if (isReload == true && context.mounted) {
               context.read<ProductFilterBloc>().add(InitProductFilterData());
             }
-            // Navigator.pushNamedAndRemoveUntil(
-            //     context,
-            //     '${customRouteMapping.productDetail}/${dataItem.id}',
-            //     (Route<dynamic> route) => false);
           } else if (context.mounted) {
             context
                 .read<ProductFilterBloc>()

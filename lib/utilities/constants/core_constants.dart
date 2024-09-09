@@ -7,8 +7,8 @@ final constants = Constants();
 class Constants {
   String appName = 'SE Solution Ori';
 
-  // String hostAddress = 'https://localhost:7299';
-  String hostAddress = 'https://test-api.sepower.vn';
+  String hostAddress = 'https://localhost:7299';
+  // String hostAddress = 'https://test-api.sepower.vn';
   // String hostAddress = 'https://api.sepower.vn';
   // String hostAddress = !kDebugMode
   //     ? 'https://test-api.sepower.vn'

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_states.dart';
-import '../models/child_product_model.dart';
+import '../models/product_detail_model.dart';
 import 'product_detail_children_item.dart';
 
 class ProductDetailChildren extends StatelessWidget {
@@ -19,7 +19,7 @@ class ProductDetailChildren extends StatelessWidget {
             (children?.where((e) => e.childId?.isEmpty ?? true).length ?? 0) ==
                 0 &&
             !(children?.any((e) => e.quantityOfChild == 0) ?? true)) {
-          state.productDetail.children?.add(ChildProductModel());
+          state.productDetail.children?.add(ChildProductDetailModel());
         }
         return ListView.builder(
             shrinkWrap: true,

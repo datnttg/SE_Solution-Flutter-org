@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:se_solution_ori/utilities/custom_widgets.dart';
-import 'package:se_solution_ori/utilities/ui_styles.dart';
 
 import '../../../../utilities/configs.dart';
+import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../models/task_detail_model.dart';
 
 class TaskFlows extends StatelessWidget {

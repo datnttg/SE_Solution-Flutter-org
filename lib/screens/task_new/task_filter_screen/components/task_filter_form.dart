@@ -54,96 +54,88 @@ class _TaskFilterFormState extends State<TaskFilterForm> {
       }
       dateRangeInputController.text = "$startDate - $endDate";
       return CGroup(
-        child: Column(
+        child: ResponsiveRow(
+          context: context,
+          basicWidth: Responsive.isSmallWidth(context) ? 300 : 400,
+          horizontalSpacing: defaultPadding * 5,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            ResponsiveRow(
-              context: context,
-              basicWidth: Responsive.isSmallWidth(context) ? 300 : 400,
-              horizontalSpacing: defaultPadding * 5,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                ResponsiveItem(
-                  child: CTextFormField(
-                    controller: dateRangeInputController,
-                    labelText: sharedPref.translate('Assigned date'),
-                    hintText: sharedPref.translate('dd/mm/yyyy - dd/mm/yyyy'),
-                    suffix: IconButton(
-                      icon: const Icon(Icons.calendar_month),
-                      onPressed: () async {
-                        DateTimeRange? pickedDateRange =
-                            await showDateRangePicker(
-                          context: context,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                          initialDateRange: initialDateRange,
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        );
-                        changeDate(pickedDateRange);
-                      },
-                    ),
-                    onChanged: (String input) {
-                      context
-                          .read<TaskFilterBloc>()
-                          .add(TaskFilterCreatedTimeChanged(input));
-                    },
-                  ),
+            ResponsiveItem(
+              child: CTextFormField(
+                controller: dateRangeInputController,
+                labelText: sharedPref.translate('Assigned date'),
+                hintText: sharedPref.translate('dd/mm/yyyy - dd/mm/yyyy'),
+                suffix: IconButton(
+                  icon: const Icon(Icons.calendar_month),
+                  onPressed: () async {
+                    DateTimeRange? pickedDateRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                      initialDateRange: initialDateRange,
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
+                    );
+                    changeDate(pickedDateRange);
+                  },
                 ),
-                ResponsiveItem(
-                  child: CDropdownMenu(
-                    labelText: sharedPref.translate('Last progress'),
-                    hintText: sharedPref.translate('All'),
-                    multiSelect: true,
-                    dropdownMenuEntries:
-                        state.dropdownData?.lastProgresses ?? [],
-                    onSelected: (values) {
-                      context
-                          .read<TaskFilterBloc>()
-                          .add(TaskFilterLastProgressesChanged(values));
-                    },
-                  ),
-                ),
-                ResponsiveItem(
-                  child: CDropdownMenu(
-                    labelText: sharedPref.translate('Status'),
-                    hintText: sharedPref.translate('All'),
-                    multiSelect: true,
-                    dropdownMenuEntries: state.dropdownData?.taskStatuses ?? [],
-                    onSelected: (values) {
-                      context
-                          .read<TaskFilterBloc>()
-                          .add(TaskFilterStatusesChanged(values));
-                    },
-                  ),
-                ),
-                ResponsiveItem(
-                  child: CDropdownMenu(
-                    labelText: sharedPref.translate('Task type'),
-                    hintText: sharedPref.translate('All'),
-                    multiSelect: true,
-                    dropdownMenuEntries: state.dropdownData?.taskTypes ?? [],
-                    onSelected: (values) {
-                      context
-                          .read<TaskFilterBloc>()
-                          .add(TaskFilterTypesChanged(values));
-                    },
-                  ),
-                ),
-                ResponsiveItem(
-                  // widthRatio: Responsive.isSmallWidth(context) ? 2 : 1,
-                  child: CDropdownMenu(
-                    labelText: sharedPref.translate('Assigned to'),
-                    hintText: sharedPref.translate('All'),
-                    multiSelect: true,
-                    dropdownMenuEntries:
-                        state.dropdownData?.assignedUsers ?? [],
-                    onSelected: (values) {
-                      context
-                          .read<TaskFilterBloc>()
-                          .add(TaskFilterAssignedUsersChanged(values));
-                    },
-                  ),
-                ),
-              ],
+                onChanged: (String input) {
+                  context
+                      .read<TaskFilterBloc>()
+                      .add(TaskFilterCreatedTimeChanged(input));
+                },
+              ),
+            ),
+            ResponsiveItem(
+              child: CDropdownMenu(
+                labelText: sharedPref.translate('Last progress'),
+                hintText: sharedPref.translate('All'),
+                multiSelect: true,
+                dropdownMenuEntries: state.dropdownData?.lastProgresses ?? [],
+                onSelected: (values) {
+                  context
+                      .read<TaskFilterBloc>()
+                      .add(TaskFilterLastProgressesChanged(values));
+                },
+              ),
+            ),
+            ResponsiveItem(
+              child: CDropdownMenu(
+                labelText: sharedPref.translate('Status'),
+                hintText: sharedPref.translate('All'),
+                multiSelect: true,
+                dropdownMenuEntries: state.dropdownData?.taskStatuses ?? [],
+                onSelected: (values) {
+                  context
+                      .read<TaskFilterBloc>()
+                      .add(TaskFilterStatusesChanged(values));
+                },
+              ),
+            ),
+            ResponsiveItem(
+              child: CDropdownMenu(
+                labelText: sharedPref.translate('Task type'),
+                hintText: sharedPref.translate('All'),
+                multiSelect: true,
+                dropdownMenuEntries: state.dropdownData?.taskTypes ?? [],
+                onSelected: (values) {
+                  context
+                      .read<TaskFilterBloc>()
+                      .add(TaskFilterTypesChanged(values));
+                },
+              ),
+            ),
+            ResponsiveItem(
+              child: CDropdownMenu(
+                labelText: sharedPref.translate('Assigned to'),
+                hintText: sharedPref.translate('All'),
+                multiSelect: true,
+                dropdownMenuEntries: state.dropdownData?.assignedUsers ?? [],
+                onSelected: (values) {
+                  context
+                      .read<TaskFilterBloc>()
+                      .add(TaskFilterAssignedUsersChanged(values));
+                },
+              ),
             ),
           ],
         ),

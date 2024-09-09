@@ -93,9 +93,7 @@ class SaveTaskButton extends StatelessWidget {
             child: CElevatedButton(
               labelText: sharedPref.translate('Save'),
               onPressed: () async {
-                context
-                    .read<TaskDetailBloc>()
-                    .add(TaskSaving(state.taskDetail));
+                context.read<TaskDetailBloc>().add(TaskSaving());
                 if (context.mounted) {
                   // context
                   //     .read<TaskDetailBloc>()

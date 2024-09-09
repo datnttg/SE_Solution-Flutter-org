@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utilities/enums/ui_enums.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import 'bloc/product_filter_bloc.dart';
@@ -50,21 +51,15 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
           onRefresh: () async {
             return context
                 .read<ProductFilterBloc>()
-                .add(InitProductFilterData());
+                .add(ProductFilterSubmitted());
           },
           child: NestedScrollView(
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: kBgColor,
-                    padding: const EdgeInsets.only(
-                        left: defaultPadding * 2, right: defaultPadding * 2),
-
-                    /// FILTER FORM
-                    child: const ProductFilterForm(),
-                  ),
+                const SliverToBoxAdapter(
+                  /// FILTER FORM
+                  child: ProductFilterForm(),
                 ),
                 const SliverToBoxAdapter(
                   child: SizedBox(
@@ -112,10 +107,18 @@ class _ProductFilterBodyState extends State<ProductFilterBody>
                 controller: _tabController,
                 children: [
                   /// PRODUCT LIST
-                  ProductList(list: normal),
-                  ProductList(list: locked),
-                  ProductList(list: cancelled),
-                  ProductList(list: all),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: normal)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: locked)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: cancelled)
+                      : const Center(child: CircularProgressIndicator()),
+                  state.loadingStatus == ProcessingStatusEnum.success
+                      ? ProductList(list: all)
+                      : const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

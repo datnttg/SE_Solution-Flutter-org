@@ -12,6 +12,8 @@ import 'task_detail_events.dart';
 import 'task_detail_services.dart';
 import 'task_detail_states.dart';
 
+final constants = Constants();
+
 class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
   static final initialState = TaskDetailState(
     screenMode: ScreenModeEnum.view,
@@ -234,7 +236,6 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
 
   Future<void> _onTaskSaving(
       TaskSaving event, Emitter<TaskDetailState> emit) async {
-    // emit(state.copyWith(loadingStatus: ProcessingStatusEnum.processing));
     var hostAddress = Uri.parse("${constants.hostAddress}/Task/Update");
     var response = await fetchData(
       hostAddress,

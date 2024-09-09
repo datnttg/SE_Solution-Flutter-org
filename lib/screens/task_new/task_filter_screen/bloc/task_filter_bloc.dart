@@ -17,16 +17,15 @@ class TaskFilterBloc extends Bloc<TaskFilterEvents, TaskFilterState> {
 
   TaskFilterBloc() : super(initialState) {
     on<InitTaskFilterData>(_onInitData);
-    on<TaskFilterListLoading>(_onTaskFilterListLoading);
-    on<TaskFilterCreatedTimeChanged>(_onChangeCreatedTime);
-    on<TaskFilterCreatedUsersChanged>(_onChangeCreatedUsers);
-    on<TaskFilterAssignedUsersChanged>(_onChangeAssignedUsers);
-    on<TaskFilterParticipantsChanged>(_onChangeParticipants);
-    on<TaskFilterLastProgressesChanged>(_onChangeLastProgress);
-    on<TaskFilterStatusesChanged>(_onChangeStatuses);
-    on<TaskFilterTypesChanged>(_onChangeTypes);
-    on<TaskFilterListChanged>(_onChangeFilterList);
-    on<SelectedFilterItemChanged>(_changeSelectedItem);
+    on<TaskFilterCreatedTimeChanged>(_onCreatedTimeChanged);
+    on<TaskFilterCreatedUsersChanged>(_onCreatedUsersChanged);
+    on<TaskFilterAssignedUsersChanged>(_onAssignedUsersChanged);
+    on<TaskFilterParticipantsChanged>(_onParticipantsChanged);
+    on<TaskFilterLastProgressesChanged>(_onLastProgressesChanged);
+    on<TaskFilterStatusesChanged>(_onStatusesChanged);
+    on<TaskFilterTypesChanged>(_onTypesChanged);
+    on<TaskFilterSubmitted>(_onTaskFilterSubmitted);
+    on<SelectedFilterItemChanged>(_onSelectedItemChanged);
   }
 
   Future<void> _onInitData(
@@ -58,11 +57,95 @@ class TaskFilterBloc extends Bloc<TaskFilterEvents, TaskFilterState> {
       tasks: [],
       selectedId: null,
     ));
-    add(TaskFilterListLoading());
+    add(TaskFilterSubmitted());
   }
 
-  Future<void> _onTaskFilterListLoading(
-      TaskFilterListLoading event, Emitter<TaskFilterState> emit) async {
+  void _onCreatedTimeChanged(
+      TaskFilterCreatedTimeChanged event, Emitter<TaskFilterState> emit) {
+    var timeRange = event.timeRange?.split(" - ");
+    var assignedDateStart = timeRange?[0];
+    var assignedDateEnd = timeRange?[1];
+    state.parameters?.copyWith(
+      assignedDateStart: assignedDateStart,
+      assignedDateEnd: assignedDateEnd,
+    );
+    add(TaskFilterSubmitted());
+  }
+
+  void _onCreatedUsersChanged(
+      TaskFilterCreatedUsersChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            createdUserIds: event.createdUsers == null
+                ? []
+                : event.createdUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onAssignedUsersChanged(
+      TaskFilterAssignedUsersChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            assignedUserIds: event.assignedUsers == null
+                ? []
+                : event.assignedUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onParticipantsChanged(
+      TaskFilterParticipantsChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            participantUserIds: event.participantUsers == null
+                ? []
+                : event.participantUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onLastProgressesChanged(
+      TaskFilterLastProgressesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            lastProgresses: event.lastProgresses == null
+                ? []
+                : event.lastProgresses!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onStatusesChanged(
+      TaskFilterStatusesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            taskStatuses: event.taskStatuses == null
+                ? []
+                : event.taskStatuses!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onTypesChanged(
+      TaskFilterTypesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            taskTypes: event.taskTypes == null
+                ? []
+                : event.taskTypes!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  Future<void> _onTaskFilterSubmitted(
+      TaskFilterSubmitted event, Emitter<TaskFilterState> emit) async {
     emit(state.copyWith(
       initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.processing,
@@ -76,88 +159,7 @@ class TaskFilterBloc extends Bloc<TaskFilterEvents, TaskFilterState> {
     ));
   }
 
-  void _onChangeCreatedTime(
-      TaskFilterCreatedTimeChanged event, Emitter<TaskFilterState> emit) {
-    var timeRange = event.timeRange?.split(" - ");
-    var assignedDateStart = timeRange?[0];
-    var assignedDateEnd = timeRange?[1];
-    state.parameters?.copyWith(
-      assignedDateStart: assignedDateStart,
-      assignedDateEnd: assignedDateEnd,
-    );
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeCreatedUsers(
-      TaskFilterCreatedUsersChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        createdUserIds: event.createdUsers == null
-            ? []
-            : event.createdUsers!
-                .map<String>((e) => e.value.toString())
-                .toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeAssignedUsers(
-      TaskFilterAssignedUsersChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        assignedUserIds: event.assignedUsers == null
-            ? []
-            : event.assignedUsers!
-                .map<String>((e) => e.value.toString())
-                .toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeParticipants(
-      TaskFilterParticipantsChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        participantUserIds: event.participantUsers == null
-            ? []
-            : event.participantUsers!
-                .map<String>((e) => e.value.toString())
-                .toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeLastProgress(
-      TaskFilterLastProgressesChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        lastProgresses: event.lastProgresses == null
-            ? []
-            : event.lastProgresses!
-                .map<String>((e) => e.value.toString())
-                .toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeStatuses(
-      TaskFilterStatusesChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        taskStatuses: event.taskStatuses == null
-            ? []
-            : event.taskStatuses!
-                .map<String>((e) => e.value.toString())
-                .toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeFilterList(
-      TaskFilterListChanged event, Emitter<TaskFilterState> emit) {
-    state.copyWith(tasks: event.list);
-    add(TaskFilterListLoading());
-  }
-
-  void _onChangeTypes(
-      TaskFilterTypesChanged event, Emitter<TaskFilterState> emit) {
-    state.parameters?.copyWith(
-        taskTypes:
-            event.taskTypes!.map<String>((e) => e.value.toString()).toList());
-    add(TaskFilterListLoading());
-  }
-
-  void _changeSelectedItem(
+  void _onSelectedItemChanged(
       SelectedFilterItemChanged event, Emitter<TaskFilterState> emit) {
     emit(state.copyWith(selectedId: event.selectedId));
   }

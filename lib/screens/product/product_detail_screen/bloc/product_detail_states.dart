@@ -1,6 +1,7 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
 import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_detail_model.dart';
+import '../models/product_update_model.dart';
 
 // extension ProcessingStatusEnumX on ProcessingStatusEnum {
 //   bool get isInitial => this == ProductDetailLoadingStatus.initial;
@@ -11,8 +12,10 @@ import '../models/product_detail_model.dart';
 
 class ProductDetailState {
   ScreenModeEnum screenMode;
-  ProcessingStatusEnum loadingStatus;
+  ProcessingStatusEnum initialStatus;
   ProductDetailModel productDetail;
+  ProductUpdateModel productUpdate;
+  ProcessingStatusEnum loadingStatus;
   List<ProductDetailModel> lstProduct;
   List<CDropdownMenuEntry> lstType;
   List<CDropdownMenuEntry> lstUnit;
@@ -21,8 +24,10 @@ class ProductDetailState {
 
   ProductDetailState({
     required this.screenMode,
-    required this.loadingStatus,
+    required this.initialStatus,
     required this.productDetail,
+    required this.productUpdate,
+    required this.loadingStatus,
     required this.lstProduct,
     required this.lstUnit,
     required this.lstStatus,
@@ -31,9 +36,11 @@ class ProductDetailState {
   });
 
   ProductDetailState copyWith({
-    ProcessingStatusEnum? loadingStatus,
+    ProcessingStatusEnum? initialStatus,
     ScreenModeEnum? screenMode,
     ProductDetailModel? productDetail,
+    ProductUpdateModel? productUpdate,
+    ProcessingStatusEnum? loadingStatus,
     List<ProductDetailModel>? lstProduct,
     List<CDropdownMenuEntry>? lstUnit,
     List<CDropdownMenuEntry>? lstStatus,
@@ -41,9 +48,11 @@ class ProductDetailState {
     List<CDropdownMenuEntry>? lstType,
   }) {
     return ProductDetailState(
+      initialStatus: initialStatus ?? this.initialStatus,
       loadingStatus: loadingStatus ?? this.loadingStatus,
       screenMode: screenMode ?? this.screenMode,
       productDetail: productDetail ?? this.productDetail,
+      productUpdate: productUpdate ?? this.productUpdate,
       lstProduct: lstProduct ?? this.lstProduct,
       lstUnit: lstUnit ?? this.lstUnit,
       lstStatus: lstStatus ?? this.lstStatus,

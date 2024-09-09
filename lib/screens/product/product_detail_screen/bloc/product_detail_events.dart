@@ -1,5 +1,5 @@
 import '../../../../utilities/enums/ui_enums.dart';
-import '../models/child_product_model.dart';
+import '../models/product_update_model.dart';
 
 abstract class ChangeProductDetailEvents {}
 
@@ -7,6 +7,8 @@ class ChangeScreenMode extends ChangeProductDetailEvents {
   ScreenModeEnum? screenMode;
   ChangeScreenMode(this.screenMode);
 }
+
+class ProductDataInitializing extends ChangeProductDetailEvents {}
 
 class ProductIdChanged extends ChangeProductDetailEvents {
   String? id;
@@ -69,7 +71,7 @@ class ChildProductRemoved extends ChangeProductDetailEvents {
 }
 
 class ChildProductAdded extends ChangeProductDetailEvents {
-  ChildProductModel childProduct;
+  ChildProductUpdateModel childProduct;
   ChildProductAdded(this.childProduct);
 }
 
@@ -85,6 +87,6 @@ class ChildProductQuantityChanged extends ChangeProductDetailEvents {
   ChildProductQuantityChanged(this.item, this.quantity);
 }
 
-class SubmitData extends ChangeProductDetailEvents {
-  SubmitData();
+class ProductSaving extends ChangeProductDetailEvents {
+  ProductSaving();
 }

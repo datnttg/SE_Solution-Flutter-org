@@ -66,7 +66,7 @@ class _TaskFilterBodyState extends State<TaskFilterBody>
             .toList();
         return RefreshIndicator(
           onRefresh: () async {
-            return context.read<TaskFilterBloc>().add(TaskFilterListLoading());
+            return context.read<TaskFilterBloc>().add(TaskFilterSubmitted());
           },
           child: NestedScrollView(
             headerSliverBuilder:

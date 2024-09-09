@@ -1,6 +1,7 @@
 import '../../../../utilities/classes/custom_widget_models.dart';
-import '../../../../utilities/enums/ui_enums.dart';
+// import '../../../../utilities/enums/ui_enums.dart';
 import '../models/product_filter_item_model.dart';
+import '../models/product_filter_parameter_model.dart';
 
 abstract class ProductFilterEvents {}
 
@@ -8,10 +9,10 @@ class InitProductFilterData extends ProductFilterEvents {
   InitProductFilterData();
 }
 
-class ProductFilterDataLoaded extends ProductFilterEvents {
-  ProcessingStatusEnum loadingStatus;
-  ProductFilterDataLoaded(this.loadingStatus);
-}
+// class ProductFilterDataLoaded extends ProductFilterEvents {
+//   ProcessingStatusEnum loadingStatus;
+//   ProductFilterDataLoaded(this.loadingStatus);
+// }
 
 class ProductFilterCodeChanged extends ProductFilterEvents {
   String? productCode;
@@ -28,19 +29,13 @@ class ProductFilterCategoriesChanged extends ProductFilterEvents {
   ProductFilterCategoriesChanged(this.categoryCodes);
 }
 
-class ProductFilterSelectedCategoriesChanged extends ProductFilterEvents {
-  List<CDropdownMenuEntry>? selectedCategoryCodes;
-  ProductFilterSelectedCategoriesChanged(this.selectedCategoryCodes);
-}
-
 class ProductFilterTypesChanged extends ProductFilterEvents {
   List<CDropdownMenuEntry>? typeCodes;
   ProductFilterTypesChanged(this.typeCodes);
 }
 
-class ProductFilterSelectedTypesChanged extends ProductFilterEvents {
-  List<CDropdownMenuEntry>? selectedTypeCodes;
-  ProductFilterSelectedTypesChanged(this.selectedTypeCodes);
+class ProductFilterSubmitted extends ProductFilterEvents {
+  ProductFilterSubmitted();
 }
 
 class ProductFilterListChanged extends ProductFilterEvents {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
+import '../../../../utilities/ui_styles.dart';
 import '../bloc/product_filter_bloc.dart';
 import '../bloc/product_filter_events.dart';
 import '../bloc/product_filter_states.dart';
@@ -15,17 +16,17 @@ class ProductFilterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductFilterBloc, ProductFilterState>(
         builder: (context, state) {
-      return Form(
+      return CGroup(
         child: ResponsiveRow(
           context: context,
-          basicWidth: 400,
-          horizontalSpacing: 0,
+          basicWidth: Responsive.isSmallWidth(context) ? 300 : 400,
+          horizontalSpacing: defaultPadding * 5,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             /// CODE
             ResponsiveItem(
                 child: CTextFormField(
               labelText: sharedPref.translate('Product code'),
-              // wrap: true,
               hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
@@ -39,7 +40,6 @@ class ProductFilterForm extends StatelessWidget {
             ResponsiveItem(
                 child: CTextFormField(
               labelText: sharedPref.translate('Product name'),
-              // wrap: true,
               hintText: '--${sharedPref.translate('All')}--',
               controller: null,
               onChanged: (value) {
@@ -49,7 +49,7 @@ class ProductFilterForm extends StatelessWidget {
               },
             )),
 
-            /// ASSIGNED USER
+            /// CATEGORY
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
@@ -57,16 +57,17 @@ class ProductFilterForm extends StatelessWidget {
                 labelText: sharedPref.translate('Category'),
                 multiSelect: true,
                 hintText: '--${sharedPref.translate('All')}--',
-                dropdownMenuEntries: state.productCategories ?? [],
+                dropdownMenuEntries:
+                    state.dropdownData?.productCategories ?? [],
                 onSelected: (values) {
                   context
                       .read<ProductFilterBloc>()
-                      .add(ProductFilterSelectedCategoriesChanged(values));
+                      .add(ProductFilterCategoriesChanged(values));
                 },
               ),
             ),
 
-            /// ASSIGNED USER
+            /// TYPE
             ResponsiveItem(
               percentWidthOnParent:
                   Responsive.isSmallWidth(context) == true ? 100 : null,
@@ -74,11 +75,11 @@ class ProductFilterForm extends StatelessWidget {
                 labelText: sharedPref.translate('Type'),
                 multiSelect: true,
                 hintText: '--${sharedPref.translate('All')}--',
-                dropdownMenuEntries: state.productTypes ?? [],
+                dropdownMenuEntries: state.dropdownData?.productTypes ?? [],
                 onSelected: (values) {
                   context
                       .read<ProductFilterBloc>()
-                      .add(ProductFilterSelectedTypesChanged(values));
+                      .add(ProductFilterTypesChanged(values));
                 },
               ),
             ),
