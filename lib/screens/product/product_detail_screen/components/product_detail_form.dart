@@ -18,7 +18,7 @@ class ProductDetailForm extends StatelessWidget {
     /// RETURN
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
-        var readOnly = state.productDetail.id != null &&
+        var readOnly = state.productUpdate.id != null &&
             state.screenMode == ScreenModeEnum.view;
         double basicWidth = 360;
         return LayoutBuilder(builder: (context, constrains) {
@@ -36,8 +36,8 @@ class ProductDetailForm extends StatelessWidget {
                     labelText: sharedPref.translate('Code'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
-                    autoFocus: state.productDetail.code == null ? true : false,
-                    initialValue: state.productDetail.code,
+                    autoFocus: state.productUpdate.code == null ? true : false,
+                    initialValue: state.productUpdate.code,
                     onChanged: (value) {
                       context
                           .read<ProductDetailBloc>()
@@ -53,7 +53,7 @@ class ProductDetailForm extends StatelessWidget {
                     labelText: sharedPref.translate('Name'),
                     required: state.screenMode == ScreenModeEnum.edit,
                     readOnly: readOnly,
-                    initialValue: state.productDetail.name,
+                    initialValue: state.productUpdate.name,
                     onChanged: (value) {
                       context
                           .read<ProductDetailBloc>()
@@ -70,7 +70,7 @@ class ProductDetailForm extends StatelessWidget {
                     readOnly: readOnly,
                     dropdownMenuEntries: state.lstUnit,
                     selectedMenuEntries: state.lstUnit
-                        .where((e) => e.value == state.productDetail.unitCode)
+                        .where((e) => e.value == state.productUpdate.unitCode)
                         .toList(),
                     onSelected: (value) {
                       context
@@ -85,7 +85,7 @@ class ProductDetailForm extends StatelessWidget {
                   child: CSwitch(
                     labelText: sharedPref.translate('Serial monitoring'),
                     readOnly: readOnly,
-                    value: state.productDetail.serialRequired ?? false,
+                    value: state.productUpdate.serialRequired ?? false,
                     onChanged: (value) {
                       context
                           .read<ProductDetailBloc>()
@@ -103,7 +103,7 @@ class ProductDetailForm extends StatelessWidget {
                     keyboardType: TextInputType.number,
                     readOnly: readOnly,
                     initialValue:
-                        state.productDetail.monthsOfWarranty?.toString(),
+                        state.productUpdate.monthsOfWarranty?.toString(),
                     onChanged: (value) {
                       context.read<ProductDetailBloc>().add(
                           ProductMonthsOfWarrantyChanged(int.parse(value)));
@@ -117,7 +117,7 @@ class ProductDetailForm extends StatelessWidget {
                   child: CTextFormField(
                     labelText: sharedPref.translate('Description'),
                     readOnly: readOnly,
-                    initialValue: state.productDetail.description,
+                    initialValue: state.productUpdate.description,
                     onChanged: (value) {
                       context
                           .read<ProductDetailBloc>()
@@ -135,7 +135,7 @@ class ProductDetailForm extends StatelessWidget {
                     dropdownMenuEntries: state.lstCategory,
                     selectedMenuEntries: state.lstCategory
                         .where(
-                            (e) => e.value == state.productDetail.categoryCode)
+                            (e) => e.value == state.productUpdate.categoryCode)
                         .toList(),
                     onSelected: (value) {
                       context.read<ProductDetailBloc>().add(
@@ -152,7 +152,7 @@ class ProductDetailForm extends StatelessWidget {
                     readOnly: readOnly,
                     dropdownMenuEntries: state.lstStatus,
                     selectedMenuEntries: state.lstStatus
-                        .where((e) => e.value == state.productDetail.statusCode)
+                        .where((e) => e.value == state.productUpdate.statusCode)
                         .toList(),
                     onSelected: (value) {
                       context
@@ -167,11 +167,11 @@ class ProductDetailForm extends StatelessWidget {
                   child: CDropdownMenu(
                     labelText: sharedPref.translate('Type'),
                     required: state.screenMode == ScreenModeEnum.edit,
-                    readOnly: state.productDetail.id != null &&
+                    readOnly: state.productUpdate.id != null &&
                         state.screenMode == ScreenModeEnum.view,
                     dropdownMenuEntries: state.lstType,
                     selectedMenuEntries: state.lstType
-                        .where((e) => e.value == state.productDetail.typeCode)
+                        .where((e) => e.value == state.productUpdate.typeCode)
                         .toList(),
                     onSelected: (value) {
                       context

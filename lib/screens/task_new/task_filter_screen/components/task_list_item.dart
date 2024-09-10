@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
@@ -100,17 +101,28 @@ class TaskListItem extends StatelessWidget {
                     ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
                         (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
                   ResponsiveItem(
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: defaultPadding),
-                          child: Icon(
-                            Icons.person,
-                            size: mediumTextSize,
+                    child: InkWell(
+                      onTap: () async {
+                        if (dataItem.subjects?[0].phone != null) {
+                          final Uri phoneUri = Uri(
+                              scheme: 'tel', path: dataItem.subjects![0].phone);
+                          if (await canLaunchUrl(phoneUri)) {
+                            await launchUrl(phoneUri);
+                          }
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: defaultPadding),
+                            child: Icon(
+                              Icons.person,
+                              size: mediumTextSize,
+                            ),
                           ),
-                        ),
-                        CText('${dataItem.subjects?[0].name}'),
-                      ],
+                          CText('${dataItem.subjects?[0].name}'),
+                        ],
+                      ),
                     ),
                   ),
 

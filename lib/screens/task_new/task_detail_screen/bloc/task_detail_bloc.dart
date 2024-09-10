@@ -53,6 +53,11 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     on<TaskDiscardChanges>(_onTaskDiscardChanges);
   }
 
+  void _onScreenModeChanged(
+      ScreenModeChanged event, Emitter<TaskDetailState> emit) {
+    emit(state.copyWith(screenMode: event.screenMode));
+  }
+
   Future<void> _onTaskDataInitializing(
       TaskDataInitializing event, Emitter<TaskDetailState> emit) async {
     emit(state.copyWith(
@@ -71,21 +76,23 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
       "mappingProperty": "",
       "statusCode": "",
     });
-    emit(state.copyWith(
-      initialStatus: ProcessingStatusEnum.success,
-      loadingStatus: ProcessingStatusEnum.processing,
-      dropdownData: TaskDetailDropdownsModel(
-        taskTypes: types,
-        taskCategories: categories,
-        creators: users,
-        assignedUsers: users,
-        participants: users,
+
+    emit(
+      state.copyWith(
+        initialStatus: ProcessingStatusEnum.success,
+        dropdownData: TaskDetailDropdownsModel(
+          taskTypes: types,
+          taskCategories: categories,
+          creators: users,
+          assignedUsers: users,
+          participants: users,
+        ),
+        mappingConditions: mappingConditions,
+        taskUpdate: TaskUpdateModel(
+          taskAssignment: TaskAssignmentUpdateModel(),
+        ),
       ),
-      mappingConditions: mappingConditions,
-      taskUpdate: TaskUpdateModel(
-        taskAssignment: TaskAssignmentUpdateModel(),
-      ),
-    ));
+    );
   }
 
   Future<void> _onTaskIdChanged(
@@ -103,7 +110,6 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     emit(state.copyWith(
       taskDetail: taskDetail,
       taskUpdate: taskUpdate,
-      initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.success,
       screenMode: event.id == '' ? ScreenModeEnum.edit : ScreenModeEnum.view,
     ));
@@ -227,11 +233,6 @@ class TaskDetailBloc extends Bloc<ChangeTaskDetailEvents, TaskDetailState> {
     emit(state.copyWith(
         taskUpdate:
             state.taskUpdate.copyWith(constructions: event.constructions)));
-  }
-
-  void _onScreenModeChanged(
-      ScreenModeChanged event, Emitter<TaskDetailState> emit) {
-    emit(state.copyWith(screenMode: event.screenMode));
   }
 
   Future<void> _onTaskSaving(

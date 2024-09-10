@@ -68,9 +68,9 @@ class ProductDetailBloc
     var listCategory =
         await fetchProductCategory(categoryProperty: 'ProductCategory');
     var listType = await fetchProductCategory(categoryProperty: 'ProductType');
+
     emit(state.copyWith(
       initialStatus: ProcessingStatusEnum.success,
-      loadingStatus: ProcessingStatusEnum.processing,
       lstProduct: listProduct,
       lstCategory: listCategory,
       lstStatus: listStatus,
@@ -91,12 +91,12 @@ class ProductDetailBloc
         productUpdate = ProductUpdateModel.fromJson(productDetail.toMap());
       }
     }
+
     emit(state.copyWith(
-      screenMode: event.id == '' ? ScreenModeEnum.edit : state.screenMode,
       productDetail: productDetail,
       productUpdate: productUpdate,
-      initialStatus: ProcessingStatusEnum.success,
       loadingStatus: ProcessingStatusEnum.success,
+      screenMode: event.id == '' ? ScreenModeEnum.edit : ScreenModeEnum.view,
     ));
   }
 

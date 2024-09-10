@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../utilities/configs.dart';
 import '../../../utilities/custom_widgets.dart';
@@ -96,6 +97,17 @@ class TaskDetailBody extends StatelessWidget {
                               required: state.screenMode == ScreenModeEnum.edit,
                               readOnly: readOnly,
                               autoFocus: state.taskUpdate.subjects?.isEmpty,
+                              suffix: IconButton(
+                                  onPressed: () async {
+                                    final Uri phoneUri = Uri(
+                                        scheme: 'tel',
+                                        path: state
+                                            .taskUpdate.subjects?[0].phone);
+                                    if (await canLaunchUrl(phoneUri)) {
+                                      await launchUrl(phoneUri);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.phone_enabled)),
                               initialValue:
                                   state.taskUpdate.subjects?.isEmpty == true
                                       ? ''
