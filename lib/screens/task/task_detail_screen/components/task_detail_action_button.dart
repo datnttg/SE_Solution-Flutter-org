@@ -95,12 +95,6 @@ class SaveTaskButton extends StatelessWidget {
               labelText: sharedPref.translate('Save'),
               onPressed: () async {
                 context.read<TaskDetailBloc>().add(TaskSaving());
-                if (context.mounted) {
-                  // context
-                  //     .read<TaskDetailBloc>()
-                  //     .add(TaskIdChanged(state.taskDetail.taskAssignment?.id));
-                  // context.read<TaskFilterBloc>().add(TaskFilterListLoading());
-                }
               },
             ));
       } else {
