@@ -12,7 +12,6 @@ import '../../product_filter_screen/bloc/product_filter_events.dart';
 import '../bloc/product_detail_bloc.dart';
 import '../bloc/product_detail_events.dart';
 import '../bloc/product_detail_states.dart';
-import '../services/fetch_data_service.dart';
 
 class AddProductFilterButton extends StatelessWidget {
   const AddProductFilterButton({super.key});
@@ -57,7 +56,7 @@ class AddProductFilterFloatingButton extends StatelessWidget {
             padding: const EdgeInsets.all(defaultPadding),
             child: FloatingActionButton(
               tooltip: sharedPref.translate('Add'),
-              backgroundColor: cButtonTextHoverColor,
+              backgroundColor: cFloatButtonBgColor,
               shape: RoundedRectangleBorder(
                 side: const BorderSide(color: cButtonBorderColor, width: 1.0),
                 borderRadius: BorderRadius.circular(20.0),
@@ -73,7 +72,8 @@ class AddProductFilterFloatingButton extends StatelessWidget {
                   context.read<ProductDetailBloc>().add(ProductIdChanged(''));
                 }
               },
-              child: const Icon(Icons.add, color: kBgColorHeader, size: 30),
+              child:
+                  const Icon(Icons.add, color: cFloatButtonTextColor, size: 30),
             ));
       } else {
         return const SizedBox();

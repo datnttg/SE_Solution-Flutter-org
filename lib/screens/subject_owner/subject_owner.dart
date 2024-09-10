@@ -38,7 +38,7 @@ class _SubjectOwnerState extends State<SubjectOwner> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     bool isWidescreen = size.width > size.height;
-    return KScaffold(
+    return CScaffold(
       appBar: topNavigationBar(isWidescreen) as AppBar,
       drawer: const MainMenu(),
       bottomNavigationBar: bottomNavigationBar(!isWidescreen),

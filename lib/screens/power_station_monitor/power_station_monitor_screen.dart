@@ -46,7 +46,7 @@ class _PowerStationMonitorScreenState extends State<PowerStationMonitorScreen> {
 
     scheduleTimeout(400);
 
-    return KScaffold(
+    return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
         title: Text(sharedPref.translate("Dashboard")),

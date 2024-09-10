@@ -158,7 +158,7 @@ class _OwnerProjectOverviewScreenState extends State<OwnerProjectOverviewScreen>
     var mediaQuery = MediaQuery.of(context);
     // RenderBox mediaQuery =
     //     _widgetKey.currentContext?.findRenderObject() as RenderBox;
-    return KScaffold(
+    return CScaffold(
       drawer: const MainMenu(),
       appBar: AppBar(
         title: Text(sharedPref.translate("Dashboard")),

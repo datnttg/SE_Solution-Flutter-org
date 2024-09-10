@@ -56,7 +56,7 @@ class AddTaskFilterFloatingButton extends StatelessWidget {
             padding: const EdgeInsets.all(defaultPadding),
             child: FloatingActionButton(
               tooltip: sharedPref.translate('Add'),
-              backgroundColor: cButtonTextHoverColor,
+              backgroundColor: cFloatButtonBgColor,
               shape: RoundedRectangleBorder(
                 side: const BorderSide(color: cButtonBorderColor, width: 1.0),
                 borderRadius: BorderRadius.circular(20.0),
@@ -71,7 +71,8 @@ class AddTaskFilterFloatingButton extends StatelessWidget {
                   context.read<TaskDetailBloc>().add(TaskIdChanged(''));
                 }
               },
-              child: const Icon(Icons.add, color: kBgColorHeader, size: 30),
+              child:
+                  const Icon(Icons.add, color: cFloatButtonTextColor, size: 30),
             ));
       } else {
         return const SizedBox();
