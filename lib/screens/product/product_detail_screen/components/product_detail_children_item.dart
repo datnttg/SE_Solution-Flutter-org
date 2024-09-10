@@ -22,13 +22,13 @@ class ProductDetailChildrenItem extends StatelessWidget {
     final quantityController = TextEditingController();
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
-        var childItem = state.productDetail.children?[itemIndex];
+        var childItem = state.productUpdate.children?[itemIndex];
         ProductDetailModel? child = state.lstProduct
             .where((e) => e.id == childItem?.childId)
             .firstOrNull;
 
         double quantity =
-            state.productDetail.children?[itemIndex].quantityOfChild ?? 0;
+            state.productUpdate.children?[itemIndex].quantityOfChild ?? 0;
         quantityController.text = quantity.toString();
 
         List<CDropdownMenuEntry> dropdownMenuEntries = state.lstProduct
@@ -38,7 +38,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
         List<CDropdownMenuEntry> selectedMenuEntries = state.lstProduct
             .where((e) =>
                 e.id != null &&
-                e.id == state.productDetail.children?[itemIndex].childId)
+                e.id == state.productUpdate.children?[itemIndex].childId)
             .map<CDropdownMenuEntry>(
                 (e) => CDropdownMenuEntry(value: e.id, labelText: e.name))
             .toList();
@@ -46,7 +46,7 @@ class ProductDetailChildrenItem extends StatelessWidget {
             .where((e) =>
                 e.statusCode != 'Normal' ||
                 e.typeCode != 'SingleProduct' ||
-                (state.productDetail.children ?? [])
+                (state.productUpdate.children ?? [])
                     .any((i) => i.childId == e.id))
             .map<CDropdownMenuEntry>(
                 (e) => CDropdownMenuEntry(value: e.id, labelText: e.name))

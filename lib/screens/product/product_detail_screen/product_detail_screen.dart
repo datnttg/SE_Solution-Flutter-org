@@ -55,6 +55,8 @@ class ProductDetailScreen extends StatelessWidget {
                         builder: (context, loadingStatus) {
                           switch (loadingStatus) {
                             case ProcessingStatusEnum.success:
+
+                              /// PRODUCT DETAIL BODY
                               return const ProductDetailBody();
                             default:
                               context
