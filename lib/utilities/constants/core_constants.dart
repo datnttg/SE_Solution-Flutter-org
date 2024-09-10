@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
 import '../classes/app_models.dart';
 
 final constants = Constants();
@@ -10,11 +9,6 @@ class Constants {
   // String hostAddress = 'https://localhost:7299';
   String hostAddress = 'https://test-api.sepower.vn';
   // String hostAddress = 'https://api.sepower.vn';
-  // String hostAddress = !kDebugMode
-  //     ? 'https://test-api.sepower.vn'
-  //     : kIsWeb
-  //         ? 'https://localhost:7299'
-  //         : 'https://test-api.sepower.vn';
 
   String defaultLocaleName = 'vi_VN';
   Locale defaultLocale = const Locale('vi', 'VN');
