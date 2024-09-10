@@ -1,195 +1,131 @@
 import 'package:flutter/material.dart';
-import '../../../utilities/configs.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../utilities/custom_widgets.dart';
+import '../../../utilities/enums/ui_enums.dart';
+import '../../../utilities/responsive.dart';
 import '../../../utilities/shared_preferences.dart';
 import '../../../utilities/ui_styles.dart';
 import '../../common_components/main_menu.dart';
+import '../task_detail_screen/bloc/task_detail_bloc.dart';
+import '../task_detail_screen/bloc/task_detail_states.dart';
+import '../task_detail_screen/components/task_detail_action_button.dart';
+import '../task_detail_screen/task_detail_body.dart';
 import 'bloc/task_filter_bloc.dart';
-import 'components/task_filter_form.dart';
-import 'components/task_list.dart';
-import 'models/task_filter_item_model.dart';
+import 'bloc/task_filter_events.dart';
+import 'bloc/task_filter_states.dart';
+import 'task_filter_body.dart';
 
-class TaskFilterScreen extends StatefulWidget {
+class TaskFilterScreen extends StatelessWidget {
   const TaskFilterScreen({super.key});
 
   @override
-  State<TaskFilterScreen> createState() => _TaskFilterScreenState();
-}
-
-class _TaskFilterScreenState extends State<TaskFilterScreen>
-    with SingleTickerProviderStateMixin {
-  final TaskFilterBloc bloc = TaskFilterBloc();
-  late final TabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = TabController(length: 5, vsync: this);
-    bloc.loadData();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  List<TaskFilterItemModel> allTasks = [];
-  List<TaskFilterItemModel> waitToConfirm = [];
-  List<TaskFilterItemModel> notCompleted = [];
-  List<TaskFilterItemModel> completed = [];
-  List<TaskFilterItemModel> rejected = [];
-
-  @override
   Widget build(BuildContext context) {
-    bloc.stateController.stream.listen((data) {
-      setState(() {
-        allTasks = data.taskList ?? [];
-        if (allTasks.isNotEmpty) {
-          allTasks.sort((a, b) => b.createdTime == null
-              ? -1
-              : a.createdTime == null
-                  ? 1
-                  : b.createdTime!.compareTo(a.createdTime!));
-        }
-        waitToConfirm = allTasks
-            .where((e) => ['WaitToConfirm'].any((u) => u == e.taskStatusCode))
-            .toList();
-        completed = allTasks
-            .where((e) => ['Completed'].any((u) => u == e.taskStatusCode))
-            .toList();
-        rejected = allTasks
-            .where((e) => ['Rejected'].any((u) => u == e.taskStatusCode))
-            .toList();
-        notCompleted = allTasks
-            .where((e) => !['WaitToConfirm', 'Completed', 'Rejected']
-                .any((u) => u == e.taskStatusCode))
-            .toList();
-      });
-    });
+    double screenWidth = MediaQuery.of(context).size.width;
 
     /// RETURN WIDGET
-    return CScaffold(
-      drawer: const MainMenu(),
-      appBar: AppBar(
-        title: Text(sharedPref.translate('Task'),
-            style: const TextStyle(
-                fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: CElevatedButton(
-              labelText: sharedPref.translate('Create'),
-              onPressed: () async {
-                final isReload = await Navigator.pushNamed(
-                    context, customRouteMapping.taskAdd);
-                if (isReload == true) {
-                  bloc.loadData();
-                }
-              },
-            ),
-          )
-        ],
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: defaultPadding * 2,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TaskFilterBloc>(create: (_) => TaskFilterBloc()),
+        BlocProvider<TaskDetailBloc>(create: (_) => TaskDetailBloc()),
+      ],
+      child: CScaffold(
+        drawer: const MainMenu(),
+        appBar: AppBar(
+          title: Text(sharedPref.translate('Task'),
+              style: const TextStyle(
+                  fontSize: mediumTextSize * 1.2, fontWeight: FontWeight.bold)),
+          actions: [
+            if (!Responsive.isMobileAndPortrait(context))
+              const AddTaskFilterButton(),
+            if (!Responsive.isMobileAndPortrait(context))
+              const EditTaskButton(),
+            if (!Responsive.isMobileAndPortrait(context))
+              const SaveTaskButton(),
+            if (!Responsive.isMobileAndPortrait(context))
+              const DiscardTaskButton(),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              constraints: const BoxConstraints(
+                maxHeight: double.infinity,
+                maxWidth: double.infinity,
+              ),
+              child: BlocBuilder<TaskFilterBloc, TaskFilterState>(
+                builder: (context, state) {
+                  bool isSmallWidthAndActive =
+                      Responsive.isSmallWidth(context) &&
+                          state.selectedId != null;
+                  switch (state.initialStatus) {
+                    case ProcessingStatusEnum.success:
+                      return Row(
+                        children: [
+                          const Expanded(
+                            /// FILTER BODY
+                            child: TaskFilterBody(),
+                          ),
+                          if (!Responsive.isSmallWidth(context))
+                            const SizedBox(
+                              width: defaultPadding * 2,
+                            ),
+                          if (!Responsive.isSmallWidth(context) ||
+                              isSmallWidthAndActive)
+                            BlocSelector<TaskFilterBloc, TaskFilterState,
+                                    String?>(
+                                selector: (state) => state.selectedId,
+                                builder: (context, selectedId) {
+                                  return SizedBox(
+                                    width: screenWidth -
+                                        (isSmallWidthAndActive == false
+                                            ? 450
+                                            : 0),
+                                    child: selectedId == null
+                                        ? Center(
+                                            child: SizedBox(
+                                                child: Text(sharedPref.translate(
+                                                    'Please select an item'))))
+                                        : BlocBuilder<TaskDetailBloc,
+                                            TaskDetailState>(
+                                            builder: (context, state) {
+                                              switch (state.loadingStatus) {
+                                                case ProcessingStatusEnum
+                                                      .success:
+
+                                                  /// DETAIL BODY
+                                                  return const TaskDetailBody();
+                                                default:
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                              }
+                                            },
+                                          ),
+                                  );
+                                }),
+                        ],
+                      );
+                    default:
+                      context.read<TaskFilterBloc>().add(InitTaskFilterData());
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                  }
+                },
               ),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: kBgColor,
-                padding: const EdgeInsets.all(defaultPadding),
-                child: TaskFilterForm(bloc: bloc),
+
+            /// ADD PRODUCT BUTTON
+            if (Responsive.isMobileAndPortrait(context))
+              const Positioned(
+                bottom: 50,
+                right: 50,
+                child: AddTaskFilterFloatingButton(),
               ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: defaultPadding * 2,
-              ),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.black87,
-                  unselectedLabelColor: Colors.grey,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.center,
-                  tabs: [
-                    Tab(
-                        child: Text(
-                            '${sharedPref.translate("Not completed")} (${notCompleted.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPref.translate("Wait to confirm")} (${waitToConfirm.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPref.translate("Completed")} (${completed.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPref.translate("Rejected")} (${rejected.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                    Tab(
-                        child: Text(
-                            '${sharedPref.translate("All")} (${allTasks.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold))),
-                  ],
-                ),
-              ),
-            ),
-          ];
-        },
-        body: Center(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              TaskList(list: notCompleted),
-              TaskList(list: waitToConfirm),
-              TaskList(list: completed),
-              TaskList(list: rejected),
-              TaskList(list: allTasks),
-            ],
-          ),
+          ],
         ),
       ),
     );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar _tabBar;
-  _SliverAppBarDelegate(this._tabBar);
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return true;
   }
 }

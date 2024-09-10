@@ -8,6 +8,8 @@ class TaskFilterItemModel {
   String? taskDescription;
   String? taskStatusCode;
   String? taskStatusText;
+  String? lastProgressCode;
+  String? lastProgressText;
   String? assignedUserId;
   String? assignedName;
   String? deadline;
@@ -15,9 +17,10 @@ class TaskFilterItemModel {
   String? createdTime;
   String? createdUserId;
   String? createdName;
-  List<ParticipantModel>? participants;
-  List<TaskDetailModel>? moreDetail;
+  int? waitingProposal;
+  List<TaskParticipantModel>? participants;
   List<TaskSubjectModel>? subjects;
+  dynamic moreDetail;
 
   TaskFilterItemModel({
     this.taskId,
@@ -29,6 +32,8 @@ class TaskFilterItemModel {
     this.taskDescription,
     this.taskStatusCode,
     this.taskStatusText,
+    this.lastProgressCode,
+    this.lastProgressText,
     this.assignedUserId,
     this.assignedName,
     this.deadline,
@@ -36,45 +41,47 @@ class TaskFilterItemModel {
     this.createdTime,
     this.createdUserId,
     this.createdName,
+    this.waitingProposal,
     this.participants,
-    this.moreDetail,
     this.subjects,
+    this.moreDetail,
   });
 
+  // fromJson method
   factory TaskFilterItemModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return TaskFilterItemModel(
-        taskId: json['taskId'],
-        taskType: json['taskType'],
-        taskTypeTitle: json['taskTypeTitle'],
-        categoryCode: json['categoryCode'],
-        taskCategoryTitle: json['taskCategoryTitle'],
-        taskTitle: json['taskTitle'],
-        taskDescription: json['taskDescription'],
-        taskStatusCode: json['taskStatusCode'],
-        taskStatusText: json['taskStatusText'],
-        assignedUserId: json['assignedUserId'],
-        assignedName: json['assignedName'],
-        deadline: json['deadline'],
-        beginningDateTime: json['beginningDateTime'],
-        createdTime: json['createdTime'],
-        createdUserId: json['createdUserId'],
-        createdName: json['createdName'],
-        participants: List<ParticipantModel>.from(
-          json['participants']?.map((e) => ParticipantModel.fromJson(e)),
-        ),
-        moreDetail: List<TaskDetailModel>.from(
-          json['moreDetail']?.map((e) => TaskDetailModel.fromJson(e)),
-        ),
-        subjects: List<TaskSubjectModel>.from(
-          json['subjects']?.map((e) => TaskSubjectModel.fromJson(e)),
-        ),
-      );
-    } catch (ex) {
-      return TaskFilterItemModel();
-    }
+    return TaskFilterItemModel(
+      taskId: json['taskId'],
+      taskType: json['taskType'],
+      taskTypeTitle: json['taskTypeTitle'],
+      categoryCode: json['categoryCode'],
+      taskCategoryTitle: json['taskCategoryTitle'],
+      taskTitle: json['taskTitle'],
+      taskDescription: json['taskDescription'],
+      taskStatusCode: json['taskStatusCode'],
+      taskStatusText: json['taskStatusText'],
+      lastProgressCode: json['lastProgressCode'],
+      lastProgressText: json['lastProgressText'],
+      assignedUserId: json['assignedUserId'],
+      assignedName: json['assignedName'],
+      deadline: json['deadline'],
+      beginningDateTime: json['beginningDateTime'],
+      createdTime: json['createdTime'],
+      createdUserId: json['createdUserId'],
+      createdName: json['createdName'],
+      waitingProposal: json['waitingProposal'],
+      participants: json['participants'] != null
+          ? List<TaskParticipantModel>.from(
+              json['participants'].map((x) => TaskParticipantModel.fromJson(x)))
+          : null,
+      subjects: json['subjects'] != null
+          ? List<TaskSubjectModel>.from(
+              json['subjects'].map((x) => TaskSubjectModel.fromJson(x)))
+          : null,
+      moreDetail: json['moreDetail'],
+    );
   }
 
+  // toMap method
   Map<String, dynamic> toMap() {
     return {
       'taskId': taskId,
@@ -86,6 +93,8 @@ class TaskFilterItemModel {
       'taskDescription': taskDescription,
       'taskStatusCode': taskStatusCode,
       'taskStatusText': taskStatusText,
+      'lastProgressCode': lastProgressCode,
+      'lastProgressText': lastProgressText,
       'assignedUserId': assignedUserId,
       'assignedName': assignedName,
       'deadline': deadline,
@@ -93,26 +102,23 @@ class TaskFilterItemModel {
       'createdTime': createdTime,
       'createdUserId': createdUserId,
       'createdName': createdName,
-      'participants': participants?.map((p) => p.toMap()).toList(),
-      'moreDetail': moreDetail?.map((d) => d.toMap()).toList(),
-      'subjects': subjects?.map((s) => s.toMap()).toList(),
+      'waitingProposal': waitingProposal,
+      'participants': participants?.map((x) => x.toMap()).toList(),
+      'subjects': subjects?.map((x) => x.toMap()).toList(),
+      'moreDetail': moreDetail,
     };
   }
 }
 
-class ParticipantModel {
-  final String? participantUserId;
-  final String? participantName;
+class TaskParticipantModel {
+  String? participantUserId;
+  String? participantName;
+  TaskParticipantModel({this.participantUserId, this.participantName});
 
-  ParticipantModel({
-    this.participantUserId,
-    this.participantName,
-  });
-
-  factory ParticipantModel.fromJson(Map<String, dynamic> json) {
-    return ParticipantModel(
-      participantUserId: json['participantUserId'],
-      participantName: json['participantName'],
+  factory TaskParticipantModel.fromJson(Map<String, dynamic> json) {
+    return TaskParticipantModel(
+      participantUserId: json['participantUserId'] as String?,
+      participantName: json['participantName'] as String?,
     );
   }
 
@@ -120,34 +126,6 @@ class ParticipantModel {
     return {
       'participantUserId': participantUserId,
       'participantName': participantName,
-    };
-  }
-}
-
-class TaskDetailModel {
-  final String? taskDetailProperty;
-  final String? propertyDataType;
-  final String? taskDetailValue;
-
-  TaskDetailModel({
-    this.taskDetailProperty,
-    this.propertyDataType,
-    this.taskDetailValue,
-  });
-
-  factory TaskDetailModel.fromJson(Map<String, dynamic> json) {
-    return TaskDetailModel(
-      taskDetailProperty: json['taskDetailProperty'],
-      propertyDataType: json['propertyDataType'],
-      taskDetailValue: json['taskDetailValue'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'taskDetailProperty': taskDetailProperty,
-      'propertyDataType': propertyDataType,
-      'taskDetailValue': taskDetailValue,
     };
   }
 }
@@ -171,12 +149,12 @@ class TaskSubjectModel {
 
   factory TaskSubjectModel.fromJson(Map<String, dynamic> json) {
     return TaskSubjectModel(
-      id: json['id'],
-      type: json['type'],
-      name: json['name'],
-      phone: json['phone'],
-      address: json['address'],
-      customerSource: json['customerSource'],
+      id: json['id'] as String?,
+      type: json['type'] as String?,
+      name: json['name'] as String?,
+      phone: json['phone'] as String?,
+      address: json['address'] as String?,
+      customerSource: json['customerSource'] as String?,
     );
   }
 

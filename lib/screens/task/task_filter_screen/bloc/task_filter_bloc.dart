@@ -1,80 +1,170 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../utilities/app_service.dart';
-import '../../../../utilities/shared_preferences.dart';
-import '../models/task_filter_parameter_model.dart';
-import '../services/task_fetch_data_service.dart';
+import '../../../../utilities/configs.dart';
+import '../../../../utilities/enums/ui_enums.dart';
+import '../models/task_filter_dropdowns_model.dart';
+import '../models/task_filter_parameters_model.dart';
 import 'task_filter_events.dart';
+import 'task_filter_services.dart';
 import 'task_filter_states.dart';
 
-class TaskFilterBloc {
-  final eventController = StreamController<TaskFilterEvents>();
-  final stateController = StreamController<TaskListState>.broadcast();
+class TaskFilterBloc extends Bloc<TaskFilterEvents, TaskFilterState> {
+  static final initialState = TaskFilterState(
+    parameters: TaskFilterParameters(),
+    dropdownData: TaskFilterDropdownsModel(),
+    tasks: [],
+  );
 
-  var initialDateRange =
-      '${DateFormat('dd/MM/yyyy').format(DateTime(DateTime.now().year, DateTime.now().month - 1, DateTime.now().day + 1))} - ${DateFormat('dd/MM/yyyy').format(DateTime.now())}';
-  var params = TaskFilterParameterModel();
-
-  TaskFilterBloc() {
-    setDateRange(initialDateRange);
-    eventController.stream.listen((event) {
-      if (event is ChangeCreatedDate) {
-        setDateRange(event.dateRange!);
-      } else if (event is ChangeTaskFilterStatus) {
-        params.taskStatuses = event.selected!.isNotEmpty
-            ? event.selected!.map<String>((e) => e.value).toList()
-            : null;
-      } else if (event is ChangeTaskFilterAssignedUser) {
-        params.assignedUserIds = event.selected!.isNotEmpty
-            ? event.selected!.map<String>((e) => e.value).toList()
-            : null;
-      } else if (event is ChangeTaskFilterType) {
-        params.taskTypes = event.selected!.isNotEmpty
-            ? event.selected!.map<String>((e) => e.value).toList()
-            : null;
-      } else if (event is ChangeTaskFilterCreatedUser) {
-        params.createdUserIds = event.selected!.isNotEmpty
-            ? event.selected!.map<String>((e) => e.value).toList()
-            : null;
-      }
-      loadData();
-    });
+  TaskFilterBloc() : super(initialState) {
+    on<InitTaskFilterData>(_onInitData);
+    on<TaskFilterCreatedTimeChanged>(_onCreatedTimeChanged);
+    on<TaskFilterCreatedUsersChanged>(_onCreatedUsersChanged);
+    on<TaskFilterAssignedUsersChanged>(_onAssignedUsersChanged);
+    on<TaskFilterParticipantsChanged>(_onParticipantsChanged);
+    on<TaskFilterLastProgressesChanged>(_onLastProgressesChanged);
+    on<TaskFilterStatusesChanged>(_onStatusesChanged);
+    on<TaskFilterTypesChanged>(_onTypesChanged);
+    on<TaskFilterSubmitted>(_onTaskFilterSubmitted);
+    on<SelectedFilterItemChanged>(_onSelectedItemChanged);
   }
 
-  bool setDateRange(String dateRange) {
-    String? start;
-    String? end;
-    try {
-      var dateList = dateRange.split(' - ').toList();
-      start = kDateTimeConvert(dateList[0]).toString();
-      end = kDateTimeConvert(dateList[1]).toString();
-    } catch (ex) {
-      start = null;
-      end = null;
-      kShowAlert(
-          title: sharedPref.translate('Invalid format'),
-          body: Text(sharedPref.translate(
-              'Assigned date must be formated like: dd/mm/yyyy - dd/mm/yyyy')));
-      return false;
-    }
-    params.assignedDateStart = start;
-    params.assignedDateEnd = end;
-    return true;
+  Future<void> _onInitData(
+      InitTaskFilterData? event, Emitter<TaskFilterState> emit) async {
+    var types = await fetchTaskCategoryEntries(categoryProperty: 'TaskType');
+    var statuses =
+        await fetchTaskCategoryEntries(categoryProperty: 'TaskStatus');
+    var lastProgresses =
+        await fetchTaskCategoryEntries(categoryProperty: 'TaskProgress');
+    var users = await fetchTaskUserEntries();
+
+    emit(state.copyWith(
+      parameters: state.parameters?.copyWith(
+        assignedDateStart: df0.format(DateTime(DateTime.now().year,
+            DateTime.now().month - 1, DateTime.now().day + 1)),
+        assignedDateEnd: df0.format(DateTime(DateTime.now().year,
+            DateTime.now().month, DateTime.now().day, 23, 59, 59)),
+      ),
+      initialStatus: ProcessingStatusEnum.success,
+      dropdownData: TaskFilterDropdownsModel(
+        createdUsers: users,
+        assignedUsers: users,
+        participantUsers: users,
+        lastProgresses: lastProgresses,
+        taskStatuses: statuses,
+        taskTypes: types,
+      ),
+      loadingStatus: ProcessingStatusEnum.processing,
+      tasks: [],
+      selectedId: null,
+    ));
+    add(TaskFilterSubmitted());
   }
 
-  void loadData() async {
-    var data = await fetchTaskList(params);
-    if (data.isNotEmpty) {
-      stateController.sink.add(TaskListState(data));
-    } else {
-      stateController.sink.add(TaskListState(null));
-    }
+  void _onCreatedTimeChanged(
+      TaskFilterCreatedTimeChanged event, Emitter<TaskFilterState> emit) {
+    var timeRange = event.timeRange?.split(" - ");
+    var assignedDateStart = timeRange?[0];
+    var assignedDateEnd = timeRange?[1];
+    state.parameters?.copyWith(
+      assignedDateStart: assignedDateStart,
+      assignedDateEnd: assignedDateEnd,
+    );
+    add(TaskFilterSubmitted());
   }
 
-  void dispose() {
-    eventController.close();
-    stateController.close();
+  void _onCreatedUsersChanged(
+      TaskFilterCreatedUsersChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            createdUserIds: event.createdUsers == null
+                ? []
+                : event.createdUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onAssignedUsersChanged(
+      TaskFilterAssignedUsersChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            assignedUserIds: event.assignedUsers == null
+                ? []
+                : event.assignedUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onParticipantsChanged(
+      TaskFilterParticipantsChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            participantUserIds: event.participantUsers == null
+                ? []
+                : event.participantUsers!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onLastProgressesChanged(
+      TaskFilterLastProgressesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            lastProgresses: event.lastProgresses == null
+                ? []
+                : event.lastProgresses!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onStatusesChanged(
+      TaskFilterStatusesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            taskStatuses: event.taskStatuses == null
+                ? []
+                : event.taskStatuses!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  void _onTypesChanged(
+      TaskFilterTypesChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(
+        parameters: state.parameters?.copyWith(
+            taskTypes: event.taskTypes == null
+                ? []
+                : event.taskTypes!
+                    .map<String>((e) => e.value.toString())
+                    .toList())));
+    add(TaskFilterSubmitted());
+  }
+
+  Future<void> _onTaskFilterSubmitted(
+      TaskFilterSubmitted event, Emitter<TaskFilterState> emit) async {
+    emit(state.copyWith(
+      initialStatus: ProcessingStatusEnum.success,
+      loadingStatus: ProcessingStatusEnum.processing,
+    ));
+
+    var filterList = await fetchTaskList(state.parameters);
+    emit(state.copyWith(
+      tasks: filterList,
+      initialStatus: ProcessingStatusEnum.success,
+      loadingStatus: ProcessingStatusEnum.success,
+    ));
+  }
+
+  void _onSelectedItemChanged(
+      SelectedFilterItemChanged event, Emitter<TaskFilterState> emit) {
+    emit(state.copyWith(selectedId: event.selectedId));
+  }
+
+  String? getSelectedId() {
+    return state.selectedId;
   }
 }

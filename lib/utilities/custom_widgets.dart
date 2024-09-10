@@ -283,84 +283,84 @@ class CDropdownMenu extends StatelessWidget {
   }
 }
 
-class KDropdownMenu extends StatelessWidget {
-  final Widget? label;
-  final String? labelText;
-  final List<DropdownMenuEntry> dropdownMenuEntries;
-  final dynamic initialSelection;
-  final bool? enabled, enableFilter, required;
-  final TextEditingController? controller;
-  final String? hintText;
-  final double? width, menuHeight;
-  final Function(dynamic)? onSelected;
-
-  const KDropdownMenu({
-    super.key,
-    required this.dropdownMenuEntries,
-    this.label,
-    this.labelText,
-    this.initialSelection,
-    this.controller,
-    this.onSelected,
-    this.hintText,
-    this.enabled,
-    this.enableFilter = false,
-    this.required,
-    this.width,
-    this.menuHeight = 280,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? newLabel = label ?? (labelText == null ? null : Text(labelText!));
-    if (labelText != null && label == null && required == true) {
-      newLabel = Row(
-        children: [
-          Text(
-            labelText!,
-            style: const TextStyle(overflow: TextOverflow.clip),
-          ),
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-    if (label != null && required == true) {
-      newLabel = Row(
-        children: [
-          label!,
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return DropdownMenu(
-        width: constraints.maxWidth,
-        controller: controller,
-        enabled: enabled ?? true,
-        label: newLabel,
-        enableSearch: false,
-        enableFilter: enableFilter!,
-        hintText: hintText,
-        dropdownMenuEntries: dropdownMenuEntries,
-        initialSelection: initialSelection,
-        onSelected: onSelected,
-        menuHeight: menuHeight,
-        inputDecorationTheme: const InputDecorationTheme(),
-      );
-    });
-  }
-}
+// class KDropdownMenu extends StatelessWidget {
+//   final Widget? label;
+//   final String? labelText;
+//   final List<DropdownMenuEntry> dropdownMenuEntries;
+//   final dynamic initialSelection;
+//   final bool? enabled, enableFilter, required;
+//   final TextEditingController? controller;
+//   final String? hintText;
+//   final double? width, menuHeight;
+//   final Function(dynamic)? onSelected;
+//
+//   const KDropdownMenu({
+//     super.key,
+//     required this.dropdownMenuEntries,
+//     this.label,
+//     this.labelText,
+//     this.initialSelection,
+//     this.controller,
+//     this.onSelected,
+//     this.hintText,
+//     this.enabled,
+//     this.enableFilter = false,
+//     this.required,
+//     this.width,
+//     this.menuHeight = 280,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Widget? newLabel = label ?? (labelText == null ? null : Text(labelText!));
+//     if (labelText != null && label == null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           Text(
+//             labelText!,
+//             style: const TextStyle(overflow: TextOverflow.clip),
+//           ),
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//     if (label != null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           label!,
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//     return LayoutBuilder(
+//         builder: (BuildContext context, BoxConstraints constraints) {
+//       return DropdownMenu(
+//         width: constraints.maxWidth,
+//         controller: controller,
+//         enabled: enabled ?? true,
+//         label: newLabel,
+//         enableSearch: false,
+//         enableFilter: enableFilter!,
+//         hintText: hintText,
+//         dropdownMenuEntries: dropdownMenuEntries,
+//         initialSelection: initialSelection,
+//         onSelected: onSelected,
+//         menuHeight: menuHeight,
+//         inputDecorationTheme: const InputDecorationTheme(),
+//       );
+//     });
+//   }
+// }
 
 /// CUSTOM DROPDOWN SEARCH
 // class CDropdownSearch extends StatelessWidget {
@@ -487,135 +487,135 @@ class KDropdownMenu extends StatelessWidget {
 //   }
 // }
 
-class KDropdownSearch extends StatelessWidget {
-  final Widget? label;
-  final String? labelText;
-  final List<DropdownMenuEntry> dropdownMenuEntries;
-  final dynamic initialSelection;
-  final bool? enabled, required, autoFocus;
-  final DropdownEditingController<Map<String, dynamic>>? controller;
-  final String? hintText;
-  final double? width, menuHeight;
-  final Function(dynamic)? onSelected;
-
-  const KDropdownSearch({
-    super.key,
-    required this.dropdownMenuEntries,
-    this.label,
-    this.labelText,
-    this.initialSelection,
-    this.controller,
-    this.onSelected,
-    this.hintText,
-    this.autoFocus = false,
-    this.enabled = true,
-    this.required = false,
-    this.width,
-    this.menuHeight = 280,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? newLabel = label ?? (labelText == null ? null : Text(labelText!));
-    if (labelText != null && label == null && required == true) {
-      newLabel = Row(
-        children: [
-          Text(
-            labelText!,
-            style: const TextStyle(overflow: TextOverflow.clip),
-          ),
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-    if (label != null && required == true) {
-      newLabel = Row(
-        children: [
-          label!,
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-
-    if (enabled == false) {
-      return KDropdownMenu(
-        label: newLabel,
-        dropdownMenuEntries: dropdownMenuEntries,
-        initialSelection: initialSelection,
-        hintText: hintText,
-      );
-    } else {
-      final items = dropdownMenuEntries
-          .map((e) => {"value": e.value, "label": e.label})
-          .toList();
-
-      if (initialSelection != null && initialSelection != '') {
-        controller?.value =
-            items.firstWhere((element) => element['value'] == initialSelection);
-      } else {
-        controller?.value = items[0];
-      }
-      return DropdownFormField<Map<String, dynamic>>(
-        controller: controller,
-        emptyText: sharedPref.translate('No matching found!'),
-        // emptyActionText: sharedPref.translate('Create new'),
-        // onEmptyActionPressed: (String str) async {},
-        // dropdownItemSeparator: const Divider(
-        //   color: Colors.grey,
-        //   height: 1,
-        // ),
-        autoFocus: autoFocus!,
-        decoration: InputDecoration(
-          // suffixIcon: const Icon(Icons.arrow_drop_down),
-          suffix: const Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Icon(Icons.arrow_drop_down),
-          ),
-          label: newLabel,
-        ),
-        dropdownHeight: menuHeight,
-        onSaved: (dynamic str) {},
-        onChanged: (dynamic str) {
-          onSelected?.call(str['value']);
-        },
-        validator: (dynamic str) {
-          return null;
-        },
-        displayItemFn: (dynamic item) => Text(
-          (item ?? {})['label'] ?? '',
-          style: const TextStyle(fontSize: mediumTextSize * 1.3),
-        ),
-        findFn: (dynamic str) async => items,
-        selectedFn: (dynamic item1, dynamic item2) {
-          if (item1 != null && item2 != null) {
-            return item1['value'] == item2['value'];
-          }
-          return false;
-        },
-        filterFn: (dynamic item, str) =>
-            item['value'].toLowerCase().indexOf(str.toLowerCase()) >= 0,
-        dropdownItemFn: (dynamic item, int position, bool focused,
-            bool selected, Function() onTap) {
-          return ListTile(
-            title: Text(item['label']),
-            tileColor: focused ? Colors.blue.shade200 : kBgColorRow1,
-            onTap: onTap,
-          );
-        },
-      );
-    }
-  }
-}
+// class KDropdownSearch extends StatelessWidget {
+//   final Widget? label;
+//   final String? labelText;
+//   final List<DropdownMenuEntry> dropdownMenuEntries;
+//   final dynamic initialSelection;
+//   final bool? enabled, required, autoFocus;
+//   final DropdownEditingController<Map<String, dynamic>>? controller;
+//   final String? hintText;
+//   final double? width, menuHeight;
+//   final Function(dynamic)? onSelected;
+//
+//   const KDropdownSearch({
+//     super.key,
+//     required this.dropdownMenuEntries,
+//     this.label,
+//     this.labelText,
+//     this.initialSelection,
+//     this.controller,
+//     this.onSelected,
+//     this.hintText,
+//     this.autoFocus = false,
+//     this.enabled = true,
+//     this.required = false,
+//     this.width,
+//     this.menuHeight = 280,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Widget? newLabel = label ?? (labelText == null ? null : Text(labelText!));
+//     if (labelText != null && label == null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           Text(
+//             labelText!,
+//             style: const TextStyle(overflow: TextOverflow.clip),
+//           ),
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//     if (label != null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           label!,
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//
+//     if (enabled == false) {
+//       return KDropdownMenu(
+//         label: newLabel,
+//         dropdownMenuEntries: dropdownMenuEntries,
+//         initialSelection: initialSelection,
+//         hintText: hintText,
+//       );
+//     } else {
+//       final items = dropdownMenuEntries
+//           .map((e) => {"value": e.value, "label": e.label})
+//           .toList();
+//
+//       if (initialSelection != null && initialSelection != '') {
+//         controller?.value =
+//             items.firstWhere((element) => element['value'] == initialSelection);
+//       } else {
+//         controller?.value = items[0];
+//       }
+//       return DropdownFormField<Map<String, dynamic>>(
+//         controller: controller,
+//         emptyText: sharedPref.translate('No matching found!'),
+//         // emptyActionText: sharedPref.translate('Create new'),
+//         // onEmptyActionPressed: (String str) async {},
+//         // dropdownItemSeparator: const Divider(
+//         //   color: Colors.grey,
+//         //   height: 1,
+//         // ),
+//         autoFocus: autoFocus!,
+//         decoration: InputDecoration(
+//           // suffixIcon: const Icon(Icons.arrow_drop_down),
+//           suffix: const Padding(
+//             padding: EdgeInsets.only(right: 15),
+//             child: Icon(Icons.arrow_drop_down),
+//           ),
+//           label: newLabel,
+//         ),
+//         dropdownHeight: menuHeight,
+//         onSaved: (dynamic str) {},
+//         onChanged: (dynamic str) {
+//           onSelected?.call(str['value']);
+//         },
+//         validator: (dynamic str) {
+//           return null;
+//         },
+//         displayItemFn: (dynamic item) => Text(
+//           (item ?? {})['label'] ?? '',
+//           style: const TextStyle(fontSize: mediumTextSize * 1.3),
+//         ),
+//         findFn: (dynamic str) async => items,
+//         selectedFn: (dynamic item1, dynamic item2) {
+//           if (item1 != null && item2 != null) {
+//             return item1['value'] == item2['value'];
+//           }
+//           return false;
+//         },
+//         filterFn: (dynamic item, str) =>
+//             item['value'].toLowerCase().indexOf(str.toLowerCase()) >= 0,
+//         dropdownItemFn: (dynamic item, int position, bool focused,
+//             bool selected, Function() onTap) {
+//           return ListTile(
+//             title: Text(item['label']),
+//             tileColor: focused ? Colors.blue.shade200 : kBgColorRow1,
+//             onTap: onTap,
+//           );
+//         },
+//       );
+//     }
+//   }
+// }
 
 /// CUSTOM LOADING DROPDOWN MENU
 class COnLoadingDropdownMenu extends StatelessWidget {
@@ -650,40 +650,40 @@ class COnLoadingDropdownMenu extends StatelessWidget {
   }
 }
 
-class KOnLoadingDropdownMenu extends StatelessWidget {
-  final Widget? label;
-  final bool? required;
-
-  const KOnLoadingDropdownMenu({super.key, this.label, this.required});
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? newLabel = label;
-    if (label != null && required == true) {
-      newLabel = Row(
-        children: [
-          label!,
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-
-    return KTextFormField(
-        label: newLabel,
-        hintText: sharedPref.translate('Loading...'),
-        readOnly: true,
-        suffixIcon: const CircularProgressIndicator(),
-        suffixIconConstraints: const BoxConstraints(
-          maxHeight: mediumTextSize * 1.5,
-          maxWidth: mediumTextSize * 1.5,
-        ));
-  }
-}
+// class KOnLoadingDropdownMenu extends StatelessWidget {
+//   final Widget? label;
+//   final bool? required;
+//
+//   const KOnLoadingDropdownMenu({super.key, this.label, this.required});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Widget? newLabel = label;
+//     if (label != null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           label!,
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//
+//     return KTextFormField(
+//         label: newLabel,
+//         hintText: sharedPref.translate('Loading...'),
+//         readOnly: true,
+//         suffixIcon: const CircularProgressIndicator(),
+//         suffixIconConstraints: const BoxConstraints(
+//           maxHeight: mediumTextSize * 1.5,
+//           maxWidth: mediumTextSize * 1.5,
+//         ));
+//   }
+// }
 
 /// CUSTOM FUTURE DROPDOWN MENU
 class CFutureDropdownMenu extends StatelessWidget {
@@ -763,84 +763,84 @@ class CFutureDropdownMenu extends StatelessWidget {
   }
 }
 
-class KFutureDropdownMenu extends StatelessWidget {
-  final Widget? label;
-  final Future<List<DropdownMenuEntry>> dropdownMenuEntries;
-  final Object? initialSelection;
-  final bool? enabled, enableSearch, enableFilter, required;
-  final TextEditingController? controller;
-  final String? hintText;
-  final String? Function(String?)? validator;
-  final Function(dynamic)? onSelected;
-
-  const KFutureDropdownMenu(
-      {super.key,
-      required this.dropdownMenuEntries,
-      this.label,
-      this.initialSelection,
-      this.controller,
-      this.onSelected,
-      this.hintText,
-      this.enableSearch,
-      this.enableFilter,
-      this.enabled,
-      this.required,
-      this.validator});
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? newLabel = label;
-    if (label != null && required == true) {
-      newLabel = Row(
-        children: [
-          label!,
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-
-    return FutureBuilder(
-      future: dropdownMenuEntries,
-      builder: (context, snapshot) {
-        Widget child = Container();
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return KOnLoadingDropdownMenu(
-            required: required,
-            label: label,
-          );
-        }
-        if (snapshot.hasData) {
-          child = LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            var parentWidth = constraints.maxWidth;
-            return DropdownMenu(
-              width: parentWidth,
-              controller: controller,
-              enabled: enabled ?? true,
-              label: newLabel,
-              enableSearch: enableSearch ?? true,
-              enableFilter: enableFilter ?? false,
-              hintText: hintText,
-              dropdownMenuEntries: snapshot.data != null ? snapshot.data! : [],
-              initialSelection: initialSelection,
-              onSelected: onSelected,
-              menuHeight: 400,
-              inputDecorationTheme: const InputDecorationTheme(),
-            );
-          });
-        }
-        return Container(
-          child: child,
-        );
-      },
-    );
-  }
-}
+// class KFutureDropdownMenu extends StatelessWidget {
+//   final Widget? label;
+//   final Future<List<DropdownMenuEntry>> dropdownMenuEntries;
+//   final Object? initialSelection;
+//   final bool? enabled, enableSearch, enableFilter, required;
+//   final TextEditingController? controller;
+//   final String? hintText;
+//   final String? Function(String?)? validator;
+//   final Function(dynamic)? onSelected;
+//
+//   const KFutureDropdownMenu(
+//       {super.key,
+//       required this.dropdownMenuEntries,
+//       this.label,
+//       this.initialSelection,
+//       this.controller,
+//       this.onSelected,
+//       this.hintText,
+//       this.enableSearch,
+//       this.enableFilter,
+//       this.enabled,
+//       this.required,
+//       this.validator});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Widget? newLabel = label;
+//     if (label != null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           label!,
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//
+//     return FutureBuilder(
+//       future: dropdownMenuEntries,
+//       builder: (context, snapshot) {
+//         Widget child = Container();
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return KOnLoadingDropdownMenu(
+//             required: required,
+//             label: label,
+//           );
+//         }
+//         if (snapshot.hasData) {
+//           child = LayoutBuilder(
+//               builder: (BuildContext context, BoxConstraints constraints) {
+//             var parentWidth = constraints.maxWidth;
+//             return DropdownMenu(
+//               width: parentWidth,
+//               controller: controller,
+//               enabled: enabled ?? true,
+//               label: newLabel,
+//               enableSearch: enableSearch ?? true,
+//               enableFilter: enableFilter ?? false,
+//               hintText: hintText,
+//               dropdownMenuEntries: snapshot.data != null ? snapshot.data! : [],
+//               initialSelection: initialSelection,
+//               onSelected: onSelected,
+//               menuHeight: 400,
+//               inputDecorationTheme: const InputDecorationTheme(),
+//             );
+//           });
+//         }
+//         return Container(
+//           child: child,
+//         );
+//       },
+//     );
+//   }
+// }
 
 /// CUSTOM SWITCH
 class CSwitch extends StatelessWidget {
@@ -1003,50 +1003,50 @@ class CElevatedButton extends StatelessWidget {
   }
 }
 
-class KElevatedButton extends StatelessWidget {
-  final Widget child;
-  final WidgetStateProperty<Color?>? msBackgroundColor;
-  final Color? backgroundColor, hoveredBgColor, pressedBgColor, borderColor;
-  final void Function()? onPressed;
-
-  const KElevatedButton({
-    super.key,
-    required this.child,
-    this.onPressed,
-    this.msBackgroundColor,
-    this.backgroundColor,
-    this.hoveredBgColor,
-    this.pressedBgColor,
-    this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var newBgColor = backgroundColor ?? kPrimaryColor;
-    return ElevatedButton(
-      style: ButtonStyle(
-        // backgroundColor: backgroundColor,
-        backgroundColor: msBackgroundColor ??
-            WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.hovered)) {
-                return hoveredBgColor ?? kSecondaryColor;
-              } else if (states.contains(WidgetState.pressed)) {
-                return newBgColor;
-              }
-              return newBgColor;
-            }),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10000),
-            side: BorderSide(color: newBgColor),
-          ),
-        ),
-      ),
-      onPressed: onPressed,
-      child: child,
-    );
-  }
-}
+// class KElevatedButton extends StatelessWidget {
+//   final Widget child;
+//   final WidgetStateProperty<Color?>? msBackgroundColor;
+//   final Color? backgroundColor, hoveredBgColor, pressedBgColor, borderColor;
+//   final void Function()? onPressed;
+//
+//   const KElevatedButton({
+//     super.key,
+//     required this.child,
+//     this.onPressed,
+//     this.msBackgroundColor,
+//     this.backgroundColor,
+//     this.hoveredBgColor,
+//     this.pressedBgColor,
+//     this.borderColor,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var newBgColor = backgroundColor ?? kPrimaryColor;
+//     return ElevatedButton(
+//       style: ButtonStyle(
+//         // backgroundColor: backgroundColor,
+//         backgroundColor: msBackgroundColor ??
+//             WidgetStateProperty.resolveWith((states) {
+//               if (states.contains(WidgetState.hovered)) {
+//                 return hoveredBgColor ?? kSecondaryColor;
+//               } else if (states.contains(WidgetState.pressed)) {
+//                 return newBgColor;
+//               }
+//               return newBgColor;
+//             }),
+//         shape: WidgetStateProperty.all(
+//           RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(10000),
+//             side: BorderSide(color: newBgColor),
+//           ),
+//         ),
+//       ),
+//       onPressed: onPressed,
+//       child: child,
+//     );
+//   }
+// }
 
 /// CUSTOM TEXT FORM FIELD
 class CTextFormField extends StatelessWidget {
@@ -1224,96 +1224,96 @@ class CTextFormField extends StatelessWidget {
   }
 }
 
-class KTextFormField extends StatelessWidget {
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final Widget? label, prefix, prefixIcon, suffix, suffixIcon;
-  final String? labelText, hintText, initialValue;
-  final BoxConstraints? suffixIconConstraints;
-  final bool? required, autoFocus, enabled, readOnly, labelTextAsHint;
-  final int? maxLines;
-  final void Function()? onTap;
-  final void Function(String)? onChanged;
-
-  const KTextFormField({
-    super.key,
-    this.controller,
-    this.validator,
-    this.label,
-    this.prefix,
-    this.prefixIcon,
-    this.labelText,
-    this.hintText,
-    this.initialValue,
-    this.suffix,
-    this.suffixIcon,
-    this.enabled,
-    this.required,
-    this.autoFocus,
-    this.readOnly,
-    this.labelTextAsHint,
-    this.maxLines = 1,
-    this.suffixIconConstraints,
-    this.onTap,
-    this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (initialValue != null && controller != null) {
-      controller!.text = initialValue!;
-    }
-
-    Widget? newLabel = label ?? Text('$labelText');
-    if (label != null && required == true) {
-      newLabel = Row(
-        children: [
-          label!,
-          const Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }
-    return TextFormField(
-      controller: controller,
-      validator: validator
-      // ?? (required == true
-      //     ? (value) {
-      //         if (value == null || value.isEmpty) {
-      //           return sharedPref.translate('This field is required!');
-      //         }
-      //         return null;
-      //       }
-      //     : null)
-      ,
-      decoration: InputDecoration(
-        label: newLabel,
-        labelText: labelText,
-        border: kBorder,
-        enabledBorder: kBorder,
-        disabledBorder: kDisabledBorder,
-        focusedBorder: kFocusedBorder,
-        hintText: hintText,
-        prefix: prefix,
-        prefixIcon: prefixIcon,
-        suffix: suffix,
-        suffixIcon: suffixIcon,
-        suffixIconConstraints: suffixIconConstraints,
-      ),
-      initialValue: controller != null ? null : initialValue,
-      onTap: onTap,
-      onChanged: onChanged,
-      readOnly: readOnly ?? false,
-      enabled: enabled,
-      autofocus: autoFocus ?? false,
-      maxLines: maxLines,
-    );
-  }
-}
+// class KTextFormField extends StatelessWidget {
+//   final TextEditingController? controller;
+//   final String? Function(String?)? validator;
+//   final Widget? label, prefix, prefixIcon, suffix, suffixIcon;
+//   final String? labelText, hintText, initialValue;
+//   final BoxConstraints? suffixIconConstraints;
+//   final bool? required, autoFocus, enabled, readOnly, labelTextAsHint;
+//   final int? maxLines;
+//   final void Function()? onTap;
+//   final void Function(String)? onChanged;
+//
+//   const KTextFormField({
+//     super.key,
+//     this.controller,
+//     this.validator,
+//     this.label,
+//     this.prefix,
+//     this.prefixIcon,
+//     this.labelText,
+//     this.hintText,
+//     this.initialValue,
+//     this.suffix,
+//     this.suffixIcon,
+//     this.enabled,
+//     this.required,
+//     this.autoFocus,
+//     this.readOnly,
+//     this.labelTextAsHint,
+//     this.maxLines = 1,
+//     this.suffixIconConstraints,
+//     this.onTap,
+//     this.onChanged,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     if (initialValue != null && controller != null) {
+//       controller!.text = initialValue!;
+//     }
+//
+//     Widget? newLabel = label ?? Text('$labelText');
+//     if (label != null && required == true) {
+//       newLabel = Row(
+//         children: [
+//           label!,
+//           const Text(
+//             '*',
+//             style: TextStyle(
+//               color: Colors.red,
+//             ),
+//           )
+//         ],
+//       );
+//     }
+//     return TextFormField(
+//       controller: controller,
+//       validator: validator
+//       // ?? (required == true
+//       //     ? (value) {
+//       //         if (value == null || value.isEmpty) {
+//       //           return sharedPref.translate('This field is required!');
+//       //         }
+//       //         return null;
+//       //       }
+//       //     : null)
+//       ,
+//       decoration: InputDecoration(
+//         label: newLabel,
+//         labelText: labelText,
+//         border: kBorder,
+//         enabledBorder: kBorder,
+//         disabledBorder: kDisabledBorder,
+//         focusedBorder: kFocusedBorder,
+//         hintText: hintText,
+//         prefix: prefix,
+//         prefixIcon: prefixIcon,
+//         suffix: suffix,
+//         suffixIcon: suffixIcon,
+//         suffixIconConstraints: suffixIconConstraints,
+//       ),
+//       initialValue: controller != null ? null : initialValue,
+//       onTap: onTap,
+//       onChanged: onChanged,
+//       readOnly: readOnly ?? false,
+//       enabled: enabled,
+//       autofocus: autoFocus ?? false,
+//       maxLines: maxLines,
+//     );
+//   }
+// }
 
 /// CUSTOM TEXT
 class CText extends StatelessWidget {
@@ -1346,32 +1346,32 @@ class CText extends StatelessWidget {
   }
 }
 
-class KText extends StatelessWidget {
-  const KText(
-    this.data, {
-    super.key,
-    this.wrapText,
-    this.style,
-  });
-
-  final String data;
-  final bool? wrapText;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    var dataWidget = Text(
-      data,
-      style: style,
-      overflow: TextOverflow.clip,
-    );
-    if (wrapText == true) {
-      return Flexible(child: dataWidget);
-    } else {
-      return dataWidget;
-    }
-  }
-}
+// class KText extends StatelessWidget {
+//   const KText(
+//     this.data, {
+//     super.key,
+//     this.wrapText,
+//     this.style,
+//   });
+//
+//   final String data;
+//   final bool? wrapText;
+//   final TextStyle? style;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var dataWidget = Text(
+//       data,
+//       style: style,
+//       overflow: TextOverflow.clip,
+//     );
+//     if (wrapText == true) {
+//       return Flexible(child: dataWidget);
+//     } else {
+//       return dataWidget;
+//     }
+//   }
+// }
 
 /// CUSTOM SELECTABLE TEXT
 class CSelectableText extends StatelessWidget {
@@ -1406,34 +1406,34 @@ class CSelectableText extends StatelessWidget {
   }
 }
 
-class KSelectableText extends StatelessWidget {
-  const KSelectableText(
-    this.data, {
-    super.key,
-    this.style,
-    this.wrapText = false,
-  });
-
-  final String data;
-  final bool? wrapText;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    var dataWidget = SelectableText(
-      data,
-      style: style ??
-          const TextStyle(
-            overflow: TextOverflow.clip,
-          ),
-    );
-    if (wrapText == true) {
-      return Flexible(child: dataWidget);
-    } else {
-      return dataWidget;
-    }
-  }
-}
+// class KSelectableText extends StatelessWidget {
+//   const KSelectableText(
+//     this.data, {
+//     super.key,
+//     this.style,
+//     this.wrapText = false,
+//   });
+//
+//   final String data;
+//   final bool? wrapText;
+//   final TextStyle? style;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var dataWidget = SelectableText(
+//       data,
+//       style: style ??
+//           const TextStyle(
+//             overflow: TextOverflow.clip,
+//           ),
+//     );
+//     if (wrapText == true) {
+//       return Flexible(child: dataWidget);
+//     } else {
+//       return dataWidget;
+//     }
+//   }
+// }
 
 /// CUSTOM ICON
 class CIcon extends StatelessWidget {
@@ -1458,27 +1458,27 @@ class CIcon extends StatelessWidget {
   }
 }
 
-class KIcon extends StatelessWidget {
-  const KIcon(
-    this.icon, {
-    super.key,
-    this.size,
-    this.color,
-  });
-
-  final IconData? icon;
-  final double? size;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      icon,
-      size: size ?? mediumTextSize * 1.5,
-      color: color,
-    );
-  }
-}
+// class KIcon extends StatelessWidget {
+//   const KIcon(
+//     this.icon, {
+//     super.key,
+//     this.size,
+//     this.color,
+//   });
+//
+//   final IconData? icon;
+//   final double? size;
+//   final Color? color;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Icon(
+//       icon,
+//       size: size ?? mediumTextSize * 1.5,
+//       color: color,
+//     );
+//   }
+// }
 
 // class CustomDatePicker extends StatefulWidget {
 //   final Widget? label;

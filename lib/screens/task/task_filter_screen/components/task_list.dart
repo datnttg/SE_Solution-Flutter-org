@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
 import '../models/task_filter_item_model.dart';
 import 'task_list_item.dart';
 
 class TaskList extends StatelessWidget {
-  final List<TaskFilterItemModel> list;
-
   const TaskList({super.key, required this.list});
+
+  final List<TaskFilterItemModel> list;
 
   @override
   Widget build(BuildContext context) {
     if (list.isEmpty) {
-      return Center(
-        child: SelectableText('(${sharedPref.translate('Empty list')})'),
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: SelectableText('(${sharedPref.translate('Empty list')})'),
+        ),
       );
     } else {
       return Container(
@@ -30,9 +34,9 @@ class TaskList extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: index.isEven ? kBgColorRow1 : null,
                       borderRadius: BorderRadius.circular(defaultRadius)),
-                  child: TaskListItem(
-                    dataItem: list[index],
-                  ),
+
+                  /// PRODUCT ITEM
+                  child: TaskListItem(dataItem: list[index]),
                 ),
               );
             }),

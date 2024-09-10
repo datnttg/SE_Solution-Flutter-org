@@ -361,7 +361,7 @@ kShowAlert({required Widget body, String? title}) {
   return Get.dialog(
     AlertDialog(
       title:
-          title == null ? null : KSelectableText(sharedPref.translate(title)),
+          title == null ? null : CSelectableText(sharedPref.translate(title)),
       content: SingleChildScrollView(
         child: body,
       ),
@@ -399,7 +399,7 @@ kShowDialog(
                     sharedPref.translate(title),
                   )),
         if (dismissible == true)
-          KElevatedButton(
+          CElevatedButton(
             msBackgroundColor: WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.hovered)) {
                 return kSecondaryColor;

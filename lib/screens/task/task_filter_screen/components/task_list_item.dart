@@ -1,126 +1,174 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../utilities/configs.dart';
 import '../../../../utilities/custom_widgets.dart';
 import '../../../../utilities/responsive.dart';
 import '../../../../utilities/shared_preferences.dart';
 import '../../../../utilities/ui_styles.dart';
+import '../../task_detail_screen/bloc/task_detail_bloc.dart';
+import '../../task_detail_screen/bloc/task_detail_events.dart';
 import '../bloc/task_filter_bloc.dart';
+import '../bloc/task_filter_events.dart';
 import '../models/task_filter_item_model.dart';
 
 class TaskListItem extends StatelessWidget {
-  final TaskFilterItemModel dataItem;
-
   const TaskListItem({super.key, required this.dataItem});
+
+  final TaskFilterItemModel dataItem;
 
   @override
   Widget build(BuildContext context) {
-    var bloc = TaskFilterBloc();
-    var beginningDateTime =
-        dataItem.beginningDateTime ?? dataItem.createdTime ?? '';
-    var duration = DateTime.parse(dataItem.deadline ?? '')
-        .difference(DateTime.parse(beginningDateTime));
-    var percentPass =
-        DateTime.now().difference(DateTime.parse(beginningDateTime)).inMinutes /
-            duration.inMinutes;
+    String? beginningDateTime =
+        dataItem.beginningDateTime ?? dataItem.createdTime;
+    var duration = (dataItem.deadline != null && beginningDateTime != null)
+        ? DateTime.parse(dataItem.deadline!)
+            .difference(DateTime.parse(beginningDateTime))
+        : null;
+    var percentPass = (beginningDateTime != null && duration != null)
+        ? DateTime.now()
+                .difference(DateTime.parse(beginningDateTime))
+                .inMinutes /
+            duration.inMinutes
+        : 0;
 
     return InkWell(
       onTap: () async {
-        final isReload = await Navigator.pushNamed(
-          context, '${customRouteMapping.taskDetail}/${dataItem.taskId}',
-          // arguments: {"taskId": dataItem["taskId"]},
-        );
-        if (isReload == true) {
-          bloc.loadData();
+        debugPrint('Selected taskId: ${dataItem.taskId}');
+        if (Responsive.isSmallWidth(context)) {
+          var isReload = await Navigator.pushNamed(
+            context,
+            '${customRouteMapping.taskDetail}/${dataItem.taskId}',
+          );
+          if (isReload == true && context.mounted) {
+            context.read<TaskFilterBloc>().add(InitTaskFilterData());
+          }
+        } else if (context.mounted) {
+          context
+              .read<TaskFilterBloc>()
+              .add(SelectedFilterItemChanged(dataItem.taskId));
+          context.read<TaskDetailBloc>().add(TaskIdChanged(dataItem.taskId));
         }
       },
       child: Container(
-        padding: const EdgeInsets.all(defaultPadding * 2),
+        padding: const EdgeInsets.all(defaultPadding),
         decoration:
             BoxDecoration(borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(
           children: [
+            /// TYPE
             ResponsiveRow(
               context: context,
-              basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
+              // basicWidth: Responsive.isSmallWidth(context) == true ? 180 : 240,
               children: [
-                /// TASK TYPE
                 ResponsiveItem(
-                  // percentWidthOnParent: 100,
-                  child: Row(
-                    children: [
-                      // CText('${sharedPref.translate('Type')}: ',
-                      //     style: const TextStyle(fontSize: smallTextSize)),
-                      CText(
-                        '${dataItem.taskTypeTitle}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: smallTextSize,
-                          color: Colors.black,
-                        ),
-                        wrapText: true,
-                      )
-                    ],
+                  child: CText(
+                    '${dataItem.taskTypeTitle}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
 
-                /// STATUS
+                /// LAST PROGRESS
                 ResponsiveItem(
-                  child: Row(
-                    children: [
-                      CText('${sharedPref.translate('Status')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
-                      CText(
-                        '${dataItem.taskStatusText}',
-                        style: TextStyle(
-                          // fontWeight: FontWeight.bold,
-                          fontSize: smallTextSize,
-                          color: dataItem.taskStatusCode == "Completed"
-                              ? Colors.green
-                              : dataItem.taskStatusCode == "WaitToConfirm"
-                                  ? Colors.orange
-                                  : dataItem.taskStatusCode == "Rejected"
-                                      ? Colors.grey
-                                      : Colors.black,
-                        ),
-                        wrapText: true,
-                      )
-                    ],
+                  child: CText(
+                    '${dataItem.lastProgressText}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: dataItem.lastProgressCode == 'WaitToConfirm'
+                          ? Colors.orange
+                          : Colors.black,
+                    ),
                   ),
                 ),
 
-                // /// CREATOR
-                // ResponsiveItem(
-                //   child: Row(
-                //     children: [
-                //       CText('${sharedPref.translate('Creator')}: ',
-                //           style: const TextStyle(fontSize: smallTextSize)),
-                //       CText(
-                //         '${dataItem.createdName}',
-                //         style: const TextStyle(
-                //           fontWeight: FontWeight.bold,
-                //           fontSize: smallTextSize,
-                //           color: Colors.black,
-                //         ),
-                //         wrapText: true,
-                //       )
-                //     ],
-                //   ),
-                // ),
+                /// TITLE
+                if (dataItem.taskTitle?.isNotEmpty ?? false)
+                  ResponsiveItem(
+                    percentWidthOnParent: 100,
+                    child: CText(
+                      '${dataItem.taskTitle}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
 
-                /// EXECUTOR
+                /// SUBJECT NAME
+                if ((dataItem.subjects?.length ?? 0) > 0 &&
+                    ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
+                        (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
+                  ResponsiveItem(
+                    child: InkWell(
+                      onTap: () async {
+                        if (dataItem.subjects?[0].phone != null) {
+                          final Uri phoneUri = Uri(
+                              scheme: 'tel', path: dataItem.subjects![0].phone);
+                          if (await canLaunchUrl(phoneUri)) {
+                            await launchUrl(phoneUri);
+                          }
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: defaultPadding),
+                            child: Icon(
+                              Icons.person,
+                              size: mediumTextSize,
+                            ),
+                          ),
+                          CText('${dataItem.subjects?[0].name}'),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                /// SUBJECT PHONE
+                if ((dataItem.subjects?.length ?? 0) > 0 &&
+                    ((dataItem.subjects![0].name?.isNotEmpty ?? false) ||
+                        (dataItem.subjects![0].phone?.isNotEmpty ?? false)))
+                  ResponsiveItem(
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: defaultPadding),
+                          child: Icon(
+                            Icons.phone,
+                            size: mediumTextSize,
+                          ),
+                        ),
+                        CText('${dataItem.subjects?[0].phone}')
+                      ],
+                    ),
+                  ),
+
+                /// DESCRIPTION
+                if (dataItem.taskDescription?.isNotEmpty ?? false)
+                  ResponsiveItem(
+                    percentWidthOnParent: 100,
+                    child: CText('${dataItem.taskDescription}'),
+                  ),
+
+                /// CREATOR
                 ResponsiveItem(
                   child: Row(
                     children: [
-                      CText('${sharedPref.translate('Executor')}: ',
-                          style: const TextStyle(fontSize: smallTextSize)),
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.person_add_outlined,
+                          size: mediumTextSize,
+                        ),
+                      ),
                       CText(
-                        '${dataItem.assignedName}',
+                        '${dataItem.createdName}'.capitalize ?? '',
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: smallTextSize,
                           color: Colors.black,
                         ),
-                        wrapText: true,
                       )
                     ],
                   ),
@@ -131,18 +179,23 @@ class TaskListItem extends StatelessWidget {
                   child: dataItem.deadline != null
                       ? Row(
                           children: [
-                            CText('${sharedPref.translate('Deadline')}: ',
-                                style:
-                                    const TextStyle(fontSize: smallTextSize)),
+                            const Padding(
+                              padding: EdgeInsets.only(right: defaultPadding),
+                              child: Icon(
+                                Icons.av_timer,
+                                size: mediumTextSize,
+                              ),
+                            ),
                             CText(
-                              df2.format(DateTime.parse(dataItem.deadline ?? '')
-                                  .toLocal()),
+                              df2.format(
+                                  DateTime.parse(dataItem.deadline!).toLocal()),
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
                                 fontSize: smallTextSize,
-                                color: (dataItem.taskStatusCode ==
-                                            'Completed' ||
-                                        dataItem.taskStatusCode == 'Rejected')
+                                color: ([
+                                  'Completed',
+                                  'Rejected',
+                                  'WaitToConfirm'
+                                ].any((e) => e == dataItem.lastProgressCode))
                                     ? Colors.black
                                     : percentPass >= 1
                                         ? Colors.red
@@ -150,51 +203,72 @@ class TaskListItem extends StatelessWidget {
                                             ? Colors.orange
                                             : Colors.black,
                               ),
-                              wrapText: true,
                             )
                           ],
                         )
                       : Container(),
                 ),
 
-                /// TITLE
+                /// EXECUTOR
                 ResponsiveItem(
-                  widthRatio: 2,
-                  child: dataItem.taskTitle == null
-                      ? Container()
-                      : CText('${dataItem.taskTitle}'),
-                ),
-
-                /// DESCRIPTION
-                ResponsiveItem(
-                  widthRatio: 2,
-                  child: dataItem.taskDescription == null
-                      ? Container()
-                      : CText('${dataItem.taskDescription}'),
-                ),
-
-                /// SUBJECTS
-                dataItem.subjects?.isNotEmpty == true
-                    ? ResponsiveItem(
-                        percentWidthOnParent: 100,
-                        child: Row(
-                          children: [
-                            for (var e in dataItem.subjects ?? [])
-                              Row(
-                                children: [
-                                  e.phone != null
-                                      ? CText('${e.name} (${e.phone})')
-                                      : Container(),
-                                ],
-                              ),
-                            const SizedBox(width: 20)
-                          ],
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.how_to_reg_outlined,
+                          size: mediumTextSize,
+                        ),
+                      ),
+                      CText(
+                        '${dataItem.assignedName}'.capitalize ?? '',
+                        style: const TextStyle(
+                          fontSize: smallTextSize,
+                          color: Colors.black,
                         ),
                       )
-                    : ResponsiveItem(
-                        percentWidthOnParent: 0,
-                        child: Container(),
+                    ],
+                  ),
+                ),
+
+                /// ROLE
+                ResponsiveItem(
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: defaultPadding),
+                        child: Icon(
+                          Icons.person_outline,
+                          size: mediumTextSize,
+                        ),
                       ),
+                      CText(
+                        dataItem.assignedUserId == sharedPref.getUserId()
+                            ? sharedPref.translate('Executor')
+                            : (dataItem.participants != null
+                                ? (dataItem.participants!.any((e) =>
+                                        e.participantUserId ==
+                                        sharedPref.getUserId())
+                                    ? sharedPref.translate('Participant')
+                                    : (dataItem.createdUserId ==
+                                            sharedPref.getUserId()
+                                        ? sharedPref.translate('Creator')
+                                        : ''))
+                                : ''),
+                        style: TextStyle(
+                          fontSize: smallTextSize,
+                          color: dataItem.taskStatusCode == "Completed"
+                              ? Colors.green
+                              : dataItem.taskStatusCode == "WaitToConfirm"
+                                  ? Colors.orange
+                                  : dataItem.taskStatusCode == "Rejected"
+                                      ? Colors.grey
+                                      : Colors.black,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ],
             )
           ],
